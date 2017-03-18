@@ -1,0 +1,23 @@
+".conf.yml":
+  refs:
+    users:
+      best_comment_id: comments
+    tickets:
+      user_id: users
+    comments:
+      ticket_id: tickets
+
+"users.yml":
+  kirill:
+    name: Kirill
+    best_comment_id: wtf
+
+"tickets.yml":
+  skeleton:
+    name: To create a project skepeton
+    user_id: kirill
+
+"comments.yml":
+  wtf:
+    ticket_id: skeleton
+    message: "Can any one add a description?"

@@ -1,0 +1,19 @@
+".conf.yml":
+  refs:
+    family:
+      parent_id: "family"
+
+"family.yml":
+  grand_fa:
+    age: 100
+
+  dad:
+    age: 70
+    parent_id: grand_fa
+  uncle:
+    age: 75
+    parent_id: grand_fa
+
+  me:
+    age: 40
+    parent_id: dad

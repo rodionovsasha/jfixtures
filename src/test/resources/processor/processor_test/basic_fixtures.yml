@@ -1,0 +1,10 @@
+"/admin":
+  "users.yml":
+    vlad:
+      first_name: Vladimir
+      age: 29
+      sex: man
+    diman:
+      first_name: Dmitry
+      age: 28
+      sex: man

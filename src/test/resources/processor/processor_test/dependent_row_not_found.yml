@@ -1,0 +1,10 @@
+".conf.yml":
+  refs:
+    users_to_roles:
+      user_id: users
+
+"users.yml":
+
+"users_to_roles.yml":
+  kirill_is_guest:
+    user_id: kirill

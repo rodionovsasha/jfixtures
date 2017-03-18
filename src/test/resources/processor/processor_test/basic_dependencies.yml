@@ -1,0 +1,45 @@
+".conf.yml":
+  refs:
+    "admin.users_to_roles":
+      user_id: "admin.users"
+      role_id: "admin.roles"
+
+"/admin":
+  "users.yml":
+    vlad:
+      first_name: Vladimir
+      second_name: Korobkov
+      age: 29
+    diman:
+      first_name: Dmitry
+      second_name: Kabanov
+      age: 28
+    kirill:
+      first_name: Kirill
+      second_name: Turutin
+      age: 27
+
+  "roles.yml":
+    guest:
+      can_read: true
+      can_change: false
+      can_delete: false
+    commitee:
+        can_read: true
+        can_change: true
+        can_delete: true
+    owner:
+      can_read: true
+      can_change: true
+      can_delete: true
+
+  "users_to_roles.yml":
+    kirill_is_guest:
+      user_id: kirill
+      role_id: guest
+    vlad_is_owner:
+      user_id: vlad
+      role_id: owner
+    diman_is_commitee:
+      user_id: diman
+      role_id: commitee

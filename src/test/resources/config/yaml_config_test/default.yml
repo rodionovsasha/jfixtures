@@ -1,0 +1,10 @@
+"settings.yml":
+  name: Vlad
+  age: 29
+  music:
+    kind:
+      rock: rocks!
+
+  ".every":
+    ".default":
+      ".id": 10000
