@@ -31,4 +31,5 @@ cache:
 
 
 after_success:
+  - chmod +x delivery/deploy.sh
   - ./delivery/deploy.sh
