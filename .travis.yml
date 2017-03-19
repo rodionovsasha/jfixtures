@@ -1,6 +1,10 @@
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk8
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_732fa8d9783d_key -iv $encrypted_732fa8d9783d_iv -in delivery/codesigning.asc.enc -out delivery/codesigning.asc -d
+  - gpg --fast-import delivery/codesigning.asc
 
 cache:
   directories:
