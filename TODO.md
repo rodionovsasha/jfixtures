@@ -29,3 +29,4 @@
 * Common prefix for every table
 * Column names aliases
 * Write into DB directly in Fluent API? :)
+* MS SQL - SET IDENTITY_INSERT ON/OFF

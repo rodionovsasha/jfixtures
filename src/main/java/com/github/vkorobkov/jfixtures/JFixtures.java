@@ -5,7 +5,7 @@ import com.github.vkorobkov.jfixtures.fluent.JFixturesResultImpl;
 import com.github.vkorobkov.jfixtures.sql.PgSql;
 
 public class JFixtures {
-    static JFixturesResult postgres(String fixturesFolder) {
+    public static JFixturesResult postgres(String fixturesFolder) {
         return new JFixturesResultImpl(fixturesFolder, new PgSql());
     }
 }
