@@ -32,6 +32,11 @@ class PgSqlTest extends Specification {
         sql.escapeValue(new FixtureValue("Vlad")) == "'Vlad'"
     }
 
+    def "escaped single quite in string value"() {
+        expect:
+        sql.escapeValue(new FixtureValue("Vlad' bug")) == "'Vlad'' bug'"
+    }
+
     def "does not escape non string values"(unescaped, escaped) {
         expect:
         sql.escapeValue(new FixtureValue(unescaped)) == escaped
