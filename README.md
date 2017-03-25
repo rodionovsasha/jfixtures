@@ -140,21 +140,18 @@ com.github.vkorobkov:jfixtures:jar:1.0.2
 
 ## Usage
 Once you included a dependency into your project, you're ready to use JFixtures.
-Generally speaking, JFixtures is just a text process - it expect to receive a folder with fixtures as an input and it 
-writes a SQL file as the output.
-
-See how it works:
+Generally speaking, JFixtures is just a text processor - it expects to receive a folder with fixtures as an input and it 
+writes a SQL file as the output:
 ```java
 import com.github.vkorobkov.jfixtures.JFixtures;
 
 JFixtures.postgres("/path/to/fixtures").toFile("test-data.sql");
 ```
-
-So this code will scan for YML fixtures in `/path/to/fixtures` folder and will write the output into `test-data.sql`
+So this code scans for fixtures(YML files) in `/path/to/fixtures` folder and will write the output into `test-data.sql`
 file. If output file had presented before you launched the processing, it will be _recreated_.
 
-It is also possible to get SQL instructions as a string rather than as a file, for example, if you want to execute the 
-sql against already opened SQL connection in your custom code:
+It is also possible to get output SQL instructions as a string rather than as a file, for example, if you want to execute the 
+sql against already opened SQL connection in your custom code or in your tests:
 ```java
 import com.github.vkorobkov.jfixtures.JFixtures;
 
