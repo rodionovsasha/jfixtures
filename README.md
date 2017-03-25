@@ -1,8 +1,9 @@
 ![alt text](https://travis-ci.org/vkorobkov/jfixtures.svg?branch=master "Build status")
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/cz.jirutka.rsql/rsql-parser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.vkorobkov/jfixtures)
 
 # JFixtures
 
-### Preface
+## Preface
 Nowadays almost every project has acceptance/integration/other tests which use a dedicated test database with some test 
 data inside. JFixtures is a small java lib that helps to define the test data in a human-readable YAML format and to translate 
 the data into a plain SQL. At some degree it is a port of 
@@ -11,7 +12,7 @@ the data into a plain SQL. At some degree it is a port of
 
 Disclaimer: only generation of PG SQL(and compatible) is supported at the moment.
 
-### That's wrong with SQL ?
+## That's wrong with SQL ?
 
 Of course, all the test data could be defined as a SQL script(or scripts), so why JFixtures?
 
@@ -39,7 +40,7 @@ last. That means poor developer has to remember the whole tables hierarchy.
 
 * It is verbose - for each row you need to duplicate all this ceremony: `INSERT INTO <table> (...) VALUES(...)`
 
-### JFixtures way
+## JFixtures way
 
 * Human readable test data description with a set of yaml files
 * SQL scrip as result
@@ -107,7 +108,7 @@ JFixtures.postgres("/path/to/fixtures/folder").toFile("output.sql");
 
 That's all! Output SQL file will contain all the required INSERT instructions or correct order, with correct 
 primary/foreign keys and with `DELETE FROM <table>` instruction for cleaning up every table before inserting a new
-test data.
+test data.````
 
 No hard magic here - yml file names get converted as they are(but without .yml extension) into table names.
 Each row has a human readable key like `vlad` and `alex` for `user` table and like `skeleton` and `tests`
@@ -115,3 +116,47 @@ for `ticket` table. These keys get converted into a numeric PK columns named `id
 get resolved using row keys and table relation definitions from `.conf.yml:`. Tables are getting sorted accordingly: 
 the _referred_ tables go first, the _referring_ tables go last. Circular dependencies get detected and an exception
 will be thrown.
+
+
+## Maven / Requirements / Dependencies
+JFixtures is available on maven central: 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/cz.jirutka.rsql/rsql-parser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.vkorobkov/jfixtures)
+
+**JFixtures requires Java 8** or higher and it is written in Java 8.
+
+JFixtures itself has only one "compile" time dependency - it is `org.yaml:snakeyaml:jar:1.17:compile`. 
+All other dependencies in the tree are for tests only:
+```
+com.github.vkorobkov:jfixtures:jar:1.0.2
++- org.yaml:snakeyaml:jar:1.17:compile
++- org.projectlombok:lombok:jar:1.16.14:provided
++- org.spockframework:spock-core:jar:1.1-groovy-2.4-rc-3:test
+|  +- org.codehaus.groovy:groovy-all:jar:2.4.6:test
+|  \- junit:junit:jar:4.12:test
+|     \- org.hamcrest:hamcrest-core:jar:1.3:test
++- nl.jqno.equalsverifier:equalsverifier:jar:2.2.1:test
+\- cglib:cglib-nodep:jar:3.2.5:test
+```
+
+## Usage
+Once you included a dependency into your project, you're ready to use JFixtures.
+Generally speaking, JFixtures is just a text process - it expect to receive a folder with fixtures as an input and it 
+writes a SQL file as the output.
+
+See how it works:
+```java
+import com.github.vkorobkov.jfixtures.JFixtures;
+
+JFixtures.postgres("/path/to/fixtures").toFile("test-data.sql");
+```
+
+So this code will scan for YML fixtures in `/path/to/fixtures` folder and will write the output into `test-data.sql`
+file. If output file had presented before you launched the processing, it will be _recreated_.
+
+It is also possible to get SQL instructions as a string rather than as a file, for example, if you want to execute the 
+sql against already opened SQL connection in your custom code:
+```java
+import com.github.vkorobkov.jfixtures.JFixtures;
+
+String sqlInstructions = JFixtures.postgres("/path/to/fixtures").asString();
+```
