@@ -10,7 +10,7 @@ the data into a plain SQL. At some degree it is a port of
 [Ruby On Rails fixtures](http://api.rubyonrails.org/v3.2/classes/ActiveRecord/Fixtures.html) but for java world
 (or any other JVM language such as groovy, scala, e.t.c.)
 
-Disclaimer: only generation of PG SQL(and compatible) is supported at the moment.
+Postgres and MySql are supported at the moment.
 
 ## That's wrong with SQL ?
 
@@ -44,6 +44,7 @@ last. That means poor developer has to remember the whole tables hierarchy.
 
 * Human readable test data description with a set of yaml files
 * SQL scrip as result
+* Supports Postgres SQL and MySql at the moment
 * Human readable, defined by user, string keys for each row instead of numeric IDs
 * Numeric PK's are auto generated, however, user can specify them manually
 * Foreign key values get calculated automatically(see example below)
@@ -156,6 +157,11 @@ sql against already opened SQL connection in your custom code or in your tests:
 import com.github.vkorobkov.jfixtures.JFixtures;
 
 String sqlInstructions = JFixtures.postgres("/path/to/fixtures").asString();
+```
+
+For another kind of database, for example, MySql, just use corresponding method of `JFixtures` class:
+```java
+JFixtures.mysql("/path/to/fixtures").asString();
 ```
 
 ## Fixtures and tables

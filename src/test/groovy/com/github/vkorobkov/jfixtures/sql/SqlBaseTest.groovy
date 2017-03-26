@@ -60,7 +60,7 @@ class SqlBaseTest extends Specification {
         sql.insertRow(appender, insertRow)
 
         then:
-        appender as String == "INSERT INTO [admin].[users] ([id], [name], [age]) VALUES (|1|, |Vlad|, |29|);\n"
+        appender as String == "INSERT INTO [admin].[users] ([id], [name], [age]) VALUES (1, 'Vlad', 29);\n"
     }
 
     def "rethrows exception of appender on clean table"() {
@@ -85,5 +85,26 @@ class SqlBaseTest extends Specification {
 
         then:
         thrown(IOException)
+    }
+
+    def "escapes string values with single quote"() {
+        expect:
+        sql.escapeValue(new FixtureValue("Vlad")) == "'Vlad'"
+    }
+
+    def "escaped single quite in string value"() {
+        expect:
+        sql.escapeValue(new FixtureValue("Vlad' bug")) == "'Vlad'' bug'"
+    }
+
+    def "does not escape non string values"(unescaped, escaped) {
+        expect:
+        sql.escapeValue(new FixtureValue(unescaped)) == escaped
+
+        where:
+        unescaped | escaped
+        true | 'true'
+        40 | '40'
+        3.14 | '3.14'
     }
 }

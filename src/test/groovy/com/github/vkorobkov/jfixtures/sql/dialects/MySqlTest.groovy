@@ -1,18 +1,20 @@
-package com.github.vkorobkov.jfixtures.sql
+package com.github.vkorobkov.jfixtures.sql.dialects
 
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
 import com.github.vkorobkov.jfixtures.loader.FixtureValue
+import com.github.vkorobkov.jfixtures.sql.Appender
+import com.github.vkorobkov.jfixtures.sql.Sql
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
 import spock.lang.Specification
 
-class PgSqlTest extends Specification {
 
-    PgSql sql
+class MySqlTest extends Specification {
+    Sql sql
     Appender appender
 
     void setup() {
-        sql = new PgSql()
+        sql = new MySql()
         appender = new StringAppender()
     }
 
@@ -22,30 +24,9 @@ class PgSqlTest extends Specification {
 
         where:
         unescaped | escaped
-        "users" | '"users"'
-        "admin.users" | '"admin"."users"'
-        "admin.users.id" | '"admin"."users"."id"'
-    }
-
-    def "escapes string values with single quote"() {
-        expect:
-        sql.escapeValue(new FixtureValue("Vlad")) == "'Vlad'"
-    }
-
-    def "escaped single quite in string value"() {
-        expect:
-        sql.escapeValue(new FixtureValue("Vlad' bug")) == "'Vlad'' bug'"
-    }
-
-    def "does not escape non string values"(unescaped, escaped) {
-        expect:
-        sql.escapeValue(new FixtureValue(unescaped)) == escaped
-
-        where:
-        unescaped | escaped
-        true | 'true'
-        40 | '40'
-        3.14 | '3.14'
+        "users" | '`users`'
+        "admin.users" | '`admin`.`users`'
+        "admin.users.id" | '`admin`.`users`.`id`'
     }
 
     def "clean table"() {
@@ -53,7 +34,7 @@ class PgSqlTest extends Specification {
         sql.cleanTable(appender, new CleanTable("admin.users"))
 
         then:
-        appender as String == 'DELETE FROM "admin"."users";\n'
+        appender as String == 'DELETE FROM `admin`.`users`;\n'
     }
 
     def "insert row test"() {
@@ -68,6 +49,6 @@ class PgSqlTest extends Specification {
         sql.insertRow(appender, insertRow)
 
         then:
-        appender as String == 'INSERT INTO "admin"."users" ("id", "name", "age") VALUES (1, \'Vlad\', 29);\n'
+        appender as String == 'INSERT INTO `admin`.`users` (`id`, `name`, `age`) VALUES (1, \'Vlad\', 29);\n'
     }
 }

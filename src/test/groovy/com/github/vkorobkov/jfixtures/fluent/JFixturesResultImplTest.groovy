@@ -18,7 +18,7 @@ class JFixturesResultImplTest extends Specification implements YamlVirtualFolder
     JFixturesResult fixturesResult
 
     def EXPECTED_SQL = """DELETE FROM [users];
-            |INSERT INTO [users] ([id], [name], [age]) VALUES (|1|, |Vlad|, |29|);
+            |INSERT INTO [users] ([id], [name], [age]) VALUES (1, 'Vlad', 29);
             |""".stripMargin()
 
     void setup() {
