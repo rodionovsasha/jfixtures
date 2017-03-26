@@ -157,3 +157,27 @@ import com.github.vkorobkov.jfixtures.JFixtures;
 
 String sqlInstructions = JFixtures.postgres("/path/to/fixtures").asString();
 ```
+
+## Fixtures and tables
+
+Fixture file names get mapped to table names directly without any hidden magic/conventions. These are case sensitive:
+
+fixture file     | sql table
+---------------- | ----------------
+users.yml        | users
+other_users.yml  | other_users
+SomeUsers.yml    | SomeUsers
+
+However, we don't recommend to use or to rely on case sensitivity(in you fixtures naming nor in your DB namings) - 
+for example, in OS Windows, _file names are case insensitive_ and it does not allow to store files like `hello` and
+`HELLo` inside the same directory.
+
+Fixture file name _can not contains dots_ except the last dot before `yml` extension. For example, fixture files like
+`dbo.users.yml` and `public.ticket.yml` are invalid. If you want to prepend a database name or schema or any other 
+prefix before the table name itself, then create a subfolder in your fixtures directory:
+
+fixture file     | sql table
+---------------- | ----------------
+ideas.yml        | ideas
+public/users.yml | public.users
+dbo/pub/chat.yml | dbo.pub.chat

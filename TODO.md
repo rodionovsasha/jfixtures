@@ -25,6 +25,7 @@
 * Foreign keys can not intersect with primary ones - should fail
 
 ### Other
+* Custom table names
 * Instruction of extending for other SQL databases
 * Common prefix for every table
 * Column names aliases
