@@ -3,6 +3,7 @@ package com.github.vkorobkov.jfixtures.sql;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.loader.FixtureValue;
+import com.github.vkorobkov.jfixtures.util.SqlUtil;
 import lombok.SneakyThrows;
 
 import java.util.Arrays;
@@ -39,6 +40,11 @@ public interface SqlBase extends Sql {
             .collect(Collectors.joining("."));
     }
 
+    default String escapeValue(FixtureValue value) {
+        String str = value.toString();
+        return value.isString() ? SqlUtil.escapeString(str) : str;
+    }
+
     String escapeTableOrColumnPart(String part);
-    String escapeValue(FixtureValue value);
+
 }
