@@ -7,7 +7,7 @@ class FixtureValueTest extends Specification {
 
     def "constructor test"() {
         expect:
-        new FixtureValue(5).value == 5
+        FixtureValue.ofAuto(5).value == 5
     }
 
     def "equals"() {
@@ -17,7 +17,7 @@ class FixtureValueTest extends Specification {
 
     def "isString returns true of value has a string type"(value, result) {
         expect:
-        new FixtureValue(value).string == result
+        FixtureValue.ofAuto(value).string == result
 
         where:
         value | result
@@ -25,5 +25,20 @@ class FixtureValueTest extends Specification {
         'c' as char | false
         true | false
         100 | false
+    }
+
+    def "isString returns false when SQL type"() {
+        expect:
+        !FixtureValue.ofSql("SELECT 1;").isString()
+    }
+
+    def "isSql returns true for SQL type"() {
+        expect:
+        FixtureValue.ofSql("SELECT 1;").isSql()
+    }
+
+    def "isSql returns false for auto type"() {
+        expect:
+        !FixtureValue.ofAuto("vlad").isSql()
     }
 }

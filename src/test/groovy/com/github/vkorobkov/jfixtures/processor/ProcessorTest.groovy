@@ -84,7 +84,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         and:
         def vlad = instructions[1] as InsertRow
-        vlad.values.id == new FixtureValue(100500)
+        vlad.values.id == FixtureValue.ofAuto(100500)
     }
 
     def "resolves basic dependencies"() {
@@ -114,17 +114,17 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         and:
         users_to_roles[0].values == [
-            id: new FixtureValue(IncrementalSequence.LOWER_BOUND),
+            id: FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND),
             user_id: users.find { it.rowName == "kirill" }.values.id,
             role_id: roles.find { it.rowName == "guest" }.values.id,
         ]
         users_to_roles[1].values == [
-            id: new FixtureValue(IncrementalSequence.LOWER_BOUND + 1),
+            id: FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND + 1),
             user_id: users.find { it.rowName == "vlad" }.values.id,
             role_id: roles.find { it.rowName == "owner" }.values.id,
         ]
         users_to_roles[2].values == [
-            id: new FixtureValue(IncrementalSequence.LOWER_BOUND + 2),
+            id: FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND + 2),
             user_id: users.find { it.rowName == "diman" }.values.id,
             role_id: roles.find { it.rowName == "commitee" }.values.id,
         ]
@@ -189,7 +189,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
     }
 
     boolean assertInsertInstructions(Map instructions, Map expected) {
-        expected = expected.collectEntries { [it.key, new FixtureValue(it.value)] }
+        expected = expected.collectEntries { [it.key, FixtureValue.ofAuto(it.value)] }
         new LinkedHashMap(instructions) == expected
     }
 

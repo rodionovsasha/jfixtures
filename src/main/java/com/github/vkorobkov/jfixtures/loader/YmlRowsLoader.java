@@ -45,7 +45,16 @@ public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
     }
 
     private FixtureValue columnValue(Map.Entry<String, Object> entry) {
-        return new FixtureValue(entry.getValue());
+        Object value = entry.getValue();
+        ValueType type = ValueType.AUTO;
+
+        if (value instanceof Map) {
+            Map<String, Object> node = (Map<String, Object>)value;
+            type = ValueType.valueOfIgnoreCase((String)node.get("type"));
+            value = node.get("value");
+        }
+
+        return type == ValueType.SQL ? FixtureValue.ofSql(String.valueOf(value)) : FixtureValue.ofAuto(value);
     }
 
     private Map<String, Object> loadYamlContent(Path file) {
