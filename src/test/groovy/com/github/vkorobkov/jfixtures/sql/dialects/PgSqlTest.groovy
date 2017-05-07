@@ -40,9 +40,9 @@ class PgSqlTest extends Specification {
     def "insert row test"() {
         given:
         def insertRow = new InsertRow("admin.users", "vlad", [
-            id: new FixtureValue(1),
-            name: new FixtureValue("Vlad"),
-            age : new FixtureValue(29)
+            id: FixtureValue.ofAuto(1),
+            name: FixtureValue.ofAuto("Vlad"),
+            age : FixtureValue.ofAuto(29)
         ])
 
         when:

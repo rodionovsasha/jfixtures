@@ -8,8 +8,8 @@ class FixtureRowTest extends Specification {
 
     void setup() {
         columns = [
-            id: new FixtureValue(1),
-            name: new FixtureValue("Vladimir"),
+            id: FixtureValue.ofAuto(1),
+            name: FixtureValue.ofAuto("Vladimir"),
         ]
     }
 

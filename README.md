@@ -12,7 +12,7 @@ the data into a plain SQL. At some degree it is a port of
 
 Postgres and MySql are supported at the moment.
 
-## That's wrong with SQL ?
+## What's wrong with SQL ?
 
 Of course, all the test data could be defined as a SQL script(or scripts), so why JFixtures?
 
@@ -178,7 +178,7 @@ However, we don't recommend to use or to rely on case sensitivity(in you fixture
 for example, in OS Windows, _file names are case insensitive_ and it does not allow to store files like `hello` and
 `HELLo` inside the same directory.
 
-Fixture file name _can not contains dots_ except the last dot before `yml` extension. For example, fixture files like
+Fixture file name _can not contain dots_ except the last dot before `yml` extension. For example, fixture files like
 `dbo.users.yml` and `public.ticket.yml` are invalid. If you want to prepend a database name or schema or any other 
 prefix before the table name itself, then create a subfolder in your fixtures directory:
 
@@ -187,3 +187,76 @@ fixture file     | sql table
 ideas.yml        | ideas
 public/users.yml | public.users
 dbo/pub/chat.yml | dbo.pub.chat
+
+## Tables and rows
+
+YML fixture files should have strict structure like this:
+```yaml
+row_name_1:
+    column1: value1
+    column2: value2
+row_name_2:
+    column1: value3
+    column2: value4
+```
+Each row must have a unique name(like `row_name_1` and `row_name_2`). These names do not affect the output
+SQL script, but they used internally for creating relationships between the tables(traditional for relational DB
+foreign key to primary key mappings). If any table has two or more rows with the same name then JFixture throws 
+an exception.
+
+Column names(`column1`, `column2`, e.t.c.) get mapped to corresponding SQL column names as they are, without
+any conventions nor transformation.
+
+The values(`value1`, `value2`, e.t.c.) also get mapped without any transformations except the string values.
+The string values are getting escaped(like `vlad` converts to `'vlad'`) depending on your DB type.
+
+Let's take an example. Let's assume that I've got a fixture file called `users.yml` with the following content:
+```yaml
+vlad:
+    first_name: "Vladimir's name"
+    second_name: Korobkov
+    age: 29
+alex:
+    first_name: Alex
+    second_name: Krasnov
+    age: 20
+```
+JFixture coverts the fixture in the following SQL code(I selected Postgres dialect):
+```postgresql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "first_name", "second_name", "age") VALUES (10000, 'Vladimir''s name', 'Korobkov', 29);
+INSERT INTO "users" ("id", "first_name", "second_name", "age") VALUES (10001, 'Alex', 'Krasnov', 20);
+```
+if you look at the `VALUES` section you'll see that every string value was turned into a SQL string:
+
+* `"Vladimir's name"` turned into `'Vladimir''s name'` (surrounded with apostrophes and the apostrophe inside the string 
+was replaced with double apostrophes)
+* `Korobkov` turned into `'Korobkov'`(surrounded with apostrophes)
+
+Sometimes you don't want to store a string value as a string, for example, when you want to insert a result of some
+SQL statement:
+```yaml
+vlad:
+    first_name: SELECT name FROM names ORDER BY name LIMIT 1
+    second_name: Korobkov
+```
+JFixtures will convert `first_name` column value into a SQL string: `'SELECT name FROM names ORDER BY name LIMIT 1'`.
+For the DB this is just a string literal but not a SQL expression.
+
+But there is a way to say to JFixtures "leave the value as it is, don't convert it to string":
+```yaml
+vlad:
+    # take a look at "value" and "type" subnodes - that switched off the conversion of the value into a string
+    name:
+      value: SELECT name FROM names ORDER BY name LIMIT 1
+      type: sql
+    role: dev
+    age: 29
+```
+turnes into
+```postgresql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name", "role", "age") VALUES (10000, SELECT name FROM names ORDER BY name LIMIT 1, 'dev', 29);
+```
+The `name` column was not converted to a string because we asked not to. The `role` column was converted to a string
+by the default behaviour of JFixtures.

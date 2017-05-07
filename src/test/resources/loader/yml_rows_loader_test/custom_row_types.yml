@@ -1,0 +1,7 @@
+vlad:
+  first_name:
+    value: Vladimir
+    type: auto
+  age:
+    value: DEFAULT
+    type: sql

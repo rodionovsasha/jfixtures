@@ -13,23 +13,23 @@ class IncrementalSequenceTest extends Specification {
 
     def "increments from the LOWER_BOUND with step=1"() {
         expect:
-        sequence.next("vlad") == new FixtureValue(sequence.LOWER_BOUND)
+        sequence.next("vlad") == FixtureValue.ofAuto(sequence.LOWER_BOUND)
 
         and:
-        sequence.next("vlad") == new FixtureValue(sequence.LOWER_BOUND + 1)
+        sequence.next("vlad") == FixtureValue.ofAuto(sequence.LOWER_BOUND + 1)
 
         and:
-        sequence.next("vlad") == new FixtureValue(sequence.LOWER_BOUND + 2)
+        sequence.next("vlad") == FixtureValue.ofAuto(sequence.LOWER_BOUND + 2)
     }
 
     def "row name value does not matter"() {
         expect:
-        sequence.next("vlad") == new FixtureValue(sequence.LOWER_BOUND)
+        sequence.next("vlad") == FixtureValue.ofAuto(sequence.LOWER_BOUND)
 
         and:
-        sequence.next(null) == new FixtureValue(sequence.LOWER_BOUND + 1)
+        sequence.next(null) == FixtureValue.ofAuto(sequence.LOWER_BOUND + 1)
 
         and:
-        sequence.next("hero") == new FixtureValue(sequence.LOWER_BOUND + 2)
+        sequence.next("hero") == FixtureValue.ofAuto(sequence.LOWER_BOUND + 2)
     }
 }

@@ -9,6 +9,6 @@ public class IncrementalSequence implements Sequence {
     private final AtomicLong value = new AtomicLong(LOWER_BOUND);
 
     public FixtureValue next(String rowName) {
-        return new FixtureValue(value.getAndIncrement());
+        return FixtureValue.ofAuto(value.getAndIncrement());
     }
 }

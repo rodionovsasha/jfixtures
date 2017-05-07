@@ -16,20 +16,20 @@ class SequenceRegistryTest extends Specification {
 
     def "increments sequence for specific table"() {
         expect:
-        registry.nextValue("users", "vlad") == new FixtureValue(IncrementalSequence.LOWER_BOUND)
-        registry.nextValue("users", "diman") == new FixtureValue(IncrementalSequence.LOWER_BOUND + 1)
-        registry.nextValue("users", "kirill") == new FixtureValue(IncrementalSequence.LOWER_BOUND + 2)
+        registry.nextValue("users", "vlad") == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND)
+        registry.nextValue("users", "diman") == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND + 1)
+        registry.nextValue("users", "kirill") == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND + 2)
     }
 
     def "another table returns a new sequence"() {
         expect:
-        registry.nextValue("users", "vlad") == new FixtureValue(IncrementalSequence.LOWER_BOUND)
-        registry.nextValue("users", "diman") == new FixtureValue(IncrementalSequence.LOWER_BOUND + 1)
-        registry.nextValue("users", "kirill") == new FixtureValue(IncrementalSequence.LOWER_BOUND + 2)
+        registry.nextValue("users", "vlad") == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND)
+        registry.nextValue("users", "diman") == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND + 1)
+        registry.nextValue("users", "kirill") == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND + 2)
 
         and:
-        registry.nextValue("idiots", "n") == new FixtureValue(IncrementalSequence.LOWER_BOUND)
-        registry.nextValue("idiots", "m") == new FixtureValue(IncrementalSequence.LOWER_BOUND + 1)
-        registry.nextValue("idiots", "k") == new FixtureValue(IncrementalSequence.LOWER_BOUND + 2)
+        registry.nextValue("idiots", "n") == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND)
+        registry.nextValue("idiots", "m") == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND + 1)
+        registry.nextValue("idiots", "k") == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND + 2)
     }
 }
