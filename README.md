@@ -18,7 +18,7 @@ Of course, all the test data could be defined as a SQL script(or scripts), so wh
 
 Because describing test data in SQL constructions is inconvenient:
  
-* It it hard to match values to columns:
+* It is hard to match values to columns:
 ```sql
 INSERT INTO users(id, first_name, last_name, middle_name age, sex, is_admin, is_guest) VALUES (5, 'Vladimir', 'Korobkov',
 'Vadimovich', 'm', 29, true, false); 
@@ -43,7 +43,7 @@ last. That means poor developer has to remember the whole tables hierarchy.
 ## JFixtures way
 
 * Human readable test data description with a set of yaml files
-* SQL scrip as result
+* SQL script as a result
 * Supports Postgres SQL and MySql at the moment
 * Human readable, defined by user, string keys for each row instead of numeric IDs
 * Numeric PK's are auto generated, however, user can specify them manually
