@@ -55,6 +55,7 @@
         <cglib-nodep.version>3.2.5</cglib-nodep.version>
         <junit.version>4.12</junit.version>
         <h2.version>1.4.196</h2.version>
+        <commons-dbcp2.version>2.1.1</commons-dbcp2.version>
 
         <!--Plugins-->
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
@@ -99,6 +100,12 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>${commons-dbcp2.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
