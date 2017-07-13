@@ -1,18 +1,16 @@
 package com.github.vkorobkov.jfixtures.integration
 
-import com.github.vkorobkov.jfixtures.JFixtures
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.testutil.H2Test
 import spock.lang.Specification
 
 import java.nio.file.Path
 
-import static com.github.vkorobkov.jfixtures.sql.DataSourceUtil.sql
-
-class H2IntegrationTest extends Specification implements YamlVirtualFolder {
+class H2IntegrationTest extends Specification implements H2Test {
     Path tmpFolderPath = unpackYamlToTempFolder("default.yml")
 
     void setupSpec() {
-        sql.execute("CREATE TABLE IF NOT EXISTS users (ID INT PRIMARY KEY, NAME varchar(50) DEFAULT NULL, AGE INT DEFAULT NULL)")
+        sql.execute("DROP TABLE IF EXISTS users")
+        sql.execute("CREATE TABLE users (ID INT PRIMARY KEY, NAME varchar(50) DEFAULT NULL, AGE INT DEFAULT NULL)")
     }
 
     void cleanup() {
@@ -21,7 +19,7 @@ class H2IntegrationTest extends Specification implements YamlVirtualFolder {
 
     def "h2 insert test"() {
         when:
-        sql.execute(JFixtures.h2(tmpFolderPath as String).asString())
+        executeFixtures(tmpFolderPath)
 
         then:
         def query = "SELECT * FROM users"

@@ -18,7 +18,7 @@ class ValueTypeTest extends Specification {
         "SQL" | ValueType.SQL
     }
 
-    def "valueOfIgnoreCase throws exceptin when wrong value is provided"() {
+    def "valueOfIgnoreCase throws exception when wrong value is provided"() {
         when:
         ValueType.valueOfIgnoreCase("Unicorn")
 

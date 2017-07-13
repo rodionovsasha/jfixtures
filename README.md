@@ -20,7 +20,7 @@ Because describing test data in SQL constructions is inconvenient:
  
 * It is hard to match values to columns:
 ```sql
-INSERT INTO users(id, first_name, last_name, middle_name age, sex, is_admin, is_guest) VALUES (5, 'Vladimir', 'Korobkov',
+INSERT INTO users(id, first_name, last_name, middle_name, sex, age, is_admin, is_guest) VALUES (5, 'Vladimir', 'Korobkov',
 'Vadimovich', 'm', 29, true, false); 
 ```
 Imagine, when your're typing and your cursor is somewhere in the middle of `VALUES (...)` part of the statement, it is
