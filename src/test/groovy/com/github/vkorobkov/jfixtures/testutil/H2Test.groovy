@@ -10,4 +10,9 @@ trait H2Test extends YamlVirtualFolder {
     def executeFixtures(folderPath) {
         sql.execute(JFixtures.h2(folderPath as String).asString())
     }
+
+    def recreateTable(tableName, tableColumns) {
+        sql.execute("DROP TABLE IF EXISTS " + tableName)
+        sql.execute("CREATE TABLE " + tableName + " (" + tableColumns + ")")
+    }
 }

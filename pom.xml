@@ -53,7 +53,6 @@
         <spock-core.version>1.1-groovy-2.4-rc-3</spock-core.version>
         <equalsverifier.version>2.2.1</equalsverifier.version>
         <cglib-nodep.version>3.2.5</cglib-nodep.version>
-        <junit.version>4.12</junit.version>
         <h2.version>1.4.196</h2.version>
         <commons-dbcp2.version>2.1.1</commons-dbcp2.version>
 

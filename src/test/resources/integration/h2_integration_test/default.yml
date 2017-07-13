@@ -3,3 +3,8 @@
     id: 1
     name: Vlad
     age: 29
+
+  semen:
+    id: 2
+    name: Semen's name
+    age: 32

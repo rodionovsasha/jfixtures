@@ -27,7 +27,7 @@ class RowsIndex implements InstructionVisitor {
 
     @AllArgsConstructor
     @EqualsAndHashCode
-    final static class RowKey {
+    static final class RowKey {
         public final String table;
         public final String rowName;
     }
