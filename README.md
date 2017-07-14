@@ -260,3 +260,10 @@ INSERT INTO "users" ("id", "name", "role", "age") VALUES (10000, SELECT name FRO
 ```
 The `name` column was not converted to a string because we asked not to. The `role` column was converted to a string
 by the default behaviour of JFixtures.
+
+## How to add a custom database support (e.g. H2)
+It is a quite simple:
+1. Add a new class H2 to `com.github.vkorobkov.jfixtures.sql.dialects`.
+2. Update `JFixtures.java` with a new static method `h2` which creates new instance of JFixturesResult based on H2 class.
+3. Add unit tests for `H2.java` and `JFixtures.java` classes. Ensure code coverage remains 100%(see `target/site/jacoco/index.html`).
+That's all!

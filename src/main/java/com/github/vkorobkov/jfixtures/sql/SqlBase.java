@@ -46,5 +46,4 @@ public interface SqlBase extends Sql {
     }
 
     String escapeTableOrColumnPart(String part);
-
 }
