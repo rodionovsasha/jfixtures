@@ -21,16 +21,7 @@ class H2IntegrationTest extends Specification implements H2Test {
         executeFixtures(tmpFolderPath)
 
         then:
-        def query = "SELECT * FROM users"
-        def result = sql.rows(query)
-
-        assert result.size() == 2
-        assert result.get(0).get("ID") == 1
-        assert result.get(0).get("NAME") == "Vlad"
-        assert result.get(0).get("AGE") == 29
-
-        assert result.get(1).get("ID") == 2
-        assert result.get(1).get("NAME") == "Semen's name"
-        assert result.get(1).get("AGE") == 32
+        def result = sql.rows("SELECT * FROM users")
+        [[ID: 1, NAME: "Vlad", AGE: 29], [ID: 2, NAME: "Semen's name", AGE: 32]] == result
     }
 }
