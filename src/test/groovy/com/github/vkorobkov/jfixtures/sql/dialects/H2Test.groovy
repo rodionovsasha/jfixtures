@@ -26,6 +26,7 @@ class H2Test extends Specification {
         "users" | '"users"'
         "admin.users" | '"admin"."users"'
         "admin.users.id" | '"admin"."users"."id"'
+        "':;#\"*[@" | '"\':;#"*[@"'
     }
 
     def "clean table"() {
@@ -49,5 +50,20 @@ class H2Test extends Specification {
 
         then:
         appender as String == 'INSERT INTO "admin"."users" ("id", "name", "age") VALUES (1, \'Vlad\', 29);\n'
+    }
+
+    def "insert row with special chars test"() {
+        given:
+        def insertRow = new InsertRow("admin.users", "vlad", [
+                id: FixtureValue.ofAuto(1),
+                name: FixtureValue.ofAuto("':;#\"*[@"),
+                age : FixtureValue.ofAuto(29)
+        ])
+
+        when:
+        sql.insertRow(appender, insertRow)
+
+        then:
+        appender as String == 'INSERT INTO "admin"."users" ("id", "name", "age") VALUES (1, \'\'\':;#"*[@\', 29);\n'
     }
 }

@@ -22,6 +22,6 @@ class H2IntegrationTest extends Specification implements H2Test {
 
         then:
         def result = sql.rows("SELECT * FROM users")
-        [[ID: 1, NAME: "Vlad", AGE: 29], [ID: 2, NAME: "Semen's name", AGE: 32]] == result
+        result == [[ID: 1, NAME: "Vlad", AGE: 29], [ID: 2, NAME: "Semen's special name:'#\"*[@;", AGE: 32]]
     }
 }
