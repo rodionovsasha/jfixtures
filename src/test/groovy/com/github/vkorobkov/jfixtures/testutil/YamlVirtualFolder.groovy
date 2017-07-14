@@ -15,10 +15,10 @@ trait YamlVirtualFolder implements WithTempFile, WithTestResource {
             switch(content) {
                 case Map:
                     path.write(yaml.dumpAsMap(content))
-                    break;
+                    break
                 case String:
                     path.write(content)
-                    break;
+                    break
             }
         }
 
