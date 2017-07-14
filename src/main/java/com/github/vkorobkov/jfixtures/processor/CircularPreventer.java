@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 class CircularPreventer {
-    private final static String ARROW = "-->";
+    private static final String ARROW = "-->";
     private final Deque<String> stack = new ArrayDeque<>();
 
     void doInStack(String element, Callback callback) {

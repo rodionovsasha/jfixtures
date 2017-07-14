@@ -29,7 +29,7 @@ public class FixturesLoader {
     }
 
     private boolean isFile(Path file) {
-        return !Files.isDirectory(file);
+        return !file.toFile().isDirectory();
     }
 
     private boolean isYml(Path file) {

@@ -5,7 +5,6 @@ import lombok.SneakyThrows;
 import java.util.function.Function;
 
 public class WithResource {
-
     @SneakyThrows
     public static <TResource extends AutoCloseable, TResult> TResult touch(
             ThrowingSupplier<TResource> resourceSupplier,
