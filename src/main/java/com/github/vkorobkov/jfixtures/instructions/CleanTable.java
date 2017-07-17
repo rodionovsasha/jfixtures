@@ -1,7 +1,10 @@
 package com.github.vkorobkov.jfixtures.instructions;
 
+import lombok.Getter;
+
+@Getter
 public class CleanTable implements Instruction {
-    public final String table;
+    private final String table;
 
     public CleanTable(String table) {
         this.table = table;

@@ -3,6 +3,7 @@ package com.github.vkorobkov.jfixtures.loader;
 import com.github.vkorobkov.jfixtures.util.StreamUtil;
 import com.github.vkorobkov.jfixtures.util.YmlUtil;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.val;
 
 import java.io.IOException;
@@ -15,16 +16,17 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
+@Getter
 public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
     private final Path file;
 
     @Override
     public Collection<FixtureRow> get() {
         return loadYamlContent(file)
-            .entrySet()
-            .stream()
-            .map(this::fixtureRow)
-            .collect(Collectors.toList());
+                .entrySet()
+                .stream()
+                .map(this::fixtureRow)
+                .collect(Collectors.toList());
     }
 
     private FixtureRow fixtureRow(Map.Entry<String, ?> sourceRow) {

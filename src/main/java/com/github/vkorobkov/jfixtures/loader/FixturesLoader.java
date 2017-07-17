@@ -1,6 +1,7 @@
 package com.github.vkorobkov.jfixtures.loader;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,8 +11,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
+@Getter
 public class FixturesLoader {
-    public final String path;
+    private final String path;
 
     public Map<String, Fixture> load() {
         try {

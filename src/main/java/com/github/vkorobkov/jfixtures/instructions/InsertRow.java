@@ -1,14 +1,16 @@
 package com.github.vkorobkov.jfixtures.instructions;
 
 import com.github.vkorobkov.jfixtures.loader.FixtureValue;
+import lombok.Getter;
 
 import java.util.Collections;
 import java.util.Map;
 
+@Getter
 public class InsertRow implements Instruction {
-    public final String table;
-    public final String rowName;
-    public final Map<String, FixtureValue> values;
+    private final String table;
+    private final String rowName;
+    private final Map<String, FixtureValue> values;
 
     public InsertRow(String table, String rowName, Map<String, FixtureValue> values) {
         this.table = table;
