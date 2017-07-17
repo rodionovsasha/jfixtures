@@ -17,7 +17,7 @@ public class YamlConfig implements ConfigDigger {
     }
 
     @Override
-    public<T> Optional<T> digValue(String name) {
+    public <T> Optional<T> digValue(String name) {
         Optional<T> result = dig(name);
         if (result.isPresent() && isNode(result.get())) {
             String message = "Property [" + name + "] is expected to be a value but this is a node.";
@@ -26,7 +26,7 @@ public class YamlConfig implements ConfigDigger {
         return result;
     }
 
-    private<T> Optional<T> dig(String name) {
+    private <T> Optional<T> dig(String name) {
         if (name.isEmpty()) {
             throw new IllegalArgumentException("Name can not be an empty string");
         }
@@ -51,8 +51,8 @@ public class YamlConfig implements ConfigDigger {
         if (!isNode(section)) {
             String property = String.join(KEY_SEPARATOR, sections);
             String fragment = String.join(KEY_SEPARATOR, Arrays.copyOf(sections, index));
-            String message = "Can not read property [" + property + "], because [" + fragment +
-                    "] is expected to be a node but this is a value, so can not be expanded";
+            String message = "Can not read property [" + property + "], because [" + fragment
+                    + "] is expected to be a node but this is a value, so can not be expanded";
             throw new ConfigException(message);
         }
     }

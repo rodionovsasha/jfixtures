@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class FixturesLoader {
-    public final String path;
+    private final String path;
 
     public Map<String, Fixture> load() {
         try {

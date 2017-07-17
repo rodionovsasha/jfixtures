@@ -1,11 +1,13 @@
 package com.github.vkorobkov.jfixtures.loader;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 @EqualsAndHashCode
+@Getter
 public final class FixtureValue {
-    public final Object value;
-    public final ValueType type;
+    private final Object value;
+    private final ValueType type;
 
     private FixtureValue(Object value, ValueType type) {
         this.value = value;

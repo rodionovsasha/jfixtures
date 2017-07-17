@@ -15,11 +15,10 @@ class ColumnProcessor {
 
     FixtureValue column(String table, String rowName, String column, FixtureValue value) {
         try {
-            return context.config.referredTable(table, column)
-                .map(referredTable -> referredColumn(table, referredTable, value))
-                .orElse(value);
-        }
-        catch (ProcessorException cause) {
+            return context.getConfig().referredTable(table, column)
+                    .map(referredTable -> referredColumn(table, referredTable, value))
+                    .orElse(value);
+        } catch (ProcessorException cause) {
             String columnPath = String.join(".", table, rowName, column);
             String message = "Error processing [" + columnPath + "]. Root cause:\n" + cause.getMessage();
             throw new ProcessorException(message);
@@ -33,29 +32,29 @@ class ColumnProcessor {
 
         val referredRow = referredRow(referredTable, value);
 
-// todo: so far we always have PK so that check does not matter for a while
-//        if (!referredRow.values.containsKey(Processor.PK_COLUMN_NAME)) {
-//            String columnPath = String.join(".", referredTable, String.valueOf(value.value), Processor.PK_COLUMN_NAME);
-//            String message = "Referred column [" + columnPath + "] is not found";
-//            throw new ProcessorException(message);
-//        }
+        //todo: so far we always have PK so that check does not matter for a while
+        /*if (!referredRow.values.containsKey(Processor.PK_COLUMN_NAME)) {
+            String columnPath = String.join(".", referredTable, String.valueOf(value.value), Processor.PK_COLUMN_NAME);
+            String message = "Referred column [" + columnPath + "] is not found";
+            throw new ProcessorException(message);
+        }*/
 
-        return referredRow.values.get(Processor.PK_COLUMN_NAME);
+        return referredRow.getValues().get(Processor.PK_COLUMN_NAME);
     }
 
     private InsertRow referredRow(String table, FixtureValue value) {
-        String rowName = String.valueOf(value.value);
-        return context.rowsIndex
-            .read(table, rowName)
-            .orElseThrow(() -> {
-                String rowPath = String.join(".", table, rowName);
-                String message = "Referred row [" + rowPath + "] is not found";
-                return new ProcessorException(message);
-            });
+        String rowName = String.valueOf(value.getValue());
+        return context.getRowsIndex()
+                .read(table, rowName)
+                .orElseThrow(() -> {
+                    String rowPath = String.join(".", table, rowName);
+                    String message = "Referred row [" + rowPath + "] is not found";
+                    return new ProcessorException(message);
+                });
     }
 
     private void processDependentFixture(String referredTable) {
-        val referredFixture = context.fixtures.get(referredTable);
+        val referredFixture = context.getFixtures().get(referredTable);
         if (referredFixture == null) {
             String message = "Referred table [" + referredTable + "] is not found";
             throw new ProcessorException(message);
