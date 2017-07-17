@@ -3,7 +3,6 @@ package com.github.vkorobkov.jfixtures.loader;
 import com.github.vkorobkov.jfixtures.util.StreamUtil;
 import com.github.vkorobkov.jfixtures.util.YmlUtil;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.val;
 
 import java.io.IOException;
@@ -16,7 +15,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-@Getter
 public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
     private final Path file;
 
@@ -40,7 +38,7 @@ public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
             return Collections.emptyMap();
         }
         @SuppressWarnings("unchecked")
-        Map<String, Object> data = (Map<String, Object>)row;
+        Map<String, Object> data = (Map<String, Object>) row;
         val collector = Collectors.toMap(Map.Entry::getKey, this::columnValue, StreamUtil.throwingMerger(),
                 LinkedHashMap::new);
         return data.entrySet().stream().collect(collector);
@@ -51,8 +49,8 @@ public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
         ValueType type = ValueType.AUTO;
 
         if (value instanceof Map) {
-            Map<String, Object> node = (Map<String, Object>)value;
-            type = ValueType.valueOfIgnoreCase((String)node.get("type"));
+            Map<String, Object> node = (Map<String, Object>) value;
+            type = ValueType.valueOfIgnoreCase((String) node.get("type"));
             value = node.get("value");
         }
 

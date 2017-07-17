@@ -21,7 +21,7 @@ class RowsIndex implements InstructionVisitor {
 
     @Override
     public void visit(InsertRow row) {
-        val key = new RowKey(row.table, row.rowName);
+        val key = new RowKey(row.getTable(), row.getRowName());
         index.put(key, row);
     }
 

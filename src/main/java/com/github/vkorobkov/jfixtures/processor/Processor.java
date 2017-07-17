@@ -26,13 +26,13 @@ public class Processor {
     }
 
     public List<Instruction> process() {
-        context.fixtures.values().forEach(this::processFixture);
-        return context.instructions;
+        context.getFixtures().values().forEach(this::processFixture);
+        return context.getInstructions();
     }
 
     private void processFixture(Fixture fixture) {
-        context.circularPreventer.doInStack(fixture.name,  () -> {
-            if (context.completedFixtures.add(fixture.name)) {
+        context.getCircularPreventer().doInStack(fixture.name,  () -> {
+            if (context.getCompletedFixtures().add(fixture.name)) {
                 handleFixtureInstructions(fixture);
             }
         });
@@ -42,7 +42,7 @@ public class Processor {
         List<Instruction> fixtureInstructions = new ArrayList<>();
         fixtureInstructions.add(cleanupTable(fixture));
         fixtureInstructions.addAll(processRows(fixture));
-        context.instructions.addAll(fixtureInstructions);
+        context.getInstructions().addAll(fixtureInstructions);
     }
 
     private Instruction cleanupTable(Fixture fixture) {
@@ -51,21 +51,21 @@ public class Processor {
 
     private List<Instruction> processRows(Fixture fixture) {
         String tableName = fixture.name;
-        context.sequenceRegistry.put(tableName, new IncrementalSequence());
+        context.getSequenceRegistry().put(tableName, new IncrementalSequence());
         return fixture.getRows().stream().map(row -> processRow(tableName, row)).collect(Collectors.toList());
     }
 
     private Instruction processRow(String tableName, FixtureRow row) {
-        Instruction result =  new InsertRow(tableName, row.name, extractRowValues(tableName, row));
-        result.accept(context.rowsIndex);
+        Instruction result =  new InsertRow(tableName, row.getName(), extractRowValues(tableName, row));
+        result.accept(context.getRowsIndex());
         return result;
     }
 
     private Map<String, FixtureValue> extractRowValues(String tableName, FixtureRow row) {
-        Map<String, FixtureValue> result = new LinkedHashMap<>(row.columns.size() + 1);
-        result.put(PK_COLUMN_NAME, context.sequenceRegistry.nextValue(tableName, row.name));
-        row.columns.forEach((name, value) -> {
-            value = columnProcessor.column(tableName, row.name, name, value);
+        Map<String, FixtureValue> result = new LinkedHashMap<>(row.getColumns().size() + 1);
+        result.put(PK_COLUMN_NAME, context.getSequenceRegistry().nextValue(tableName, row.getName()));
+        row.getColumns().forEach((name, value) -> {
+            value = columnProcessor.column(tableName, row.getName(), name, value);
             result.put(name, value);
         });
         return result;

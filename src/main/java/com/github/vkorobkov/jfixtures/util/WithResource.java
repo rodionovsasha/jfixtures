@@ -12,7 +12,7 @@ public final class WithResource {
     public static <TResource extends AutoCloseable, TResult> TResult touch(
             ThrowingSupplier<TResource> resourceSupplier,
             Function<TResource, TResult> callback) {
-        try(TResource resource = resourceSupplier.get()) {
+        try (TResource resource = resourceSupplier.get()) {
             return callback.apply(resource);
         }
     }

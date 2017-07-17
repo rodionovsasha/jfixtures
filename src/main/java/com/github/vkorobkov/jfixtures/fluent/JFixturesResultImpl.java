@@ -32,7 +32,7 @@ public class JFixturesResultImpl implements JFixturesResult {
         WithResource.touch(() -> new FileAppender(name), this::applyAppender);
     }
 
-    private<T extends Appender> T applyAppender(T appender) {
+    private <T extends Appender> T applyAppender(T appender) {
         new SqlBridge(sql, appender).apply(getInstructions());
         return appender;
     }

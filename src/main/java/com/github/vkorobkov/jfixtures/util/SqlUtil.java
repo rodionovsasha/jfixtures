@@ -16,9 +16,8 @@ public final class SqlUtil {
 
     public static String surround(String string, String with) {
         with = Objects.requireNonNull(with, "Can not surround string with null values");
-        return
-            with +
-            Objects.requireNonNull(string, "The input string can not be null") +
-            with;
+        return with
+                + Objects.requireNonNull(string, "The input string can not be null")
+                + with;
     }
 }

@@ -60,7 +60,6 @@
         <module name="OperatorWrap"/>
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
-        <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround"/>
         <!-- Modifier Checks                                    -->
         <!-- See http://checkstyle.sf.net/config_modifiers.html -->
@@ -85,7 +84,6 @@
         <module name="SimplifyBooleanReturn"/>
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
-        <module name="DesignForExtension"/>
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
