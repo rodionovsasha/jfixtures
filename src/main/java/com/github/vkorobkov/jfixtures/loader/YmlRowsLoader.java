@@ -21,10 +21,10 @@ public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
     @Override
     public Collection<FixtureRow> get() {
         return loadYamlContent(file)
-            .entrySet()
-            .stream()
-            .map(this::fixtureRow)
-            .collect(Collectors.toList());
+                .entrySet()
+                .stream()
+                .map(this::fixtureRow)
+                .collect(Collectors.toList());
     }
 
     private FixtureRow fixtureRow(Map.Entry<String, ?> sourceRow) {
@@ -38,7 +38,7 @@ public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
             return Collections.emptyMap();
         }
         @SuppressWarnings("unchecked")
-        Map<String, Object> data = (Map<String, Object>)row;
+        Map<String, Object> data = (Map<String, Object>) row;
         val collector = Collectors.toMap(Map.Entry::getKey, this::columnValue, StreamUtil.throwingMerger(),
                 LinkedHashMap::new);
         return data.entrySet().stream().collect(collector);
@@ -49,8 +49,8 @@ public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
         ValueType type = ValueType.AUTO;
 
         if (value instanceof Map) {
-            Map<String, Object> node = (Map<String, Object>)value;
-            type = ValueType.valueOfIgnoreCase((String)node.get("type"));
+            Map<String, Object> node = (Map<String, Object>) value;
+            type = ValueType.valueOfIgnoreCase((String) node.get("type"));
             value = node.get("value");
         }
 

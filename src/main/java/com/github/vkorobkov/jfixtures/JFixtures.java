@@ -6,7 +6,10 @@ import com.github.vkorobkov.jfixtures.sql.dialects.H2;
 import com.github.vkorobkov.jfixtures.sql.dialects.MySql;
 import com.github.vkorobkov.jfixtures.sql.dialects.PgSql;
 
-public class JFixtures {
+public final class JFixtures {
+    private JFixtures() {
+    }
+
     public static JFixturesResult postgres(String fixturesFolder) {
         return new JFixturesResultImpl(fixturesFolder, new PgSql());
     }

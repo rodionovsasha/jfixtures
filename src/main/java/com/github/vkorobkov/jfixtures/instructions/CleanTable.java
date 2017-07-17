@@ -1,11 +1,12 @@
 package com.github.vkorobkov.jfixtures.instructions;
 
-public class CleanTable implements Instruction {
-    public final String table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-    public CleanTable(String table) {
-        this.table = table;
-    }
+@AllArgsConstructor
+public class CleanTable implements Instruction {
+    @Getter
+    private final String table;
 
     @Override
     public void accept(InstructionVisitor visitor) {

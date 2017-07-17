@@ -13,20 +13,20 @@ public interface SqlBase extends Sql {
     @SneakyThrows
     @Override
     default void cleanTable(Appender appender, CleanTable cleanTable) {
-        String table = escapeTableOrColumn(cleanTable.table);
+        String table = escapeTableOrColumn(cleanTable.getTable());
         appender.append("DELETE FROM ", table, ";\n");
     }
 
     @SneakyThrows
     @Override
     default void insertRow(Appender appender, InsertRow insertRow) {
-        String table = escapeTableOrColumn(insertRow.table);
+        String table = escapeTableOrColumn(insertRow.getTable());
 
-        String columns = insertRow.values.keySet().stream()
+        String columns = insertRow.getValues().keySet().stream()
             .map(this::escapeTableOrColumnPart)
             .collect(Collectors.joining(", "));
 
-        String values = insertRow.values.values().stream()
+        String values = insertRow.getValues().values().stream()
             .map(this::escapeValue)
             .collect(Collectors.joining(", "));
 

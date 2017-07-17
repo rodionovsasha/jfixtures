@@ -8,10 +8,13 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
 
-public class YmlUtil {
+public final class YmlUtil {
+    private YmlUtil() {
+    }
+
     @SuppressWarnings("unchecked")
     public static Map<String, Object> load(Path file) throws IOException {
         Object loaded = new Yaml().load(Files.newInputStream(file));
-        return loaded == null ? Collections.emptyMap() : (Map< String, Object >)loaded;
+        return loaded == null ? Collections.emptyMap() : (Map<String, Object>)loaded;
     }
 }
