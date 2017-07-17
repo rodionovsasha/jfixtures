@@ -2,6 +2,7 @@ package com.github.vkorobkov.jfixtures.config;
 
 import java.util.Optional;
 
+@FunctionalInterface
 public interface ConfigDigger {
     String KEY_SEPARATOR = ":";
 

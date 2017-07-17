@@ -7,17 +7,17 @@ public final class FixtureValue {
     public final Object value;
     public final ValueType type;
 
+    private FixtureValue(Object value, ValueType type) {
+        this.value = value;
+        this.type = type;
+    }
+
     public static FixtureValue ofAuto(Object value) {
         return new FixtureValue(value, ValueType.AUTO);
     }
 
     public static FixtureValue ofSql(String sql) {
         return new FixtureValue(sql, ValueType.SQL);
-    }
-
-    private FixtureValue(Object value, ValueType type) {
-        this.value = value;
-        this.type = type;
     }
 
     public boolean isString() {
