@@ -9,16 +9,12 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
     Path tmpFolderPath
     String outputPath
 
-    def PG_EXPECTED_SQL = """DELETE FROM "users";
+    def DEFAULT_EXPECTED_SQL = """DELETE FROM "users";
             |INSERT INTO "users" ("id", "name", "age") VALUES (1, 'Vlad', 29);
             |""".stripMargin()
 
     def MYSQL_EXPECTED_SQL = """DELETE FROM `users`;
             |INSERT INTO `users` (`id`, `name`, `age`) VALUES (1, 'Vlad', 29);
-            |""".stripMargin()
-
-    def H2_EXPECTED_SQL = """DELETE FROM "users";
-            |INSERT INTO "users" ("id", "name", "age") VALUES (1, 'Vlad', 29);
             |""".stripMargin()
 
     void setup() {
@@ -37,7 +33,7 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
 
     def "postgres fixture to string"() {
         expect:
-        JFixtures.postgres(tmpFolderPath as String).asString() == PG_EXPECTED_SQL
+        JFixtures.postgres(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
     }
 
     def "postgres fixture to file"() {
@@ -45,7 +41,7 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
         JFixtures.postgres(tmpFolderPath as String).toFile(outputPath)
 
         then:
-        new File(outputPath).text == PG_EXPECTED_SQL
+        new File(outputPath).text == DEFAULT_EXPECTED_SQL
     }
 
     def "mysql fixture to string"() {
@@ -63,7 +59,7 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
 
     def "h2 fixture to a string"() {
         expect:
-        JFixtures.h2(tmpFolderPath as String).asString() == H2_EXPECTED_SQL
+        JFixtures.h2(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
     }
 
     def "h2 fixture to a file"() {
@@ -71,6 +67,19 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
         JFixtures.h2(tmpFolderPath as String).toFile(outputPath)
 
         then:
-        new File(outputPath).text == H2_EXPECTED_SQL
+        new File(outputPath).text == DEFAULT_EXPECTED_SQL
+    }
+
+    def "ClickHouse fixture to a string"() {
+        expect:
+        JFixtures.clickHouse(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
+    }
+
+    def "ClickHouse fixture to a file"() {
+        when:
+        JFixtures.clickHouse(tmpFolderPath as String).toFile(outputPath)
+
+        then:
+        new File(outputPath).text == DEFAULT_EXPECTED_SQL
     }
 }
