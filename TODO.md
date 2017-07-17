@@ -31,5 +31,5 @@
 * Write into DB directly in Fluent API? :)
 * MS SQL - SET IDENTITY_INSERT ON/OFF
 * Add a file system watcher-rebuild in command line tool
-* Values that are the same/computed_by_an_expresseion
+* Values that are the same/computed_by_an_expression
 for every single row could be placed in the one place

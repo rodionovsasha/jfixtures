@@ -5,7 +5,7 @@
 
     <groupId>com.github.vkorobkov</groupId>
     <artifactId>jfixtures</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <packaging>jar</packaging>
 
     <name>JFixtures</name>
@@ -24,6 +24,11 @@
             <name>Vladimir Korobkov</name>
             <email>vladimir.korobkov@gmail.com</email>
             <organizationUrl>https://github.com/vkorobkov</organizationUrl>
+        </developer>
+        <developer>
+            <name>Aleksandr Rodionov</name>
+            <email>allrod@mail.ru</email>
+            <organizationUrl>https://github.com/rodionovsasha</organizationUrl>
         </developer>
     </developers>
 
@@ -48,6 +53,8 @@
         <spock-core.version>1.1-groovy-2.4-rc-3</spock-core.version>
         <equalsverifier.version>2.2.1</equalsverifier.version>
         <cglib-nodep.version>3.2.5</cglib-nodep.version>
+        <h2.version>1.4.196</h2.version>
+        <commons-dbcp2.version>2.1.1</commons-dbcp2.version>
 
         <!--Plugins-->
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
@@ -86,6 +93,18 @@
             <groupId>cglib</groupId>
             <artifactId>cglib-nodep</artifactId>
             <version>${cglib-nodep.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>${commons-dbcp2.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

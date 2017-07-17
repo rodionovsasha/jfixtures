@@ -40,7 +40,7 @@ class WithResourceTest extends Specification {
         1 * resource.close()
     }
 
-    def "boadcasts the exception when the resource is null and function fails"() {
+    def "broadcasts the exception when the resource is null and function fails"() {
         given:
         1 * function.apply(null) >> { resource->
             throw new RuntimeException("die")

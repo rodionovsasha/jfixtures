@@ -6,7 +6,7 @@ import spock.lang.Specification
 import java.nio.file.Path
 
 class JFixturesTest extends Specification implements YamlVirtualFolder {
-    Path tmlFolderPath
+    Path tmpFolderPath
     String outputPath
 
     def PG_EXPECTED_SQL = """DELETE FROM "users";
@@ -17,13 +17,17 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
             |INSERT INTO `users` (`id`, `name`, `age`) VALUES (1, 'Vlad', 29);
             |""".stripMargin()
 
+    def H2_EXPECTED_SQL = """DELETE FROM "users";
+            |INSERT INTO "users" ("id", "name", "age") VALUES (1, 'Vlad', 29);
+            |""".stripMargin()
+
     void setup() {
-        tmlFolderPath = unpackYamlToTempFolder("default.yml")
-        outputPath = tmlFolderPath.resolve("out.sql") as String
+        tmpFolderPath = unpackYamlToTempFolder("default.yml")
+        outputPath = tmpFolderPath.resolve("out.sql") as String
     }
 
     void cleanup() {
-        tmlFolderPath.toFile().deleteDir()
+        tmpFolderPath.toFile().deleteDir()
     }
 
     def "dummy constructor"() {
@@ -33,12 +37,12 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
 
     def "postgres fixture to string"() {
         expect:
-        JFixtures.postgres(tmlFolderPath as String).asString() == PG_EXPECTED_SQL
+        JFixtures.postgres(tmpFolderPath as String).asString() == PG_EXPECTED_SQL
     }
 
     def "postgres fixture to file"() {
         when:
-        JFixtures.postgres(tmlFolderPath as String).toFile(outputPath)
+        JFixtures.postgres(tmpFolderPath as String).toFile(outputPath)
 
         then:
         new File(outputPath).text == PG_EXPECTED_SQL
@@ -46,14 +50,27 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
 
     def "mysql fixture to string"() {
         expect:
-        JFixtures.mysql(tmlFolderPath as String).asString() == MYSQL_EXPECTED_SQL
+        JFixtures.mysql(tmpFolderPath as String).asString() == MYSQL_EXPECTED_SQL
     }
 
     def "mysql fixture to file"() {
         when:
-        JFixtures.mysql(tmlFolderPath as String).toFile(outputPath)
+        JFixtures.mysql(tmpFolderPath as String).toFile(outputPath)
 
         then:
         new File(outputPath).text == MYSQL_EXPECTED_SQL
+    }
+
+    def "h2 fixture to a string"() {
+        expect:
+        JFixtures.h2(tmpFolderPath as String).asString() == H2_EXPECTED_SQL
+    }
+
+    def "h2 fixture to a file"() {
+        when:
+        JFixtures.h2(tmpFolderPath as String).toFile(outputPath)
+
+        then:
+        new File(outputPath).text == H2_EXPECTED_SQL
     }
 }

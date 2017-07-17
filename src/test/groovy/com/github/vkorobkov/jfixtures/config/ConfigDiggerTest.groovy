@@ -12,7 +12,7 @@ class ConfigDiggerTest extends Specification {
     private static class TestConfigDigger implements ConfigDigger {
         @Override
         <T> Optional<T> digValue(String name) {
-            Optional.of(name)
+            Optional.of(name) as Optional<T>
         }
     }
 }

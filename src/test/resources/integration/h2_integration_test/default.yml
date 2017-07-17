@@ -1,0 +1,10 @@
+"users.yml":
+  vlad:
+    id: 1
+    name: Vlad
+    age: 29
+
+  semen:
+    id: 2
+    name: Semen's special name:'#"*[@;
+    age: 32
