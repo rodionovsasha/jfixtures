@@ -1,0 +1,11 @@
+".conf.yml":
+  autoGeneratePk:
+    users: false
+    friends: off
+    comments: true
+    teams: on
+  refs:
+    users:
+      avatar_id: images
+    "content.comment":
+      ticket_id: tickets

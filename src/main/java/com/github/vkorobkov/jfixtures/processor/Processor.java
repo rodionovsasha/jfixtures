@@ -63,7 +63,9 @@ public class Processor {
 
     private Map<String, FixtureValue> extractRowValues(String tableName, FixtureRow row) {
         Map<String, FixtureValue> result = new LinkedHashMap<>(row.getColumns().size() + 1);
-        result.put(PK_COLUMN_NAME, context.getSequenceRegistry().nextValue(tableName, row.getName()));
+        if (context.getConfig().shouldAutoGeneratePk(tableName)) {
+            result.put(PK_COLUMN_NAME, context.getSequenceRegistry().nextValue(tableName, row.getName()));
+        }
         row.getColumns().forEach((name, value) -> {
             value = columnProcessor.column(tableName, row.getName(), name, value);
             result.put(name, value);
