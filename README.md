@@ -257,7 +257,7 @@ vlad:
     role: dev
     age: 29
 ```
-turnes into
+turns into
 ```postgresql
 DELETE FROM "users";
 INSERT INTO "users" ("id", "name", "role", "age") VALUES (10000, SELECT name FROM names ORDER BY name LIMIT 1, 'dev', 29);
@@ -271,3 +271,75 @@ It is a quite simple:
 2. Update `JFixtures.java` with a new static method `h2` which creates new instance of JFixturesResult based on H2 class.
 3. Add unit tests for `H2.java` and `JFixtures.java` classes. Ensure code coverage remains 100%(see `target/site/jacoco/index.html`).
 That's all!
+
+## Configuration
+Sometimes a better control over the fixtures/test data generation is required. Configuration could be located in
+`.conf.yml` file which should be placed in the same directory with the fixture yaml files. The config file is optional -
+nothing fails if you don't have it at all.
+What exactly can be done within the config file will be explain in other sections below.
+
+## Inheriting tables
+It happens that designing the database we can set some conventions - for example, in many cases we want to add
+a versioning support for a few/all tables. In the very basic case it means that every row in such table(s)
+has a field called `version` and has some numeric type. By default it might equal to `1`, for instance, and on every
+row modification it gets incremented:
+```yaml
+vlad:
+  name: Vlad
+  role: dev
+  version: 1
+alex:
+  name: Alexander
+  role: ui
+  version: 1
+dimon:
+  name: Diman
+  role: qa
+  version: 1
+```
+`version: 1` was duplicated 3 times - for every single row. It might me convenient when you have 3 rows, but when
+you have, for example, 300 rows, it makes sense to avoid such duplicates for every single row. There are two ways of
+doing so: 
+1. Set the default value for `version` column on the DB level 
+2. Use inheritance on JFixtures side, e.g. to add some shared behaviour for every row of a table or tables.
+
+The first variant is preferable, of course - it is simple and natural for relational databases, does not need any
+extra knowledge or skills to implement it. However, due to some reasons, your DB design might not have the default
+values for cases like that: for example, if the architect or DBA prefer to set these values explicitely from your app,
+or if it is a legacy problem and the DB refactoring is risky/going to take much/etc.
+
+So for the second case JFixtures allows you to inherit tables. If we create a `.conf.yml` and put in it following
+lines:
+```yaml
+base_columns:
+  concerns:
+    has_version:
+      version: 1
+
+  apply:
+    every_table_has_version:
+      to: /.+
+      concerns: has_version
+```
+then we can simplify our fixtures and remove `version: 1` from every single row:
+```yaml
+vlad:
+  name: Vlad
+  role: dev
+alex:
+  name: Alexander
+  role: ui
+dimon:
+  name: Diman
+  role: qa
+```
+So how does it work?
+`base_columns` section in `.conf.yml` is responsible for tables inheritance. It consists of two main subsections:
+`concerns` and `apply`. 
+
+`concerns` just describes behaviours which could be added to tables, like `has_version` behaviour in our case. 
+It has exactly the same format as rows in the fixtures. `has_version` concern sets column named `version` to `1` 
+for every row. 
+
+`apply` section defines which concerns should be applied to which tables: `to: /.+` means "apply to every table", 
+`concerns: has_version` specified which concern or concerns to apply.
