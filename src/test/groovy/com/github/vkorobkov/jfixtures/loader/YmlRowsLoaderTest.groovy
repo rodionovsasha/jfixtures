@@ -101,7 +101,7 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         dima.columns.isEmpty()
     }
 
-    def "loads explicitely defined SQL type and explicitely auto type"() {
+    def "loads explicitly defined SQL type and explicitly auto type"() {
         given:
         def path = testResourcePath("custom_row_types.yml")
 
