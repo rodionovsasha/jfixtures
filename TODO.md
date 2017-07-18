@@ -14,14 +14,10 @@
 * Every-table property for step value of PK
 * Per-table property for step value of PK
 
-### Skip formatting for SQL types
-* Per table level
-* Every table level
-
 ### Foreign keys
-* Column names based on expression
-* Custom SQL scripts before/after table/each table/global
+* Custom SQL scripts before/after table/each table/global / row
 * Foreign keys(definitions) can not intersect with primary ones - should fail
+* Foreign key to any column(not only PK) of referred table
 
 ### Other
 * Custom table names
@@ -29,7 +25,13 @@
 * Common prefix for every table
 * Column names aliases
 * Write into DB directly in Fluent API? :)
-* MS SQL - SET IDENTITY_INSERT ON/OFF
 * Add a file system watcher-rebuild in command line tool
-* Values that are the same/computed_by_an_expression
-for every single row could be placed in the one place
+* "Computed" values
+* "Computed" column names
+* Remove ugly `type:sql` in favor of a sql-specific prefix like `$sql$` 
+or `$` or `$$`
+
+### Refactoring
+* Refactor config package - incapsulate config into strong-types classes hierarchy
+* Replace ` == null` checks with `Optional<T>` where it makes sense
+* Unite YmlRowsLoader with FixturesLoader

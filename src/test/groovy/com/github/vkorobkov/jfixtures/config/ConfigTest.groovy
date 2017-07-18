@@ -11,7 +11,7 @@ class ConfigTest extends Specification implements YamlVirtualFolder {
 
     void setup() {
         tmlFolderPath = unpackYamlToTempFolder("default.yml")
-        config = new Config(tmlFolderPath.toString())
+        loadConfig()
     }
 
     void cleanup() {
@@ -39,5 +39,9 @@ class ConfigTest extends Specification implements YamlVirtualFolder {
 
         then:
         !config.referredTable("users", "avatar_id").present
+    }
+
+    private def loadConfig(path = "default") {
+        config = new Config(tmlFolderPath.toString() + "/" + path)
     }
 }
