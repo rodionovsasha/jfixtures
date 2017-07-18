@@ -7,7 +7,7 @@ import java.nio.file.Path
 
 class H2IntegrationTest extends Specification implements H2Test {
     Path tmpFolderPath = unpackYamlToTempFolder("default.yml")
-    Path tmpFolderPathPkDisabled = unpackYamlToTempFolder("pk.yml")
+    Path tmpFolderPathPk = unpackYamlToTempFolder("pk.yml")
 
     void setupSpec() {
         recreateTable("users", "ID INT, NAME VARCHAR(50) DEFAULT NULL, AGE INT DEFAULT NULL")
@@ -18,7 +18,7 @@ class H2IntegrationTest extends Specification implements H2Test {
 
     void cleanup() {
         tmpFolderPath.toFile().deleteDir()
-        tmpFolderPathPkDisabled.toFile().deleteDir()
+        tmpFolderPathPk.toFile().deleteDir()
     }
 
     def "h2 insert test"() {
@@ -32,7 +32,7 @@ class H2IntegrationTest extends Specification implements H2Test {
 
     def "h2 insert without pk test"() {
         when:
-        executeFixtures(tmpFolderPathPkDisabled)
+        executeFixtures(tmpFolderPathPk)
 
         then:
         def result = sql.rows("SELECT * FROM friends")
@@ -41,7 +41,7 @@ class H2IntegrationTest extends Specification implements H2Test {
 
     def "h2 insert with test with auto generated pk"() {
         when:
-        executeFixtures(tmpFolderPathPkDisabled)
+        executeFixtures(tmpFolderPathPk)
 
         then:
         def result = sql.rows("SELECT * FROM mates")
@@ -50,7 +50,7 @@ class H2IntegrationTest extends Specification implements H2Test {
 
     def "h2 insert with test with auto generated pk when autoGeneratePk flag does not exist"() {
         when:
-        executeFixtures(tmpFolderPathPkDisabled)
+        executeFixtures(tmpFolderPathPk)
 
         then:
         def result = sql.rows("SELECT * FROM pals")
