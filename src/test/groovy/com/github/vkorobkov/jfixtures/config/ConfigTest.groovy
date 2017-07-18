@@ -6,16 +6,21 @@ import spock.lang.Specification
 import java.nio.file.Path
 
 class ConfigTest extends Specification implements YamlVirtualFolder {
-    Path tmlFolderPath
+    Path tmpFolderPath
+    Path tmpFolderPathWithPk
     Config config
+    Config configWithPk
 
     void setup() {
-        tmlFolderPath = unpackYamlToTempFolder("default.yml")
-        config = new Config(tmlFolderPath.toString())
+        tmpFolderPath = unpackYamlToTempFolder("default.yml")
+        tmpFolderPathWithPk = unpackYamlToTempFolder("auto_generate_pk.yml")
+        config = new Config(tmpFolderPath.toString())
+        configWithPk = new Config(tmpFolderPathWithPk.toString())
     }
 
     void cleanup() {
-        tmlFolderPath.toFile().deleteDir()
+        tmpFolderPath.toFile().deleteDir()
+        tmpFolderPathWithPk.toFile().deleteDir()
     }
 
     def "reads referred table"() {
@@ -39,5 +44,22 @@ class ConfigTest extends Specification implements YamlVirtualFolder {
 
         then:
         !config.referredTable("users", "avatar_id").present
+    }
+
+    def "should auto generate PK when autoGeneratePk flag does not exist"() {
+        expect:
+        config.shouldAutoGeneratePk("users")
+    }
+
+    def "should auto generate PK when autoGeneratePk flag has true value"() {
+        expect:
+        configWithPk.shouldAutoGeneratePk("comments")
+        configWithPk.shouldAutoGeneratePk("teams")
+    }
+
+    def "should not auto generate PK when autoGeneratePk flag has false value"() {
+        expect:
+        !configWithPk.shouldAutoGeneratePk("users")
+        !configWithPk.shouldAutoGeneratePk("friends")
     }
 }

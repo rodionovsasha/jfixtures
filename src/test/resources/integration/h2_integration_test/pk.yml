@@ -1,0 +1,19 @@
+".conf.yml":
+  autoGeneratePk:
+    friends: false
+    mates: true
+
+"friends.yml":
+  vlad:
+    name: Vlad
+    age: 29
+
+"mates.yml":
+  vlad:
+    name: Vlad
+    age: 29
+
+"pals.yml":
+  vlad:
+    name: Vlad
+    age: 29

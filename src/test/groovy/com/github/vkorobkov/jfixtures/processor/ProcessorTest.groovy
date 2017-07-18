@@ -188,6 +188,27 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         exception.message.contains("Circular dependency between tables found")
     }
 
+    def "row creation instructions test with PK disabled"() {
+        when:
+        def instructions = load("basic_fixtures_with_pk_disabled.yml")
+
+        then:
+        instructions.size() == 2
+
+        and:
+        (instructions[0] as CleanTable).table == "users"
+
+        and:
+        def vlad = instructions[1] as InsertRow
+        vlad.table == "users"
+        vlad.rowName == "vlad"
+        assertInsertInstructions(vlad.values, [
+                first_name: "Vladimir",
+                age: 29,
+                sex: "man"
+        ])
+    }
+
     boolean assertInsertInstructions(Map instructions, Map expected) {
         expected = expected.collectEntries { [it.key, FixtureValue.ofAuto(it.value)] }
         new LinkedHashMap(instructions) == expected

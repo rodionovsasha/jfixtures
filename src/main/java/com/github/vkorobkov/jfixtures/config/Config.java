@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public class Config {
     private static final String CONF_YML = ".conf.yml";
+    private static final String AUTO_GENERATE_PK = "autoGeneratePk";
     private final ConfigDigger fixturesConf;
 
     public Config(String fixturesRoot) {
@@ -15,6 +16,11 @@ public class Config {
 
     public Optional<String> referredTable(String table, String column) {
         return fixturesConf.digValue("refs", table, column);
+    }
+
+    public boolean shouldAutoGeneratePk(String tableName) {
+        Optional<Boolean> autoGeneratePkFlag = fixturesConf.digValue(AUTO_GENERATE_PK, tableName);
+        return !autoGeneratePkFlag.isPresent() || autoGeneratePkFlag.get();
     }
 
     private ConfigDigger loadFixturesConf(Path ymlConfPath) {
