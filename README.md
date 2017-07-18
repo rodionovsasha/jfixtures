@@ -267,3 +267,19 @@ It is a quite simple:
 2. Update `JFixtures.java` with a new static method `h2` which creates new instance of JFixturesResult based on H2 class.
 3. Add unit tests for `H2.java` and `JFixtures.java` classes. Ensure code coverage remains 100%(see `target/site/jacoco/index.html`).
 That's all!
+
+## Enable/disable primary key generation (ID column)
+We can describe rules for primary key generation in a special file `.conf.yml`:
+```yaml
+".conf.yml":
+  autoGeneratePk:
+    friends: false
+
+"friends.yml":
+  vlad:
+    name: Vlad
+    age: 29
+```
+where `friends` is a table name.
+Accepted values: `true, false, on, off`.
+If `autoGeneratePk` flag is not set the system will generate `ID` column by default.
