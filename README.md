@@ -10,7 +10,11 @@ the data into a plain SQL. At some degree it is a port of
 [Ruby On Rails fixtures](http://api.rubyonrails.org/v3.2/classes/ActiveRecord/Fixtures.html) but for java world
 (or any other JVM language such as groovy, scala, e.t.c.)
 
-Postgres and MySql are supported at the moment.
+Databases which JFixtures supports:
+* Postgres
+* MySql
+* H2
+* Yandex ClickHouse
 
 ## What's wrong with SQL ?
 
@@ -44,7 +48,7 @@ last. That means poor developer has to remember the whole tables hierarchy.
 
 * Human readable test data description with a set of yaml files
 * SQL script as a result
-* Supports Postgres SQL and MySql at the moment
+* Supports Postgres SQL, MySql, H2, Yandex ClickHouse at the moment
 * Human readable, defined by user, string keys for each row instead of numeric IDs
 * Numeric PK's are auto generated, however, user can specify them manually
 * Foreign key values get calculated automatically(see example below)
