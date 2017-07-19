@@ -19,8 +19,7 @@ public class Config {
     }
 
     public boolean shouldAutoGeneratePk(String tableName) {
-        Optional<Boolean> autoGeneratePkFlag = fixturesConf.digValue(AUTO_GENERATE_PK, tableName);
-        return !autoGeneratePkFlag.isPresent() || autoGeneratePkFlag.get();
+        return (boolean)fixturesConf.digValue(AUTO_GENERATE_PK, tableName).orElse(true);
     }
 
     private ConfigDigger loadFixturesConf(Path ymlConfPath) {
