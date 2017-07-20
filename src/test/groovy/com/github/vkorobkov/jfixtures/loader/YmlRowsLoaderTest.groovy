@@ -12,7 +12,7 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         def path = testResourcePath("simple_rows.yml")
 
         when:
-        def fixtures = new YmlRowsLoader(path).get()
+        def fixtures = loadRows(path)
 
         then:
         fixtures.size() == 2
@@ -37,7 +37,7 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         def path = testResourcePath("simple_rows.yml")
 
         when:
-        def fixtures = new YmlRowsLoader(path).get()
+        def fixtures = loadRows(path)
 
         then:
         def columnsKeys = fixtures[0].columns.keySet().asList()
@@ -49,7 +49,7 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         def path = testResourcePath("duplicate_columns.yml")
 
         when:
-        def fixtures = new YmlRowsLoader(path).get()
+        def fixtures = loadRows(path)
 
         then:
         fixtures[0].columns.age == FixtureValue.ofAuto(35)
@@ -60,7 +60,7 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         def path = notExistingPath(".yml")
 
         when:
-        new YmlRowsLoader(path).get()
+        loadRows(path)
 
         then:
         def exception = thrown(LoaderException)
@@ -72,7 +72,7 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         def path = testResourcePath("empty_fixture.yml")
 
         when:
-        def fixtures = new YmlRowsLoader(path).get()
+        def fixtures = loadRows(path)
 
         then:
         fixtures.empty
@@ -83,7 +83,7 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         def path = testResourcePath("with_empty_row.yml")
 
         when:
-        def fixtures = new YmlRowsLoader(path).get()
+        def fixtures = loadRows(path)
 
         then:
         fixtures.size() == 2
@@ -101,17 +101,52 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         dima.columns.isEmpty()
     }
 
-    def "loads explicitly defined SQL type and explicitly auto type"() {
+    def "loads explicitly defined SQL type and explicitely auto type"() {
         given:
         def path = testResourcePath("custom_row_types.yml")
 
         when:
-        def fixtures = new YmlRowsLoader(path).get()
+        def fixtures = loadRows(path)
 
         then:
         def vlad = fixtures.first()
         vlad.name == "vlad"
         vlad.columns.first_name == FixtureValue.ofAuto("Vladimir")
         vlad.columns.age == FixtureValue.ofSql("DEFAULT")
+    }
+
+    def "merges base table into fixture"() {
+        given:
+        def path = testResourcePath("simple_rows.yml")
+        def base = [
+            "music": "rock!",
+            "sex": [type: "sql"]
+        ]
+
+        when:
+        def fixtures = loadRows(path, base)
+
+        then:
+        fixtures.size() == 2
+
+        and:
+        def vlad = fixtures[0]
+        vlad.name == "vlad"
+        vlad.columns.first_name == FixtureValue.ofAuto("Vladimir")
+        vlad.columns.age == FixtureValue.ofAuto(29)
+        vlad.columns.sex == FixtureValue.ofSql("man")
+        vlad.columns.music == FixtureValue.ofAuto("rock!")
+
+        and:
+        def dima = fixtures[1]
+        dima.name == "diman"
+        dima.columns.first_name == FixtureValue.ofAuto("Dmitry")
+        dima.columns.age == FixtureValue.ofAuto(28)
+        dima.columns.sex == FixtureValue.ofSql("man")
+        dima.columns.music == FixtureValue.ofAuto("rock!")
+    }
+
+    private def loadRows(path, base = [:]) {
+        new YmlRowsLoader(path, base).get()
     }
 }

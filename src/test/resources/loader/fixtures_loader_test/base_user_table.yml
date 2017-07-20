@@ -1,0 +1,18 @@
+".conf.yml":
+  base_columns:
+    concerns:
+      has_sex:
+        sex: man
+
+    apply:
+      users_have_sex:
+        to: users
+        concerns: has_sex
+
+"users.yml":
+    vlad:
+      first_name: Vladimir
+      age: 29
+    diman:
+      first_name: Dmitry
+      age: 28

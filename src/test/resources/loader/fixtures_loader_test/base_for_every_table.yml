@@ -1,0 +1,19 @@
+".conf.yml":
+  base_columns:
+    concerns:
+      has_version:
+        version: 1
+
+    apply:
+      every_table_has_version:
+        to: /.+
+        concerns: has_version
+
+"users.yml":
+  vlad:
+    first_name: Vladimir
+    age: 29
+
+"roles.yml":
+  vlad:
+    role: admin

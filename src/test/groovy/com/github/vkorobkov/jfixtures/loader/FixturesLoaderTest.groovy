@@ -1,5 +1,6 @@
 package com.github.vkorobkov.jfixtures.loader
 
+import com.github.vkorobkov.jfixtures.config.Config
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 
@@ -38,8 +39,11 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
     }
 
     def "fails with IOException if folder with fixtures does not exist"() {
+        given:
+        def path = notExistingPath() as String
+
         when:
-        new FixturesLoader(notExistingPath().toString()).load()
+        new FixturesLoader(path, new Config(path)).load()
 
         then:
         def exception = thrown(LoaderException)
@@ -77,8 +81,48 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         dima.columns.sex == FixtureValue.ofAuto("man")
     }
 
+    def "'users' table copies fields from the base table"() {
+        when:
+        def fixtures = load("base_user_table.yml")
+
+        then:
+        def users = fixtures.get("users").rows
+
+        and:
+        def vlad = users[0]
+        vlad.name == "vlad"
+        vlad.columns.first_name == FixtureValue.ofAuto("Vladimir")
+        vlad.columns.age == FixtureValue.ofAuto(29)
+        vlad.columns.sex == FixtureValue.ofAuto("man")
+
+        and:
+        def dima = users[1]
+        dima.name == "diman"
+        dima.columns.first_name == FixtureValue.ofAuto("Dmitry")
+        dima.columns.age == FixtureValue.ofAuto(28)
+        dima.columns.sex == FixtureValue.ofAuto("man")
+    }
+
+    def "every table copies super base table fields"() {
+        when:
+        def fixtures = load("base_for_every_table.yml")
+
+        then:
+        def user = fixtures.get("users").rows.first()
+        user.name == "vlad"
+        user.columns.first_name == FixtureValue.ofAuto("Vladimir")
+        user.columns.age == FixtureValue.ofAuto(29)
+        user.columns.version == FixtureValue.ofAuto(1)
+
+        and:
+        def role = fixtures.get("roles").rows.first()
+        role.name == "vlad"
+        role.columns.role == FixtureValue.ofAuto("admin")
+        role.columns.version == FixtureValue.ofAuto(1)
+    }
+
     Map<String, Fixture> load(String ymlFile) {
-        def path = unpackYamlToTempFolder(ymlFile)
-        new FixturesLoader(path.toString()).load()
+        def path = unpackYamlToTempFolder(ymlFile) as String
+        new FixturesLoader(path, new Config(path)).load()
     }
 }
