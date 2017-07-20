@@ -68,7 +68,7 @@ public class YamlConfig {
             collect(Collectors.toList());
 
         if (splittedSections.isEmpty()) {
-            throw new IllegalArgumentException("Name can not be an empty");
+            throw new IllegalArgumentException("Name can not be empty");
         }
 
         return dig(yaml, splittedSections, 0);

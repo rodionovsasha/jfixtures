@@ -31,10 +31,7 @@
 * Remove ugly `type:sql` in favor of a sql-specific prefix like `$sql$` 
 or `$` or `$$`
 
-### Testing
-* High level integration tests with some embedded DB like H2
-
 ### Refactoring
+* Refactor config package - incapsulate config into strong-types classes hierarchy
 * Replace ` == null` checks with `Optional<T>` where it makes sense
 * Unite YmlRowsLoader with FixturesLoader
-* A better abstraction over Yaml "Object" results as a replacement of `ConfigDigger`

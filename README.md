@@ -313,7 +313,7 @@ dimon:
   role: qa
   version: 1
 ```
-`version: 1` was duplicated 3 times - for every single row. It might me convenient when you have 3 rows, but when
+`version: 1` was duplicated 3 times - for every single row. It might be convenient when you have 3 rows, but when
 you have, for example, 300 rows, it makes sense to avoid such duplicates for every single row. There are two ways of
 doing so: 
 1. Set the default value for `version` column on the DB level 
@@ -322,7 +322,8 @@ doing so:
 The first variant is preferable, of course - it is simple and natural for relational databases, does not need any
 extra knowledge or skills to implement it. However, due to some reasons, your DB design might not have the default
 values for cases like that: for example, if the architect or DBA prefer to set these values explicitely from your app,
-or if it is a legacy problem and the DB refactoring is risky/going to take much/etc.
+or if it is a legacy problem and the DB refactoring is risky/going to take much/etc or when you need to put values
+which are different from table's default values in SQL.
 
 So for the second case JFixtures allows you to inherit tables. If we create a `.conf.yml` and put in it following
 lines:
@@ -350,6 +351,7 @@ dimon:
   role: qa
 ```
 So how does it work?
+
 `base_columns` section in `.conf.yml` is responsible for tables inheritance. It consists of two main subsections:
 `concerns` and `apply`. 
 
@@ -359,3 +361,81 @@ for every row.
 
 `apply` section defines which concerns should be applied to which tables: `to: /.+` means "apply to every table", 
 `concerns: has_version` specified which concern or concerns to apply.
+
+It is possible to apply many concerns to many tables at the same time: sections `apply:to` and `apply:concerns` can
+receive many items(tables and concerns):
+
+* A single value: `to: users`, `concerns: has_version`
+Applies to a single table/concern
+* Comma separated string: `to: table_1, table_2, table_3`, `concerns: has_version, has_cr_date`
+Applies to every comma-separated table/concern.
+* An array: `to: [table_1, table_2, table_3]`, `concerns: [has_version, has_cr_date]`.
+Array could also contain another arrays. The depth in not limited.
+Every array(or sub array) item could be either a string(for one table/concern) or a comma separated string(
+for many tables/concerns). This pattern opens a very powerful ability of YAML: you can define and include lists into 
+one another if you need to group and reuse items:
+```yaml
+base_columns:
+  concerns:
+    has_version:
+      version: 1
+      
+  # Define a list to reuse it later
+  _user_related_tables: &user_related_tables
+    - users
+    - profiles
+    - avatars
+    - raitings
+
+  apply:
+    every_table_has_version:
+      # applies to every table from user_related_tables list and to comments and tickets
+      to: [*user_related_tables, comments, tickets]
+      concerns: has_version
+    # every_table_has_cr_date ...
+    # etc 
+```
+
+The items of `apply:to` could be a either a string or a regular expression. 
+Use `/` prefix to start a regexp: `to: /.+` means `.+` will be tested against every table, and when table name matches, 
+all the concerns from `concerns` section will be applied.
+
+The order of items in `apply:to` does not matter; any duplicates are ignored;
+The order of items in `apply:concerns` matters: concerns will be applied in the same order as they were defined,
+from left to right. Duplicates are not getting removed. Whem many concerns, they are getting merged, it means, 
+that the further concerns complement(add rows) or override(replace rows) the previous ones.
+
+Note, that columns in fixtures have a priority over the columns from `base_columns:concerns`. It means that when
+fixture defines the same columns as defined in `base_columns:concerns` for that table, the column value from
+fixture will override the value from `base_columns:concerns`.
+
+The `apply` may have a number of named subsections like `every_table_has_version`, `user_table_has_cr_date`, etc.
+These named sections are getting scanned and applied in top down order:
+```yaml
+base_columns:
+  concerns:
+    has_version:
+      version: 1
+      
+    has_cr_date:
+      cr_date: NOW()
+      
+    has_next_version:
+      version: 2
+
+  apply:
+    # Adds [version: 1] to every row of users table
+    users_has_version:
+      to: users
+      concerns: has_version
+    # Adds [cr_date: NOW()] to every row of users table, keeping previous [version: 1]
+    users_has_cr_date:
+      to: users
+      concerns: has_cr_date
+    # Replaces [version: 1] with [version: 2]   
+    users_has_version_2:
+      to: users
+      concerns: has_next_version
+```
+This example results into two columns, which will be added into every row of `users` table: 
+`cr_date: NOW()` and `version: 2`
