@@ -13,8 +13,8 @@ class ConfigTest extends Specification implements YamlVirtualFolder {
 
     void setup() {
         tmpFolderPath = unpackYamlToTempFolder("default.yml")
+        loadConfig()
         tmpFolderPathWithPk = unpackYamlToTempFolder("auto_generate_pk.yml")
-        config = new Config(tmpFolderPath.toString())
         configWithPk = new Config(tmpFolderPathWithPk.toString())
     }
 
@@ -61,5 +61,9 @@ class ConfigTest extends Specification implements YamlVirtualFolder {
         expect:
         !configWithPk.shouldAutoGeneratePk("users")
         !configWithPk.shouldAutoGeneratePk("friends")
+    }
+
+    private def loadConfig(path = "default") {
+        config = new Config(tmpFolderPath.toString() + "/" + path)
     }
 }

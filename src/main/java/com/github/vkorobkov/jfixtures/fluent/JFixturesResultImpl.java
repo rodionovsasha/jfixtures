@@ -39,8 +39,8 @@ public class JFixturesResultImpl implements JFixturesResult {
 
     private List<Instruction> getInstructions() {
         if (instructions == null) {
-            val fixtures = new FixturesLoader(fixturesFolder).load();
             val config = new Config(fixturesFolder);
+            val fixtures = new FixturesLoader(fixturesFolder, config).load();
             instructions = new Processor(fixtures, config).process();
         }
         return instructions;
