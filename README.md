@@ -278,7 +278,7 @@ Sometimes a better control over the fixtures/test data generation is required. C
 nothing fails if you don't have it at all.
 What exactly can be done within the config file will be explain in other sections below.
 
-### Inheriting tables
+## Inheriting tables
 It happens that designing the database we can set some conventions - for example, in many cases we want to add
 a versioning support for a few/all tables. In the very basic case it means that every row in such table(s)
 has a field called `version` and has some numeric type. By default it might equal to `1`, for instance, and on every
