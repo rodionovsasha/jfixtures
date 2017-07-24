@@ -3,12 +3,12 @@
     all_tables_do_not_have_generated_pk:
       applies_to: "friends"
       pk:
-        generate: false
+        generate: off
 
     users_related_table_has_pk:
       applies_to: "mates"
       pk:
-        generate: true
+        generate: on
 
 "friends.yml":
   vlad:
