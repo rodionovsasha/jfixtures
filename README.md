@@ -272,29 +272,13 @@ It is a quite simple:
 3. Add unit tests for `H2.java` and `JFixtures.java` classes. Ensure code coverage remains 100%(see `target/site/jacoco/index.html`).
 That's all!
 
-## Enable/disable primary key generation (ID column)
-We can describe rules for primary key generation in a special file `.conf.yml`:
-```yaml
-".conf.yml":
-  autoGeneratePk:
-    friends: false
-
-"friends.yml":
-  vlad:
-    name: Vlad
-    age: 29
-```
-where `friends` is a table name.
-Accepted values: `true, false, on, off`.
-If `autoGeneratePk` flag is not set the system will generate `ID` column by default.
-
 ## Configuration
 Sometimes a better control over the fixtures/test data generation is required. Configuration could be located in
 `.conf.yml` file which should be placed in the same directory with the fixture yaml files. The config file is optional -
 nothing fails if you don't have it at all.
 What exactly can be done within the config file will be explain in other sections below.
 
-## Inheriting tables
+### Inheriting tables
 It happens that designing the database we can set some conventions - for example, in many cases we want to add
 a versioning support for a few/all tables. In the very basic case it means that every row in such table(s)
 has a field called `version` and has some numeric type. By default it might equal to `1`, for instance, and on every
@@ -439,3 +423,22 @@ base_columns:
 ```
 This example results into two columns, which will be added into every row of `users` table: 
 `cr_date: NOW()` and `version: 2`
+
+### Enable/disable primary key generation (ID column)
+We can describe rules for primary key generation in a special file `.conf.yml`:
+```yaml
+".conf.yml":
+  tables:
+    all_tables_do_not_have_generated_pk:
+      applies_to: "friends"
+      pk:
+        generate: false
+
+"friends.yml":
+  vlad:
+    name: Vlad
+    age: 29
+```
+where `friends` is a table name. The items of `applies_to:` could be a either a string or a regular expression. 
+Accepted values for `generate` section: `true, false, on, off`.
+If configuration for tables is not set the system will generate `ID` column by default.
