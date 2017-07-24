@@ -424,7 +424,7 @@ base_columns:
 This example results into two columns, which will be added into every row of `users` table: 
 `cr_date: NOW()` and `version: 2`
 
-### Enable/disable primary key generation (ID column)
+## Enable/disable primary key generation (ID column)
 We can describe rules for primary key generation in a special file `.conf.yml`:
 ```yaml
 ".conf.yml":
