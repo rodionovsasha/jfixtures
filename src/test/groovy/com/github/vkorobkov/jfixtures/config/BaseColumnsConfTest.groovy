@@ -3,7 +3,6 @@ package com.github.vkorobkov.jfixtures.config
 import spock.lang.Specification
 
 class BaseColumnsConfTest extends Specification {
-
     def SAMPLE_CONCERNS =  [
         has_version: [version: 1],
         has_date: [date: "12.02.1988"],
@@ -119,6 +118,6 @@ class BaseColumnsConfTest extends Specification {
 
     private static def baseColumns(Map config, String table) {
         config = [base_columns: config]
-        new BaseColumnsConf(new YamlConfig(config)).baseColumns(table)
+        new BaseColumnsConf(new YamlConfig(config)).getBaseColumns(table)
     }
 }

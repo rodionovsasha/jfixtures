@@ -1,6 +1,7 @@
 package com.github.vkorobkov.jfixtures.processor;
 
 import com.github.vkorobkov.jfixtures.config.Config;
+import com.github.vkorobkov.jfixtures.config.TablesConfig;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
@@ -63,7 +64,7 @@ public class Processor {
 
     private Map<String, FixtureValue> extractRowValues(String tableName, FixtureRow row) {
         Map<String, FixtureValue> result = new LinkedHashMap<>(row.getColumns().size() + 1);
-        if (context.getConfig().shouldAutoGeneratePk(tableName)) {
+        if (getTablesConfig().shouldAutoGeneratePk(tableName)) {
             result.put(PK_COLUMN_NAME, context.getSequenceRegistry().nextValue(tableName, row.getName()));
         }
         row.getColumns().forEach((name, value) -> {
@@ -71,5 +72,9 @@ public class Processor {
             result.put(name, value);
         });
         return result;
+    }
+
+    private TablesConfig getTablesConfig() {
+        return new TablesConfig(context.getConfig().getYamlConfig());
     }
 }

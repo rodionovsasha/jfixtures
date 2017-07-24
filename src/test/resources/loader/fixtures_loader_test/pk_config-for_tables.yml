@@ -1,12 +1,12 @@
 ".conf.yml":
   tables:
-    all_tables_do_not_have_generated_pk:
-      applies_to: "friends"
+     all_tables_do_not_have_generated_pk:
+      applies_to: /.+
       pk:
         generate: false
 
     users_related_table_has_pk:
-      applies_to: "mates"
+      applies_to: users
       pk:
         generate: true
 
@@ -20,7 +20,7 @@
     name: Vlad
     age: 29
 
-"pals.yml":
+"users.yml":
   vlad:
     name: Vlad
     age: 29

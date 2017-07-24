@@ -17,7 +17,7 @@ public class FixturesLoader {
 
     public FixturesLoader(String path, Config config) {
         this.path = path;
-        this.baseColumnsConf = new BaseColumnsConf(config.getYamlConf());
+        this.baseColumnsConf = new BaseColumnsConf(config.getYamlConfig());
     }
 
     public Map<String, Fixture> load() {
@@ -49,7 +49,7 @@ public class FixturesLoader {
 
     private Fixture loadFixture(Path file) {
         String name =  getFixtureName(file);
-        val baseColumns = baseColumnsConf.baseColumns(name);
+        val baseColumns = baseColumnsConf.getBaseColumns(name);
         return new Fixture(name, new YmlRowsLoader(file, baseColumns));
     }
 

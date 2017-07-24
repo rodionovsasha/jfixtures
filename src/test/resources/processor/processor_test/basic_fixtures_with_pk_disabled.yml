@@ -1,6 +1,9 @@
 ".conf.yml":
-  autoGeneratePk:
-    users: false
+  tables:
+    all_tables_do_not_have_generated_pk:
+      applies_to: "users"
+      pk:
+        generate: false
 
 "users.yml":
   vlad:

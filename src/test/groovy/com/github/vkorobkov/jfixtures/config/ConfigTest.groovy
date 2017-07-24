@@ -7,20 +7,15 @@ import java.nio.file.Path
 
 class ConfigTest extends Specification implements YamlVirtualFolder {
     Path tmpFolderPath
-    Path tmpFolderPathWithPk
     Config config
-    Config configWithPk
 
     void setup() {
         tmpFolderPath = unpackYamlToTempFolder("default.yml")
         loadConfig()
-        tmpFolderPathWithPk = unpackYamlToTempFolder("auto_generate_pk.yml")
-        configWithPk = new Config(tmpFolderPathWithPk.toString())
     }
 
     void cleanup() {
         tmpFolderPath.toFile().deleteDir()
-        tmpFolderPathWithPk.toFile().deleteDir()
     }
 
     def "reads referred table"() {
@@ -44,23 +39,6 @@ class ConfigTest extends Specification implements YamlVirtualFolder {
 
         then:
         !config.referredTable("users", "avatar_id").present
-    }
-
-    def "should auto generate PK when autoGeneratePk flag does not exist"() {
-        expect:
-        config.shouldAutoGeneratePk("users")
-    }
-
-    def "should auto generate PK when autoGeneratePk flag has true value"() {
-        expect:
-        configWithPk.shouldAutoGeneratePk("comments")
-        configWithPk.shouldAutoGeneratePk("teams")
-    }
-
-    def "should not auto generate PK when autoGeneratePk flag has false value"() {
-        expect:
-        !configWithPk.shouldAutoGeneratePk("users")
-        !configWithPk.shouldAutoGeneratePk("friends")
     }
 
     private def loadConfig(path = "default") {
