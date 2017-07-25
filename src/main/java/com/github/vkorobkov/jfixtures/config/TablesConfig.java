@@ -29,7 +29,7 @@ public class TablesConfig extends Config {
 
     private Stream<String> getMatchingTables(final String tableName) {
         return getYamlConfig()
-                .<String>digNode(SECTION_TABLES).orElse(Collections.emptyMap())
+                .digNode(SECTION_TABLES).orElse(Collections.emptyMap())
                 .keySet().stream()
                 .map(section -> SECTION_TABLES + ":" + section)
                 .filter(section -> tableMatches(section, tableName, SECTION_APPLIES_TO));
