@@ -25,25 +25,47 @@ class TablesConfigTest extends Specification {
             ]
     ]
 
-    def "should auto generate PK when autoGeneratePk flag does not exist"() {
+    def SAMPLE_CONFIG_WITH_CUSTOM_PK = [
+            table_has_pk: [
+                    applies_to: "users",
+                    pk: [generate: true, column: "custom_id"],
+            ]
+    ]
+
+    def "should auto generate PK when generate flag does not exist"() {
         expect:
         shouldAutoGeneratePk(SAMPLE_CONFIG, "mates" )
+        getCustomColumnForPk(SAMPLE_CONFIG, "mates" ) == "id"
     }
 
-    def "should auto generate PK when autoGeneratePk flag has true value"() {
+    def "should auto generate PK when generate flag has true value"() {
         expect:
         shouldAutoGeneratePk(SAMPLE_CONFIG, "users")
         shouldAutoGeneratePk(SAMPLE_CONFIG_REGEXP, "users")
+        getCustomColumnForPk(SAMPLE_CONFIG_REGEXP, "users" ) == "id"
     }
 
-    def "should not auto generate PK when autoGeneratePk flag has false value"() {
+    def "should generate PK with custom column name"() {
+        expect:
+        getCustomColumnForPk(SAMPLE_CONFIG_WITH_CUSTOM_PK, "users" ) == "custom_id"
+    }
+
+    def "should not auto generate PK when generate flag has false value"() {
         expect:
         !shouldAutoGeneratePk(SAMPLE_CONFIG, "friends")
         !shouldAutoGeneratePk(SAMPLE_CONFIG_REGEXP, "any_table")
     }
 
     private static def shouldAutoGeneratePk(Map config, String table) {
+        getTablesConfig(config).shouldAutoGeneratePk(table)
+    }
+
+    private static def getCustomColumnForPk(Map config, String table) {
+        getTablesConfig(config).getCustomColumnForPk(table)
+    }
+
+    private static def getTablesConfig(Map config) {
         config = [tables: config]
-        new TablesConfig(new YamlConfig(config)).shouldAutoGeneratePk(table)
+        new TablesConfig(new YamlConfig(config))
     }
 }

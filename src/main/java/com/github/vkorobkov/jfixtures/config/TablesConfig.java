@@ -7,6 +7,8 @@ public class TablesConfig extends Config {
     private static final String SECTION_APPLIES_TO = "applies_to";
     private static final String SECTION_PRIMARY_KEY = "pk";
     private static final String SECTION_GENERATE = "generate";
+    private static final String SECTION_COLUMN = "column";
+    private static final String PK_DEFAULT_COLUMN_NAME = "id";
 
     public TablesConfig(final YamlConfig yamlConfig) {
         super(yamlConfig);
@@ -20,6 +22,22 @@ public class TablesConfig extends Config {
                 .filter(section -> tableMatches(section, tableName, SECTION_APPLIES_TO))
                 .map(this::extractGenerateValue)
                 .reduce((current, last) -> last).orElse(true);
+    }
+
+    public String getCustomColumnForPk(String tableName) {
+        return getYamlConfig()
+                .<String>digNode(SECTION_TABLES).orElse(Collections.emptyMap())
+                .keySet().stream()
+                .map(section -> SECTION_TABLES + ":" + section)
+                .filter(section -> tableMatches(section, tableName, SECTION_APPLIES_TO))
+                .map(this::extractColumnValue)
+                .reduce((current, last) -> last).orElse(PK_DEFAULT_COLUMN_NAME);
+    }
+
+    private String extractColumnValue(String section) {
+        return getYamlConfig()
+                .<String>digValue(section, SECTION_PRIMARY_KEY, SECTION_COLUMN)
+                .orElse(PK_DEFAULT_COLUMN_NAME);
     }
 
     private boolean extractGenerateValue(String section) {

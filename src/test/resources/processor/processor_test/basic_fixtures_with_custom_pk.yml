@@ -1,0 +1,13 @@
+".conf.yml":
+  tables:
+    tables_with_custom_generated_pk:
+      applies_to: "users"
+      pk:
+        generate: true
+        column: custom_id
+
+"users.yml":
+  vlad:
+    first_name: Vladimir
+    age: 29
+    sex: man

@@ -442,3 +442,25 @@ We can describe rules for primary key generation in a special file `.conf.yml`:
 where `friends` is a table name. The items of `applies_to:` could be a either a string or a regular expression. 
 Accepted values for `generate` section: `true, false, on, off`.
 If configuration for tables is not set the system will generate `ID` column by default.
+
+Another option: not all tables can contain `ID` column as a primary key. In this case any custom id can be set using `column` section.
+Source YAML:
+
+```yaml
+".conf.yml":
+  tables:
+    tables_with_generated_pk:
+      applies_to: "friends"
+      pk:
+        generate: true
+        column: custom_id
+
+"friends.yml":
+  vlad:
+    name: Vlad
+    age: 29
+```
+Output SQL:
+```sql
+INSERT INTO "friends" ("custom_id", "name", "age") VALUES (10000, 'Vlad', 29);
+```

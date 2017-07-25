@@ -10,6 +10,12 @@
       pk:
         generate: on
 
+    table_has_custom_pk:
+      applies_to: "fellows"
+      pk:
+        generate: true
+        column: custom_id
+
 "friends.yml":
   vlad:
     name: Vlad
@@ -24,3 +30,8 @@
   vlad:
     name: Vlad
     age: 29
+
+"fellows.yml":
+  semen:
+    name: Semen
+    age: 30

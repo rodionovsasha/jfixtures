@@ -1,5 +1,7 @@
 package com.github.vkorobkov.jfixtures.processor;
 
+import com.github.vkorobkov.jfixtures.config.Config;
+import com.github.vkorobkov.jfixtures.config.TablesConfig;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.loader.Fixture;
 import com.github.vkorobkov.jfixtures.loader.FixtureValue;
@@ -15,7 +17,7 @@ class ColumnProcessor {
 
     FixtureValue column(String table, String rowName, String column, FixtureValue value) {
         try {
-            return context.getConfig().referredTable(table, column)
+            return getConfig().referredTable(table, column)
                     .map(referredTable -> referredColumn(table, referredTable, value))
                     .orElse(value);
         } catch (ProcessorException cause) {
@@ -39,7 +41,7 @@ class ColumnProcessor {
             throw new ProcessorException(message);
         }*/
 
-        return referredRow.getValues().get(Processor.PK_COLUMN_NAME);
+        return referredRow.getValues().get(getTablesConfig().getCustomColumnForPk(referredTable));
     }
 
     private InsertRow referredRow(String table, FixtureValue value) {
@@ -60,5 +62,13 @@ class ColumnProcessor {
             throw new ProcessorException(message);
         }
         dependencyResolver.accept(referredFixture);
+    }
+
+    private Config getConfig() {
+        return context.getConfig();
+    }
+
+    private TablesConfig getTablesConfig() {
+        return new TablesConfig(getConfig().getYamlConfig());
     }
 }
