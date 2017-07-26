@@ -424,7 +424,7 @@ base_columns:
 This example results into two columns, which will be added into every row of `users` table: 
 `cr_date: NOW()` and `version: 2`
 
-## Enable/disable primary key generation (ID column)
+## Enable/disable primary key generation (id column)
 We can describe rules for primary key generation in a special file `.conf.yml`:
 ```yaml
 ".conf.yml":
@@ -439,11 +439,16 @@ We can describe rules for primary key generation in a special file `.conf.yml`:
     name: Vlad
     age: 29
 ```
-where `friends` is a table name. The items of `applies_to:` could be a either a string or a regular expression. 
-Accepted values for `generate` section: `true, false, on, off`.
-If configuration for tables is not set the system will generate `ID` column by default.
+where `friends` is a table name.
+* `applies_to` can be a regular expression starts with /
+* `applies_to` can be a comma separated string like "table1, table2, /user.+"
+* `applies_to` can be an array of strings, regexps or other arrays
 
-Another option: not all tables can contain `ID` column as a primary key. In this case any custom id can be set using `column` section.
+Accepted values for `generate` section: `true, false, on, off`.
+
+If configuration for tables is not set the system will generate `id` column by default.
+
+Another option: not all tables can contain `id` column as a primary key. In this case any custom id can be set using `column` section.
 Source YAML:
 
 ```yaml
