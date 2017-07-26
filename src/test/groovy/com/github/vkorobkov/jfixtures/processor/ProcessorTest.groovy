@@ -231,6 +231,15 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         ])
     }
 
+    def "throw ProcessorException when dependent table not have pk"() {
+        when:
+        load("dependent_table_not_have_pk.yml")
+
+        then:
+        def exception = thrown(ProcessorException)
+        exception.message.contains("Referred column [profiles.public.id] is not found")
+    }
+
     boolean assertInsertInstructions(Map instructions, Map expected) {
         expected = expected.collectEntries { [it.key, FixtureValue.ofAuto(it.value)] }
         new LinkedHashMap(instructions) == expected
