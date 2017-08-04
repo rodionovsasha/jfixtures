@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.processor;
 
-import com.github.vkorobkov.jfixtures.config.Config;
+import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
 import com.github.vkorobkov.jfixtures.loader.Fixture;
 import com.github.vkorobkov.jfixtures.processor.sequence.SequenceRegistry;
@@ -16,9 +16,9 @@ class Context {
     private final Set<String> completedFixtures = new HashSet<>();
     private final CircularPreventer circularPreventer = new CircularPreventer();
     private final Map<String, Fixture> fixtures;
-    private final Config config;
+    private final Root config;
 
-    Context(Map<String, Fixture> fixtures, Config config) {
+    Context(Map<String, Fixture> fixtures, Root config) {
         this.fixtures = Collections.unmodifiableMap(fixtures);
         this.config = config;
     }

@@ -1,5 +1,5 @@
 ".conf.yml":
-  base_columns:
+  columns:
     concerns:
       has_sex:
         sex: man

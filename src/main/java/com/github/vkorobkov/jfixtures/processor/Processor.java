@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.processor;
 
-import com.github.vkorobkov.jfixtures.config.Config;
+import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
@@ -20,7 +20,7 @@ public class Processor {
     private final ColumnProcessor columnProcessor;
     private final Context context;
 
-    public Processor(Map<String, Fixture> fixtures, Config config) {
+    public Processor(Map<String, Fixture> fixtures, Root config) {
         this.context = new Context(fixtures, config);
         this.columnProcessor = new ColumnProcessor(context, this::processFixture);
     }

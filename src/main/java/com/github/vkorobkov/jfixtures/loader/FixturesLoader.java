@@ -1,7 +1,6 @@
 package com.github.vkorobkov.jfixtures.loader;
 
-import com.github.vkorobkov.jfixtures.config.BaseColumnsConf;
-import com.github.vkorobkov.jfixtures.config.Config;
+import com.github.vkorobkov.jfixtures.config.structure.Root;
 import lombok.val;
 
 import java.io.IOException;
@@ -13,11 +12,11 @@ import java.util.stream.Collectors;
 
 public class FixturesLoader {
     private final String path;
-    private final BaseColumnsConf baseColumnsConf;
+    private final Root config;
 
-    public FixturesLoader(String path, Config config) {
+    public FixturesLoader(String path, Root config) {
         this.path = path;
-        this.baseColumnsConf = new BaseColumnsConf(config.getYamlConf());
+        this.config = config;
     }
 
     public Map<String, Fixture> load() {
@@ -49,7 +48,7 @@ public class FixturesLoader {
 
     private Fixture loadFixture(Path file) {
         String name =  getFixtureName(file);
-        val baseColumns = baseColumnsConf.baseColumns(name);
+        val baseColumns = config.columns().forTable(name);
         return new Fixture(name, new YmlRowsLoader(file, baseColumns));
     }
 
