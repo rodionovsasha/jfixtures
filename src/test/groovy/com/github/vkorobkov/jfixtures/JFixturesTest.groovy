@@ -1,5 +1,6 @@
 package com.github.vkorobkov.jfixtures
 
+import com.github.vkorobkov.jfixtures.sql.SqlType
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 
@@ -78,6 +79,19 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
     def "ClickHouse fixture to a file"() {
         when:
         JFixtures.clickHouse(tmpFolderPath as String).toFile(outputPath)
+
+        then:
+        new File(outputPath).text == DEFAULT_EXPECTED_SQL
+    }
+
+    def "by dialect fixture to a string"() {
+        expect:
+        JFixtures.byDialect(tmpFolderPath as String, SqlType.POSTGRES).asString() == DEFAULT_EXPECTED_SQL
+    }
+
+    def "by dialect fixture to a file"() {
+        when:
+        JFixtures.byDialect(tmpFolderPath as String, SqlType.POSTGRES).toFile(outputPath)
 
         then:
         new File(outputPath).text == DEFAULT_EXPECTED_SQL
