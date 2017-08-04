@@ -312,7 +312,7 @@ which are different from table's default values in SQL.
 So for the second case JFixtures allows you to inherit tables. If we create a `.conf.yml` and put in it following
 lines:
 ```yaml
-base_columns:
+columns:
   concerns:
     has_version:
       version: 1
@@ -336,7 +336,7 @@ dimon:
 ```
 So how does it work?
 
-`base_columns` section in `.conf.yml` is responsible for tables inheritance. It consists of two main subsections:
+`columns` section in `.conf.yml` is responsible for tables inheritance. It consists of two main subsections:
 `concerns` and `apply`. 
 
 `concerns` just describes behaviours which could be added to tables, like `has_version` behaviour in our case. 
@@ -359,7 +359,7 @@ Every array(or sub array) item could be either a string(for one table/concern) o
 for many tables/concerns). This pattern opens a very powerful ability of YAML: you can define and include lists into 
 one another if you need to group and reuse items:
 ```yaml
-base_columns:
+columns:
   concerns:
     has_version:
       version: 1
@@ -389,14 +389,14 @@ The order of items in `apply:concerns` matters: concerns will be applied in the 
 from left to right. Duplicates are not getting removed. Whem many concerns, they are getting merged, it means, 
 that the further concerns complement(add rows) or override(replace rows) the previous ones.
 
-Note, that columns in fixtures have a priority over the columns from `base_columns:concerns`. It means that when
-fixture defines the same columns as defined in `base_columns:concerns` for that table, the column value from
-fixture will override the value from `base_columns:concerns`.
+Note, that columns in fixtures have a priority over the columns from `columns:concerns`. It means that when
+fixture defines the same columns as defined in `columns:concerns` for that table, the column value from
+fixture will override the value from `columns:concerns`.
 
 The `apply` may have a number of named subsections like `every_table_has_version`, `user_table_has_cr_date`, etc.
 These named sections are getting scanned and applied in top down order:
 ```yaml
-base_columns:
+columns:
   concerns:
     has_version:
       version: 1
