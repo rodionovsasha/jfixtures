@@ -1,7 +1,6 @@
 package com.github.vkorobkov.jfixtures.processor;
 
-import com.github.vkorobkov.jfixtures.config.Config;
-import com.github.vkorobkov.jfixtures.config.TablesConfig;
+import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.loader.Fixture;
 import com.github.vkorobkov.jfixtures.loader.FixtureValue;
@@ -33,7 +32,7 @@ class ColumnProcessor {
         }
 
         val referredRowValues = referredRow(referredTable, value).getValues();
-        val primaryKey = getTablesConfig().getCustomColumnForPk(referredTable);
+        val primaryKey = getConfig().table(referredTable).getCustomColumnForPk();
 
         if (!referredRowValues.containsKey(primaryKey)) {
             String columnPath = String.join(".", referredTable, String.valueOf(value.getValue()), primaryKey);
@@ -64,11 +63,7 @@ class ColumnProcessor {
         dependencyResolver.accept(referredFixture);
     }
 
-    private Config getConfig() {
+    private Root getConfig() {
         return context.getConfig();
-    }
-
-    private TablesConfig getTablesConfig() {
-        return new TablesConfig(getConfig().getYamlConfig());
     }
 }

@@ -19,12 +19,10 @@ import java.util.stream.Collectors;
 public class Processor {
     private final ColumnProcessor columnProcessor;
     private final Context context;
-    private final Tables tables;
 
     public Processor(Map<String, Fixture> fixtures, Root config) {
         this.context = new Context(fixtures, config);
         this.columnProcessor = new ColumnProcessor(context, this::processFixture);
-        this.tables = context.getConfig().tables();
     }
 
     public List<Instruction> process() {
@@ -65,8 +63,9 @@ public class Processor {
 
     private Map<String, FixtureValue> extractRowValues(String tableName, FixtureRow row) {
         Map<String, FixtureValue> result = new LinkedHashMap<>(row.getColumns().size() + 1);
-        if (tables.shouldAutoGeneratePk(tableName)) {
-            result.put(tables.getCustomColumnForPk(tableName),
+        Tables table = context.getConfig().table(tableName);
+        if (table.shouldAutoGeneratePk()) {
+            result.put(table.getCustomColumnForPk(),
                     context.getSequenceRegistry().nextValue(tableName, row.getName()));
         }
         row.getColumns().forEach((name, value) -> {

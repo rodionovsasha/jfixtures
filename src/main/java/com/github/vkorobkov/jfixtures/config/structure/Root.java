@@ -1,7 +1,7 @@
 package com.github.vkorobkov.jfixtures.config.structure;
 
-
 import com.github.vkorobkov.jfixtures.config.structure.columns.Columns;
+import com.github.vkorobkov.jfixtures.config.structure.tables.Tables;
 import com.github.vkorobkov.jfixtures.config.yaml.Node;
 
 import java.util.Optional;
@@ -17,5 +17,9 @@ public class Root extends Section {
 
     public Columns columns() {
         return new Columns(getNode().child("columns"));
+    }
+
+    public Tables table(String name) {
+        return new Tables(getNode().child("tables"), name);
     }
 }

@@ -25,10 +25,10 @@ class ColumnsTest extends Specification {
         ]
 
         then:
-        baseColumns(data, "users") == [version: 1, cr_date: "NOW"]
+        сolumns(data, "users") == [version: 1, cr_date: "NOW"]
 
         and:
-        baseColumns(data, "tickets") == [version: 1]
+        сolumns(data, "tickets") == [version: 1]
     }
 
     def "applies concerns from many apply blocks one by one"() {
@@ -51,7 +51,7 @@ class ColumnsTest extends Specification {
         ]
 
         then:
-        baseColumns(data, "users") == [version: 1, cr_date: "NOW"]
+        сolumns(data, "users") == [version: 1, cr_date: "NOW"]
     }
 
     def "latest apply block overrides previous on conflict"() {
@@ -74,7 +74,7 @@ class ColumnsTest extends Specification {
         ]
 
         then:
-        baseColumns(data, "users") == [version: 2, versioned: true]
+        сolumns(data, "users") == [version: 2, versioned: true]
     }
 
     def "returns nothing if tables do not match"() {
@@ -92,10 +92,10 @@ class ColumnsTest extends Specification {
         ]
 
         then:
-        baseColumns(data, "people").isEmpty()
+        сolumns(data, "people").isEmpty()
     }
 
-    def baseColumns(content, table) {
+    private static def сolumns(content, table) {
         new Columns(Node.root(content)).forTable(table)
     }
 }

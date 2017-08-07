@@ -3,7 +3,7 @@ package com.github.vkorobkov.jfixtures.config.structure.tables
 import com.github.vkorobkov.jfixtures.config.yaml.Node
 import spock.lang.Specification
 
-class TableTest extends Specification {
+class TablesTest extends Specification {
     def SAMPLE_CONFIG = [
             table_NOT_have_pk: [
                     applies_to: "friends",
@@ -47,14 +47,6 @@ class TableTest extends Specification {
     }
 
     def "should generate PK with custom column name"() {
-        //println "tables(SAMPLE_CONFIG) " + getTablesConfig(SAMPLE_CONFIG).
-        println "tables(SAMPLE_CONFIG) users " + getTablesConfig(SAMPLE_CONFIG, "users").getMatchingTables2()
-        println "tables(SAMPLE_CONFIG) friends " + getTablesConfig(SAMPLE_CONFIG, "friends").getMatchingTables2()
-        println "tables(SAMPLE_CONFIG) mates " + getTablesConfig(SAMPLE_CONFIG, "mates").getMatchingTables2()
-
-
-        //println "tables(SAMPLE_CONFIG) users " + getTablesConfig(SAMPLE_CONFIG, "users").getMatchingTables()
-        //println "tables(SAMPLE_CONFIG) mates " + getTablesConfig(SAMPLE_CONFIG, "mates").getMatchingTables()
         expect:
         getCustomColumnForPk(SAMPLE_CONFIG_WITH_CUSTOM_PK, "users" ) == "custom_id"
     }
@@ -74,6 +66,6 @@ class TableTest extends Specification {
     }
 
     private static def getTablesConfig(content, String name) {
-        new Table(Node.root(content), name)
+        new Tables(Node.root(content), name)
     }
 }

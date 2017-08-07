@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 
 @FunctionalInterface
 public interface TableMatcher {
-
     default boolean tableMatches(String table) {
         return flatTablesToMatch().anyMatch(pattern -> {
             if (pattern.startsWith("/")) {

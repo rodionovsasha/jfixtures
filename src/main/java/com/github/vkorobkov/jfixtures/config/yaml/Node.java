@@ -30,15 +30,15 @@ public final class Node {
     }
 
     public Stream<Node> children() {
-        return asMap().entrySet().stream().map(entry -> {
-           return subNode(this, entry.getKey(), entry.getValue());
-        });
+        return asMap().entrySet().stream().map(
+                entry -> subNode(this, entry.getKey(), entry.getValue())
+        );
     }
 
-    public Node dig(String ... names) {
+    public Node dig(String... names) {
         Node result = this;
-        for (String name: names) {
-            result = result.child(name);
+        for (String nodeName : names) {
+            result = result.child(nodeName);
         }
         return result;
     }
@@ -49,7 +49,7 @@ public final class Node {
 
     @SuppressWarnings("unchecked")
     public <T> Optional<T> optional() {
-        return (Optional<T>) content;
+        return (Optional<T>)content;
     }
 
     @SuppressWarnings("unchecked")
@@ -65,7 +65,7 @@ public final class Node {
     @SuppressWarnings("unchecked")
     private Map<String, Object> asMap() {
         return (Map<String, Object>)content
-            .filter(c -> c instanceof Map)
-            .orElse(Collections.emptyMap());
+                .filter(c -> c instanceof Map)
+                .orElse(Collections.emptyMap());
     }
 }
