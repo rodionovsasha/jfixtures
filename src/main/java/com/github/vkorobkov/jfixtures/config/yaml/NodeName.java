@@ -18,7 +18,7 @@ public final class NodeName {
     }
 
     public NodeName sub(String ... names) {
-        List<String> newSections = new ArrayList<>(sections.size() + 1);
+        List<String> newSections = new ArrayList<>(sections.size() + names.length);
         newSections.addAll(sections);
         newSections.addAll(Arrays.asList(names));
         return new NodeName(newSections);
