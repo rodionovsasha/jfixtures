@@ -1,6 +1,5 @@
 package com.github.vkorobkov.jfixtures.processor;
 
-import com.github.vkorobkov.jfixtures.config.structure.tables.Tables;
 import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
@@ -9,6 +8,7 @@ import com.github.vkorobkov.jfixtures.loader.Fixture;
 import com.github.vkorobkov.jfixtures.loader.FixtureRow;
 import com.github.vkorobkov.jfixtures.loader.FixtureValue;
 import com.github.vkorobkov.jfixtures.processor.sequence.IncrementalSequence;
+import lombok.val;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -63,7 +63,7 @@ public class Processor {
 
     private Map<String, FixtureValue> extractRowValues(String tableName, FixtureRow row) {
         Map<String, FixtureValue> result = new LinkedHashMap<>(row.getColumns().size() + 1);
-        Tables table = context.getConfig().table(tableName);
+        val table = context.getConfig().table(tableName);
         if (table.shouldAutoGeneratePk()) {
             result.put(table.getCustomColumnForPk(),
                     context.getSequenceRegistry().nextValue(tableName, row.getName()));

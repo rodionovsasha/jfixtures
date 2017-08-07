@@ -32,15 +32,15 @@ class ColumnProcessor {
         }
 
         val referredRowValues = referredRow(referredTable, value).getValues();
-        val primaryKey = getConfig().table(referredTable).getCustomColumnForPk();
+        val referredPk = getConfig().table(referredTable).getCustomColumnForPk();
 
-        if (!referredRowValues.containsKey(primaryKey)) {
-            String columnPath = String.join(".", referredTable, String.valueOf(value.getValue()), primaryKey);
+        if (!referredRowValues.containsKey(referredPk)) {
+            String columnPath = String.join(".", referredTable, String.valueOf(value.getValue()), referredPk);
             String message = "Referred column [" + columnPath + "] is not found";
             throw new ProcessorException(message);
         }
 
-        return referredRowValues.get(primaryKey);
+        return referredRowValues.get(referredPk);
     }
 
     private InsertRow referredRow(String table, FixtureValue value) {
