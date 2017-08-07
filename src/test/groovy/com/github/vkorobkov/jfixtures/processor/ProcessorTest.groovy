@@ -188,7 +188,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         exception.message.contains("Circular dependency between tables found")
     }
 
-    def "row creation instructions test with PK disabled"() {
+    def "does not have 'id' column when the PK is disabled"() {
         when:
         def instructions = load("basic_fixtures_with_pk_disabled.yml")
 
