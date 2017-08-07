@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.loader
 
-import com.github.vkorobkov.jfixtures.config.Config
+import com.github.vkorobkov.jfixtures.config.ConfigLoader
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 
@@ -43,7 +43,7 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         def path = notExistingPath() as String
 
         when:
-        new FixturesLoader(path, new Config(path)).load()
+        new FixturesLoader(path, new ConfigLoader(path).load()).load()
 
         then:
         def exception = thrown(LoaderException)
@@ -123,6 +123,6 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
 
     Map<String, Fixture> load(String ymlFile) {
         def path = unpackYamlToTempFolder(ymlFile) as String
-        new FixturesLoader(path, new Config(path)).load()
+        new FixturesLoader(path, new ConfigLoader(path).load()).load()
     }
 }

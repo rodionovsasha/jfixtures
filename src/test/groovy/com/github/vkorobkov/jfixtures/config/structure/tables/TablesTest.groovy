@@ -1,8 +1,9 @@
-package com.github.vkorobkov.jfixtures.config
+package com.github.vkorobkov.jfixtures.config.structure.tables
 
+import com.github.vkorobkov.jfixtures.config.yaml.Node
 import spock.lang.Specification
 
-class TablesConfigTest extends Specification {
+class TableTest extends Specification {
     def SAMPLE_CONFIG = [
             table_NOT_have_pk: [
                     applies_to: "friends",
@@ -46,6 +47,14 @@ class TablesConfigTest extends Specification {
     }
 
     def "should generate PK with custom column name"() {
+        //println "tables(SAMPLE_CONFIG) " + getTablesConfig(SAMPLE_CONFIG).
+        println "tables(SAMPLE_CONFIG) users " + getTablesConfig(SAMPLE_CONFIG, "users").getMatchingTables2()
+        println "tables(SAMPLE_CONFIG) friends " + getTablesConfig(SAMPLE_CONFIG, "friends").getMatchingTables2()
+        println "tables(SAMPLE_CONFIG) mates " + getTablesConfig(SAMPLE_CONFIG, "mates").getMatchingTables2()
+
+
+        //println "tables(SAMPLE_CONFIG) users " + getTablesConfig(SAMPLE_CONFIG, "users").getMatchingTables()
+        //println "tables(SAMPLE_CONFIG) mates " + getTablesConfig(SAMPLE_CONFIG, "mates").getMatchingTables()
         expect:
         getCustomColumnForPk(SAMPLE_CONFIG_WITH_CUSTOM_PK, "users" ) == "custom_id"
     }
@@ -56,16 +65,15 @@ class TablesConfigTest extends Specification {
         !shouldAutoGeneratePk(SAMPLE_CONFIG_REGEXP, "any_table")
     }
 
-    private static def shouldAutoGeneratePk(Map config, String table) {
-        getTablesConfig(config).shouldAutoGeneratePk(table)
+    private static def shouldAutoGeneratePk(content, String name) {
+        getTablesConfig(content, name).shouldAutoGeneratePk()
     }
 
-    private static def getCustomColumnForPk(Map config, String table) {
-        getTablesConfig(config).getCustomColumnForPk(table)
+    private static def getCustomColumnForPk(content, String name) {
+        getTablesConfig(content, name).getCustomColumnForPk()
     }
 
-    private static def getTablesConfig(Map config) {
-        config = [tables: config]
-        new TablesConfig(new YamlConfig(config))
+    private static def getTablesConfig(content, String name) {
+        new Table(Node.root(content), name)
     }
 }

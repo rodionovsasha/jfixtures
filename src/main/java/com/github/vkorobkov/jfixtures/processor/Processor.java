@@ -1,7 +1,7 @@
 package com.github.vkorobkov.jfixtures.processor;
 
-import com.github.vkorobkov.jfixtures.config.Config;
-import com.github.vkorobkov.jfixtures.config.TablesConfig;
+import com.github.vkorobkov.jfixtures.config.structure.tables.Tables;
+import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 public class Processor {
     private final ColumnProcessor columnProcessor;
     private final Context context;
-    private final TablesConfig tablesConfig;
+    private final Tables tables;
 
-    public Processor(Map<String, Fixture> fixtures, Config config) {
+    public Processor(Map<String, Fixture> fixtures, Root config) {
         this.context = new Context(fixtures, config);
         this.columnProcessor = new ColumnProcessor(context, this::processFixture);
-        this.tablesConfig = new TablesConfig(context.getConfig().getYamlConfig());
+        this.tables = context.getConfig().tables();
     }
 
     public List<Instruction> process() {
@@ -65,8 +65,8 @@ public class Processor {
 
     private Map<String, FixtureValue> extractRowValues(String tableName, FixtureRow row) {
         Map<String, FixtureValue> result = new LinkedHashMap<>(row.getColumns().size() + 1);
-        if (tablesConfig.shouldAutoGeneratePk(tableName)) {
-            result.put(tablesConfig.getCustomColumnForPk(tableName),
+        if (tables.shouldAutoGeneratePk(tableName)) {
+            result.put(tables.getCustomColumnForPk(tableName),
                     context.getSequenceRegistry().nextValue(tableName, row.getName()));
         }
         row.getColumns().forEach((name, value) -> {

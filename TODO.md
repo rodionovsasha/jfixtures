@@ -25,7 +25,6 @@
 * Common prefix for every table
 * Column names aliases
 * Write into DB directly in Fluent API? :)
-* Add a file system watcher-rebuild in command line tool
 * "Computed" values
 * "Computed" column names
 * Remove ugly `type:sql` in favor of a sql-specific prefix like `$sql$` 

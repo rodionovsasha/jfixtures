@@ -1,5 +1,5 @@
 ".conf.yml":
-  base_columns:
+  columns:
     concerns:
       has_version:
         version: 1
