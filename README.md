@@ -270,7 +270,7 @@ It is a quite simple:
 1. Add a new class H2 to `com.github.vkorobkov.jfixtures.sql.dialects`.
 2. Update `JFixtures.java` with a new static method `h2` which creates new instance of JFixturesResult based on H2 class.
 3. Update `SqlType.java` with a new enumeration value for `h2` which allows to extend creation of `JFixturesResult` implementations using `byDialect` method.
-3. Add unit tests for `H2.java` and `JFixtures.java` classes and update `SqlTypeTest.groovy`.  Ensure code coverage remains 100%(see `target/site/jacoco/index.html`).  
+4. Add unit tests for `H2.java` and `JFixtures.java` classes and update `SqlTypeTest.groovy`.  Ensure code coverage remains 100%(see `target/site/jacoco/index.html`).  
 That's all!
 
 ## Configuration
