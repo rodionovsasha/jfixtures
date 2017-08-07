@@ -4,6 +4,7 @@ import com.github.vkorobkov.jfixtures.config.structure.Section;
 import com.github.vkorobkov.jfixtures.config.structure.util.TableMatcher;
 import com.github.vkorobkov.jfixtures.config.yaml.Node;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class Tables extends Section {
@@ -21,16 +22,19 @@ public class Tables extends Section {
     }
 
     public boolean shouldAutoGeneratePk() {
-        return (boolean)getMatchingTables()
-                .map(node -> node.dig(SECTION_PRIMARY_KEY, SECTION_GENERATE).required())
-                .reduce((current, last) -> last).orElse(true);
-
+        return (boolean)readProperty(SECTION_PRIMARY_KEY, SECTION_GENERATE).orElse(true);
     }
 
     public String getCustomColumnForPk() {
-        return (String)getMatchingTables()
-                .map(node -> node.dig(SECTION_PRIMARY_KEY, SECTION_COLUMN).optional().orElse(PK_DEFAULT_COLUMN_NAME))
-                .reduce((current, last) -> last).orElse(PK_DEFAULT_COLUMN_NAME);
+        return (String)readProperty(SECTION_PRIMARY_KEY, SECTION_COLUMN).orElse(PK_DEFAULT_COLUMN_NAME);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Optional<T> readProperty(String... sections) {
+        Optional result = getMatchingTables()
+                .map(node -> node.dig(sections).optional())
+                .reduce((current, last) -> last);
+        return (Optional<T>)result.orElse(result);
     }
 
     private Stream<Node> getMatchingTables() {
