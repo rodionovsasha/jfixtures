@@ -14,10 +14,9 @@ public interface TableMatcher {
         return flatTablesToMatch().anyMatch(pattern -> {
             if (pattern.startsWith("/")) {
                 return Pattern.compile(pattern.substring(1)).matcher(table).matches();
-            } else if (pattern.equals(table)) {
-                return true;
+            } else {
+                return pattern.equals(table);
             }
-            return false;
         });
     }
 
