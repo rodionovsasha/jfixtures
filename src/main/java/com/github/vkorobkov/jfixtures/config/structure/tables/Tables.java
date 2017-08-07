@@ -33,7 +33,7 @@ public class Tables extends Section {
                 .reduce((current, last) -> last).orElse(PK_DEFAULT_COLUMN_NAME);
     }
 
-    public Stream<Node> getMatchingTables() {
+    private Stream<Node> getMatchingTables() {
         return getNode()
                 .children()
                 .filter(
