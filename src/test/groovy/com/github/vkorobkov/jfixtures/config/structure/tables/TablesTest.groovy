@@ -36,25 +36,34 @@ class TablesTest extends Specification {
     def "should auto generate PK when generate flag does not exist"() {
         expect:
         shouldAutoGeneratePk(SAMPLE_CONFIG, "mates" )
-        getCustomColumnForPk(SAMPLE_CONFIG, "mates" ) == "id"
     }
 
     def "should auto generate PK when generate flag has true value"() {
         expect:
         shouldAutoGeneratePk(SAMPLE_CONFIG, "users")
         shouldAutoGeneratePk(SAMPLE_CONFIG_REGEXP, "users")
-        getCustomColumnForPk(SAMPLE_CONFIG_REGEXP, "users" ) == "id"
-    }
-
-    def "should generate PK with custom column name"() {
-        expect:
-        getCustomColumnForPk(SAMPLE_CONFIG_WITH_CUSTOM_PK, "users" ) == "custom_id"
     }
 
     def "should not auto generate PK when generate flag has false value"() {
         expect:
         !shouldAutoGeneratePk(SAMPLE_CONFIG, "friends")
         !shouldAutoGeneratePk(SAMPLE_CONFIG_REGEXP, "any_table")
+    }
+
+    def "should auto generate PK with default column name when generate flag does not exist"() {
+        expect:
+        getCustomColumnForPk(SAMPLE_CONFIG, "mates" ) == "id"
+    }
+
+    def "should auto generate PK with default column name when generate flag has true value"() {
+        expect:
+        getCustomColumnForPk(SAMPLE_CONFIG_REGEXP, "users" ) == "id"
+    }
+
+
+    def "should generate PK with custom column name"() {
+        expect:
+        getCustomColumnForPk(SAMPLE_CONFIG_WITH_CUSTOM_PK, "users" ) == "custom_id"
     }
 
     private static def shouldAutoGeneratePk(content, String name) {

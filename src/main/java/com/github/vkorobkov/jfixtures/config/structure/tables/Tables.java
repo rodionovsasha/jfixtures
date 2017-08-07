@@ -38,13 +38,11 @@ public class Tables extends Section {
     }
 
     private Stream<Node> getMatchingTables() {
-        return getNode()
-                .children()
-                .filter(
-                        node -> {
-                            Object appliesTo = node.child(SECTION_APPLIES_TO).required();
-                            return ((TableMatcher)() -> appliesTo).tableMatches(this.name);
-                        }
-                );
+        return getNode().children().filter(this::matchNodeToTable);
+    }
+
+    private boolean matchNodeToTable(Node node) {
+        Object appliesTo = node.child(SECTION_APPLIES_TO).required();
+        return ((TableMatcher)() -> appliesTo).tableMatches(this.name);
     }
 }
