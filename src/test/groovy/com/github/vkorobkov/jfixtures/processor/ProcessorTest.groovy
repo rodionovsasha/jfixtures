@@ -231,6 +231,29 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         ])
     }
 
+    def "custom PK name for referred tables"() {
+        when:
+        def instructions = load("dependent_table_has_custom_pk.yml")
+
+        then:
+        def insertions = instructions.findAll { it instanceof InsertRow }
+
+        and:
+        def vlad = insertions.find { it.rowName == "vlad" }
+        vlad.values.id == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND)
+        vlad.values.login == FixtureValue.ofAuto("vlad")
+        vlad.values.profile_id == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND)
+
+        and:
+        def profile = insertions.find { it.rowName == "public" }
+        profile.values.custom_id == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND)
+        profile.values.name == FixtureValue.ofAuto("Vladimir")
+        profile.values.age == FixtureValue.ofAuto(29)
+
+        and:
+        vlad.values.profile_id == profile.values.custom_id
+    }
+
     def "throw ProcessorException when dependent table not have pk"() {
         when:
         load("dependent_table_not_have_pk.yml")
