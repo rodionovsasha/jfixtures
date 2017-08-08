@@ -33,7 +33,7 @@ class TablesTest extends Specification {
             ]
     ]
 
-    def "should auto generate PK when generate flag does not exist"() {
+    def "shouldAutoGeneratePk returns true by default"() {
         expect:
         shouldAutoGeneratePk(SAMPLE_CONFIG, "mates" )
     }
@@ -71,7 +71,7 @@ class TablesTest extends Specification {
     }
 
     private static def getCustomColumnForPk(content, String name) {
-        getTablesConfig(content, name).getCustomColumnForPk()
+        getTablesConfig(content, name).getPkColumnName()
     }
 
     private static def getTablesConfig(content, String name) {

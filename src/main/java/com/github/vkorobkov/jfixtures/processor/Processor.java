@@ -65,7 +65,7 @@ public class Processor {
         Map<String, FixtureValue> result = new LinkedHashMap<>(row.getColumns().size() + 1);
         val table = context.getConfig().table(tableName);
         if (table.shouldAutoGeneratePk()) {
-            result.put(table.getCustomColumnForPk(),
+            result.put(table.getPkColumnName(),
                     context.getSequenceRegistry().nextValue(tableName, row.getName()));
         }
         row.getColumns().forEach((name, value) -> {

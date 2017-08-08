@@ -32,7 +32,7 @@ class ColumnProcessor {
         }
 
         val referredRowValues = referredRow(referredTable, value).getValues();
-        val referredPk = getConfig().table(referredTable).getCustomColumnForPk();
+        val referredPk = getConfig().table(referredTable).getPkColumnName();
 
         if (!referredRowValues.containsKey(referredPk)) {
             String columnPath = String.join(".", referredTable, String.valueOf(value.getValue()), referredPk);
