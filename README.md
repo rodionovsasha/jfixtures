@@ -425,7 +425,7 @@ columns:
 This example results into two columns, which will be added into every row of `users` table: 
 `cr_date: NOW()` and `version: 2`
 
-## Table spefic properties:
+## Table specific properties:
 Every table may have it's own specific properties, for example, whether to generate primary keys automatically or not.
 There is a special section called `tables` in `.conf.yml` for managing such properties. Here is an example:
 ```yaml
