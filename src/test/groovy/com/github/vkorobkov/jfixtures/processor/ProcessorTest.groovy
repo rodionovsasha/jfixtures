@@ -268,14 +268,19 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         def instructions = load("basic_fixtures_with_clean_method.yml")
 
         then:
-        instructions.size() == 5
+        def insertions = instructions.findAll { it instanceof InsertRow }
+        insertions.size() == 3
+        def deletions = instructions.findAll { it instanceof CleanTable }
+        deletions.size() == 2
 
         and:
-        (instructions[0] as CleanTable).table == "mates"
-        (instructions[1] as InsertRow).table == "mates"
-        (instructions[2] as InsertRow).table == "users"
-        (instructions[3] as CleanTable).table == "friends"
-        (instructions[4] as InsertRow).table == "friends"
+        insertions.find { it.table == "mates" }
+        insertions.find { it.table == "users" }
+        insertions.find { it.table == "friends" }
+
+        deletions.find { it.table == "friends" }
+        deletions.find { it.table == "mates" }
+        deletions.find { it.table != "users" }
     }
 
     boolean assertInsertInstructions(Map instructions, Map expected) {
