@@ -425,79 +425,56 @@ columns:
 This example results into two columns, which will be added into every row of `users` table: 
 `cr_date: NOW()` and `version: 2`
 
-## Enable/disable primary key generation (id column)
-We can describe rules for primary key generation in a special file `.conf.yml`:
+## Table spefic properties:
+Every table may have it's own specific properties, for example, whether to generate primary keys automatically or not.
+There is a special section called `tables` in `.conf.yml` for managing such properties. Here is an example:
 ```yaml
-".conf.yml":
-  tables:
-    all_tables_do_not_have_generated_pk:
-      applies_to: "friends"
-      pk:
-        generate: false
+tables:
+  every_table_has_custom_pk:
+    applies_to: /.+ # this regexp means the section applies to every table
+    property_1: value_1
+    property_2: value_2
 
-"friends.yml":
-  vlad:
-    name: Vlad
-    age: 29
+  friens_does_not_have_generated_pk:
+    applies_to: "friends" # applies to the friends table
+    property_1: value_1
+    property_2: value_2
 ```
-where `friends` is a table name.
-* `applies_to` can be a regular expression starts with /
-* `applies_to` can be a comma separated string like "table1, table2, /user.+"
-* `applies_to` can be an array of strings, regexps or other arrays
+`tables` section consists of user named subsections like `every_table_has_custom_pk` or `friens_does_not_have_generated_pk`.
+When JFixtures reads a property of a table, it goes from the top to the bottom and it checks whether the table name
+matches the `applies_to` value(s). If the same property exists in two or more matching subsections, the last 
+property value value will be taken.
 
-Accepted values for `generate` section: `true, false, on, off`.
+The value of `applies_to` could be:
+* A string which strinctly matches table name
+* A regexp for pattern matching. Regexp should start from `/` symbol
+* It could be a comma separate list of strings and/or regexps
+* It could be an array of the any type above
+* It could be a nested array with any depth - it is useful for including one YAML lists into anothers.
 
-If configuration for tables is not set the system will generate `id` column by default.
-
-Another option: not all tables can contain `id` column as a primary key. In this case any custom id can be set using `column` section.
-Source YAML:
-
+### Enable/disable primary key generation (id column)
+By default, JFixtures automatically generates primary key(`id` column) for every row.
+If this is not a desireable behaviour, it could be switched off:
 ```yaml
-".conf.yml":
-  tables:
-    tables_with_generated_pk:
-      applies_to: "friends"
-      pk:
-        generate: true
-        column: custom_id
-
-"friends.yml":
-  vlad:
-    name: Vlad
-    age: 29
+tables:
+  friends_do_not_have_generated_pk: # do not generate id for friends table automatically
+    applies_to: "friends"
+    pk:
+      generate: false # maybe true, false, on, off. The default value is true
 ```
-Output SQL:
-```sql
-INSERT INTO "friends" ("custom_id", "name", "age") VALUES (10000, 'Vlad', 29);
-```
-## Enable/disable table cleanup (delete from table before insert)
-For this option `.conf.yml` should have the following structure:
+### Changing primary key column name
+If your table(s) need custom PK name(other than `id` which is used by default) use `pk:column` table property: 
 ```yaml
-".conf.yml":
-  tables:
-    no_clean_up:
-      applies_to: "users"
-      clean_method: "none"
-    clean_up:
-      applies_to: "friends"
-      clean_method: "delete"
-
-"users.yml":
-  vlad:
-    name: Vladimir
-    age: 29
-
-"friends.yml":
-  semen:
-    name: Semen
-    age: 30
+tables:
+  friends_has_custom_ok:
+    applies_to: "friends"
+    pk:
+      column: friend_id # Friends table now has PK named "friend_id"
 ```
-
-where `friends` and `users` are table names.
-* `applies_to` can be a regular expression starts with /
-* `applies_to` can be a comma separated string like "table1, table2, /user.+"
-* `applies_to` can be an array of strings, regexps or other arrays
-
-Accepted values for `clean_method` section: `delete` or `none`.
+### Enable/disable table cleanup (delete from table before insert)
+There is a table property named `clean_up` which is reponsible for cleaning the data from the table(s) before JFixtures
+inserts the data. It could have following values: `delete` or `none`. When `delete`, JFixtures will invoke
+`DELETE FROM $table` SQL instructions to clean a table. When `none`, the table won't be cleaned. By default,
+if the property is not specified, its value is `delete`.
 
 If configuration for clean method is not set the system will delete from table before insert by default.
