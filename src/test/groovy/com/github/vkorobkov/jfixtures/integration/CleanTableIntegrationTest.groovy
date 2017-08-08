@@ -22,42 +22,41 @@ class CleanTableIntegrationTest extends Specification implements H2Test {
         given:
         sql.execute("INSERT INTO mates (\"id\", \"name\", \"age\") VALUES (10000, 'Igor', 31);")
         def result = sql.rows("SELECT * FROM mates")
-        result == [[ID:10000, NAME: "Igor", AGE: 31]]
+        result.size() == 1
 
         when:
         executeFixtures(tmpCleanFolder)
 
         then:
         def secondResult = sql.rows("SELECT * FROM mates")
-        secondResult == result
+        secondResult.size() == 1
     }
 
     def "should delete from table when clean_method has 'delete' value"() {
         given:
         sql.execute("INSERT INTO friends (\"id\", \"name\", \"age\") VALUES (10000, 'Semen', 30);")
         def result = sql.rows("SELECT * FROM friends")
-        result == [[ID:10000, NAME: "Semen", AGE: 30]]
+        result.size() == 1
 
         when:
         executeFixtures(tmpCleanFolder)
 
         then:
         def secondResult = sql.rows("SELECT * FROM friends")
-        secondResult == result
+        secondResult.size() == 1
     }
 
     def "should not delete from table when clean_method has 'none' value"() {
         given:
         sql.execute("INSERT INTO users (\"id\", \"name\", \"age\") VALUES (10000, 'Vladimir', 29);")
         def result = sql.rows("SELECT * FROM users")
-        result == [[ID:10000, NAME: "Vladimir", AGE: 29]]
+        result.size() == 1
 
         when:
         executeFixtures(tmpCleanFolder)
 
         then:
         def secondResult = sql.rows("SELECT * FROM users")
-        secondResult != result
-        secondResult == [[ID:10000, NAME: "Vladimir", AGE: 29], [ID:10000, NAME: "Vladimir", AGE: 29]]
+        secondResult.size() == 2
     }
 }
