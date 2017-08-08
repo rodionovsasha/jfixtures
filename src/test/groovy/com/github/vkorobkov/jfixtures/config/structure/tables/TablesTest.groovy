@@ -90,20 +90,20 @@ class TablesTest extends Specification {
 
     def "getCleanMethod returns 'delete' by default"() {
         expect:
-        getCleanMethod(SAMPLE_CONFIG, "friends") == "delete"
-        getCleanMethod(SAMPLE_CONFIG, "users") == "delete"
+        getCleanMethod(SAMPLE_CONFIG, "friends") == CleanMethod.DELETE
+        getCleanMethod(SAMPLE_CONFIG, "users") == CleanMethod.DELETE
     }
 
     def "should return clean_method if set"() {
         expect:
-        getCleanMethod(CLEAN_UP_CONFIG, "users") == "none"
-        getCleanMethod(CLEAN_UP_CONFIG, "friends") == "delete"
+        getCleanMethod(CLEAN_UP_CONFIG, "users") == CleanMethod.NONE
+        getCleanMethod(CLEAN_UP_CONFIG, "friends") == CleanMethod.DELETE
     }
 
     def "should return clean_method if set for any table"() {
         expect:
-        getCleanMethod(CLEAN_UP_CONFIG_REGEXP, "any_table") == "none"
-        getCleanMethod(CLEAN_UP_CONFIG_REGEXP, "users") == "delete"
+        getCleanMethod(CLEAN_UP_CONFIG_REGEXP, "any_table") == CleanMethod.NONE
+        getCleanMethod(CLEAN_UP_CONFIG_REGEXP, "users") == CleanMethod.DELETE
     }
 
     private static def shouldAutoGeneratePk(content, String name) {

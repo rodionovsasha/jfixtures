@@ -42,7 +42,7 @@ public class Processor {
     private void handleFixtureInstructions(Fixture fixture) {
         List<Instruction> fixtureInstructions = new ArrayList<>();
         val table = context.getConfig().table(fixture.name);
-        if (CleanMethod.DELETE == CleanMethod.valueOfIgnoreCase(table.getCleanMethod())) {
+        if (CleanMethod.DELETE == table.getCleanMethod()) {
             fixtureInstructions.add(cleanupTable(fixture));
         }
         fixtureInstructions.addAll(processRows(fixture));

@@ -26,8 +26,13 @@ public class Tables extends Section {
         return (String)readProperty(SECTION_PRIMARY_KEY, "column").orElse(PK_DEFAULT_COLUMN_NAME);
     }
 
-    public String getCleanMethod() {
-        return (String)readProperty("clean_method").orElse(CleanMethod.DELETE.name().toLowerCase());
+    public CleanMethod getCleanMethod() {
+        Optional<String> property = readProperty("clean_method");
+        if (property.isPresent()) {
+            return CleanMethod.valueOfIgnoreCase(property.get());
+        } else {
+            return CleanMethod.DELETE;
+        }
     }
 
     @SuppressWarnings("unchecked")
