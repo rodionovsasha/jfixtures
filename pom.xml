@@ -5,7 +5,7 @@
 
     <groupId>com.github.vkorobkov</groupId>
     <artifactId>jfixtures</artifactId>
-    <version>1.0.10</version>
+    <version>1.0.11</version>
     <packaging>jar</packaging>
 
     <name>JFixtures</name>
@@ -49,7 +49,6 @@
         <snakeyaml.version>1.18</snakeyaml.version>
 
         <!--Test dependencies versions-->
-        <groovy.version>2.4.7</groovy.version>
         <spock-core.version>1.1-groovy-2.4</spock-core.version>
         <equalsverifier.version>2.3.1</equalsverifier.version>
         <cglib-nodep.version>3.2.5</cglib-nodep.version>

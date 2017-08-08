@@ -269,7 +269,8 @@ by the default behaviour of JFixtures.
 It is a quite simple:
 1. Add a new class H2 to `com.github.vkorobkov.jfixtures.sql.dialects`.
 2. Update `JFixtures.java` with a new static method `h2` which creates new instance of JFixturesResult based on H2 class.
-3. Add unit tests for `H2.java` and `JFixtures.java` classes. Ensure code coverage remains 100%(see `target/site/jacoco/index.html`).
+3. Update `SqlType.java` with a new enumeration value for `h2` which allows to extend creation of `JFixturesResult` implementations using `byDialect` method.
+4. Add unit tests for `H2.java` and `JFixtures.java` classes and update `SqlTypeTest.groovy`.  Ensure code coverage remains 100%(see `target/site/jacoco/index.html`).  
 That's all!
 
 ## Configuration
@@ -423,3 +424,49 @@ columns:
 ```
 This example results into two columns, which will be added into every row of `users` table: 
 `cr_date: NOW()` and `version: 2`
+
+## Enable/disable primary key generation (id column)
+We can describe rules for primary key generation in a special file `.conf.yml`:
+```yaml
+".conf.yml":
+  tables:
+    all_tables_do_not_have_generated_pk:
+      applies_to: "friends"
+      pk:
+        generate: false
+
+"friends.yml":
+  vlad:
+    name: Vlad
+    age: 29
+```
+where `friends` is a table name.
+* `applies_to` can be a regular expression starts with /
+* `applies_to` can be a comma separated string like "table1, table2, /user.+"
+* `applies_to` can be an array of strings, regexps or other arrays
+
+Accepted values for `generate` section: `true, false, on, off`.
+
+If configuration for tables is not set the system will generate `id` column by default.
+
+Another option: not all tables can contain `id` column as a primary key. In this case any custom id can be set using `column` section.
+Source YAML:
+
+```yaml
+".conf.yml":
+  tables:
+    tables_with_generated_pk:
+      applies_to: "friends"
+      pk:
+        generate: true
+        column: custom_id
+
+"friends.yml":
+  vlad:
+    name: Vlad
+    age: 29
+```
+Output SQL:
+```sql
+INSERT INTO "friends" ("custom_id", "name", "age") VALUES (10000, 'Vlad', 29);
+```

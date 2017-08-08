@@ -1,0 +1,21 @@
+".conf.yml":
+  tables:
+    tables_with_pk:
+      applies_to: "profiles"
+      pk:
+        generate: true
+        column: custom_id
+
+  refs:
+    users:
+      profile_id: "profiles"
+
+"users.yml":
+  vlad:
+    login: vlad
+    profile_id: public
+
+"profiles.yml":
+  public:
+    name: Vladimir
+    age: 29

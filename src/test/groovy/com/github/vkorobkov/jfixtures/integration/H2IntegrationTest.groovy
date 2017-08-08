@@ -9,7 +9,7 @@ class H2IntegrationTest extends Specification implements H2Test {
     Path tmpFolderPath = unpackYamlToTempFolder("default.yml")
 
     void setupSpec() {
-        recreateTable("users", "ID INT AUTO_INCREMENT PRIMARY KEY, NAME VARCHAR(50) DEFAULT NULL, AGE INT DEFAULT NULL")
+        recreateTable("users", "ID INT, NAME VARCHAR(50) DEFAULT NULL, AGE INT DEFAULT NULL")
     }
 
     void cleanup() {
@@ -22,6 +22,6 @@ class H2IntegrationTest extends Specification implements H2Test {
 
         then:
         def result = sql.rows("SELECT * FROM users")
-        result == [[ID: 1, NAME: "Vlad", AGE: 29], [ID: 2, NAME: "Semen's special name:'#\"*[@;", AGE: 32]]
+        result == [[ID: 1, NAME: "Vlad", AGE: 29], [ID: 10001, NAME: "Semen's special name:'#\"*[@;", AGE: 32]]
     }
 }

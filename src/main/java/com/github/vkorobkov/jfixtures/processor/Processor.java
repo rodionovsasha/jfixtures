@@ -8,6 +8,7 @@ import com.github.vkorobkov.jfixtures.loader.Fixture;
 import com.github.vkorobkov.jfixtures.loader.FixtureRow;
 import com.github.vkorobkov.jfixtures.loader.FixtureValue;
 import com.github.vkorobkov.jfixtures.processor.sequence.IncrementalSequence;
+import lombok.val;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -16,7 +17,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Processor {
-    static final String PK_COLUMN_NAME = "id";
     private final ColumnProcessor columnProcessor;
     private final Context context;
 
@@ -63,7 +63,11 @@ public class Processor {
 
     private Map<String, FixtureValue> extractRowValues(String tableName, FixtureRow row) {
         Map<String, FixtureValue> result = new LinkedHashMap<>(row.getColumns().size() + 1);
-        result.put(PK_COLUMN_NAME, context.getSequenceRegistry().nextValue(tableName, row.getName()));
+        val table = context.getConfig().table(tableName);
+        if (table.shouldAutoGeneratePk()) {
+            result.put(table.getPkColumnName(),
+                    context.getSequenceRegistry().nextValue(tableName, row.getName()));
+        }
         row.getColumns().forEach((name, value) -> {
             value = columnProcessor.column(tableName, row.getName(), name, value);
             result.put(name, value);

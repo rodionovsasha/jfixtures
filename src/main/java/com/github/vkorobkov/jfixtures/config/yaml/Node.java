@@ -30,15 +30,13 @@ public final class Node {
     }
 
     public Stream<Node> children() {
-        return asMap().entrySet().stream().map(entry -> {
-           return subNode(this, entry.getKey(), entry.getValue());
-        });
+        return asMap().entrySet().stream().map(entry -> subNode(this, entry.getKey(), entry.getValue()));
     }
 
-    public Node dig(String ... names) {
+    public Node dig(String... names) {
         Node result = this;
-        for (String name: names) {
-            result = result.child(name);
+        for (String nodeName : names) {
+            result = result.child(nodeName);
         }
         return result;
     }

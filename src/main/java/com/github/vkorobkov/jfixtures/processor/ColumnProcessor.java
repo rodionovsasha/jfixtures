@@ -1,5 +1,6 @@
 package com.github.vkorobkov.jfixtures.processor;
 
+import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.loader.Fixture;
 import com.github.vkorobkov.jfixtures.loader.FixtureValue;
@@ -15,7 +16,7 @@ class ColumnProcessor {
 
     FixtureValue column(String table, String rowName, String column, FixtureValue value) {
         try {
-            return context.getConfig().referredTable(table, column)
+            return getConfig().referredTable(table, column)
                     .map(referredTable -> referredColumn(table, referredTable, value))
                     .orElse(value);
         } catch (ProcessorException cause) {
@@ -30,16 +31,16 @@ class ColumnProcessor {
             processDependentFixture(referredTable);
         }
 
-        val referredRow = referredRow(referredTable, value);
+        val referredRowValues = referredRow(referredTable, value).getValues();
+        val referredPk = getConfig().table(referredTable).getPkColumnName();
 
-        //todo: so far we always have PK so that check does not matter for a while
-        /*if (!referredRow.values.containsKey(Processor.PK_COLUMN_NAME)) {
-            String columnPath = String.join(".", referredTable, String.valueOf(value.value), Processor.PK_COLUMN_NAME);
+        if (!referredRowValues.containsKey(referredPk)) {
+            String columnPath = String.join(".", referredTable, String.valueOf(value.getValue()), referredPk);
             String message = "Referred column [" + columnPath + "] is not found";
             throw new ProcessorException(message);
-        }*/
+        }
 
-        return referredRow.getValues().get(Processor.PK_COLUMN_NAME);
+        return referredRowValues.get(referredPk);
     }
 
     private InsertRow referredRow(String table, FixtureValue value) {
@@ -60,5 +61,9 @@ class ColumnProcessor {
             throw new ProcessorException(message);
         }
         dependencyResolver.accept(referredFixture);
+    }
+
+    private Root getConfig() {
+        return context.getConfig();
     }
 }

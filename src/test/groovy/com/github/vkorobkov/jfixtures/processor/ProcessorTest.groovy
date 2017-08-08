@@ -188,6 +188,81 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         exception.message.contains("Circular dependency between tables found")
     }
 
+    def "does not have 'id' column when the PK is disabled"() {
+        when:
+        def instructions = load("basic_fixtures_with_pk_disabled.yml")
+
+        then:
+        instructions.size() == 2
+
+        and:
+        (instructions[0] as CleanTable).table == "users"
+
+        and:
+        def vlad = instructions[1] as InsertRow
+        vlad.table == "users"
+        vlad.rowName == "vlad"
+        assertInsertInstructions(vlad.values, [
+                first_name: "Vladimir",
+                age: 29,
+                sex: "man"
+        ])
+    }
+
+    def "row creation instructions test with custom PK name"() {
+        when:
+        def instructions = load("basic_fixtures_with_custom_pk.yml")
+
+        then:
+        instructions.size() == 2
+
+        and:
+        (instructions[0] as CleanTable).table == "users"
+
+        and:
+        def vlad = instructions[1] as InsertRow
+        vlad.table == "users"
+        vlad.rowName == "vlad"
+        assertInsertInstructions(vlad.values, [
+                custom_id: IncrementalSequence.LOWER_BOUND,
+                first_name: "Vladimir",
+                age: 29,
+                sex: "man"
+        ])
+    }
+
+    def "custom PK name for referred tables"() {
+        when:
+        def instructions = load("dependent_table_has_custom_pk.yml")
+
+        then:
+        def insertions = instructions.findAll { it instanceof InsertRow }
+
+        and:
+        def vlad = insertions.find { it.rowName == "vlad" }
+        vlad.values.id == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND)
+        vlad.values.login == FixtureValue.ofAuto("vlad")
+        vlad.values.profile_id == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND)
+
+        and:
+        def profile = insertions.find { it.rowName == "public" }
+        profile.values.custom_id == FixtureValue.ofAuto(IncrementalSequence.LOWER_BOUND)
+        profile.values.name == FixtureValue.ofAuto("Vladimir")
+        profile.values.age == FixtureValue.ofAuto(29)
+
+        and:
+        vlad.values.profile_id == profile.values.custom_id
+    }
+
+    def "throw ProcessorException when dependent table not have pk"() {
+        when:
+        load("dependent_table_not_have_pk.yml")
+
+        then:
+        def exception = thrown(ProcessorException)
+        exception.message.contains("Referred column [profiles.public.id] is not found")
+    }
+
     boolean assertInsertInstructions(Map instructions, Map expected) {
         expected = expected.collectEntries { [it.key, FixtureValue.ofAuto(it.value)] }
         new LinkedHashMap(instructions) == expected
