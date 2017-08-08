@@ -470,3 +470,34 @@ Output SQL:
 ```sql
 INSERT INTO "friends" ("custom_id", "name", "age") VALUES (10000, 'Vlad', 29);
 ```
+## Enable/disable table cleanup (delete from table before insert)
+For this option `.conf.yml` should have the following structure:
+```yaml
+".conf.yml":
+  tables:
+    no_clean_up:
+      applies_to: "users"
+      clean_method: "none"
+    clean_up:
+      applies_to: "friends"
+      clean_method: "delete"
+
+"users.yml":
+  vlad:
+    name: Vladimir
+    age: 29
+
+"friends.yml":
+  semen:
+    name: Semen
+    age: 30
+```
+
+where `friends` and `users` are table names.
+* `applies_to` can be a regular expression starts with /
+* `applies_to` can be a comma separated string like "table1, table2, /user.+"
+* `applies_to` can be an array of strings, regexps or other arrays
+
+Accepted values for `clean_method` section: `delete` or `none`.
+
+If configuration for clean method is not set the system will delete from table before insert by default.
