@@ -4,4 +4,12 @@
         <Class name="com.github.vkorobkov.jfixtures.loader.ValueType"/>
         <Bug pattern="DM_CONVERT_CASE"/>
     </Match>
+    <Match>
+        <Class name="com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod"/>
+        <Bug pattern="DM_CONVERT_CASE"/>
+    </Match>
+    <Match>
+        <Class name="com.github.vkorobkov.jfixtures.config.structure.tables.Tables"/>
+        <Bug pattern="DM_CONVERT_CASE"/>
+    </Match>
 </FindBugsFilter>
