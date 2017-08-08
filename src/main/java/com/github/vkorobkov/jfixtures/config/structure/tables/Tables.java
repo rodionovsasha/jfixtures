@@ -27,12 +27,7 @@ public class Tables extends Section {
     }
 
     public CleanMethod getCleanMethod() {
-        Optional<String> property = readProperty("clean_method");
-        if (property.isPresent()) {
-            return CleanMethod.valueOfIgnoreCase(property.get());
-        } else {
-            return CleanMethod.DELETE;
-        }
+        return CleanMethod.valueOfIgnoreCase((String)readProperty("clean_method").orElse("delete"));
     }
 
     @SuppressWarnings("unchecked")
