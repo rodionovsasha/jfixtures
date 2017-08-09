@@ -1,6 +1,7 @@
 package com.github.vkorobkov.jfixtures.processor;
 
 import com.github.vkorobkov.jfixtures.config.structure.Root;
+import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
@@ -40,7 +41,10 @@ public class Processor {
 
     private void handleFixtureInstructions(Fixture fixture) {
         List<Instruction> fixtureInstructions = new ArrayList<>();
-        fixtureInstructions.add(cleanupTable(fixture));
+        val table = context.getConfig().table(fixture.name);
+        if (CleanMethod.DELETE == table.getCleanMethod()) {
+            fixtureInstructions.add(cleanupTable(fixture));
+        }
         fixtureInstructions.addAll(processRows(fixture));
         context.getInstructions().addAll(fixtureInstructions);
     }

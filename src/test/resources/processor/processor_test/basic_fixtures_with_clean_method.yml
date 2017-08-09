@@ -1,0 +1,26 @@
+".conf.yml":
+  tables:
+    no_clean_up:
+      applies_to: "users"
+      clean_method: "none"
+    clean_up:
+      applies_to: "friends"
+      clean_method: "delete"
+
+"users.yml":
+  vlad:
+    first_name: Vladimir
+    age: 29
+    sex: man
+
+"friends.yml":
+  semen:
+    first_name: Semen
+    age: 30
+    sex: man
+
+"mates.yml":
+  igor:
+    first_name: Igor
+    age: 31
+    sex: man

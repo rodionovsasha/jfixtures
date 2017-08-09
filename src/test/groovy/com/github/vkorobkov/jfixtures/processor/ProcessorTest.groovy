@@ -263,6 +263,26 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         exception.message.contains("Referred column [profiles.public.id] is not found")
     }
 
+    def "deletion instructions when clean_method is not set or has 'delete' value"() {
+        when:
+        def instructions = load("basic_fixtures_with_clean_method.yml")
+
+        then:
+        def insertions = instructions.findAll { it instanceof InsertRow }
+        insertions.size() == 3
+        def deletions = instructions.findAll { it instanceof CleanTable }
+        deletions.size() == 2
+
+        and:
+        insertions.find { it.table == "mates" }
+        insertions.find { it.table == "users" }
+        insertions.find { it.table == "friends" }
+
+        deletions.find { it.table == "friends" }
+        deletions.find { it.table == "mates" }
+        deletions.find { it.table != "users" }
+    }
+
     boolean assertInsertInstructions(Map instructions, Map expected) {
         expected = expected.collectEntries { [it.key, FixtureValue.ofAuto(it.value)] }
         new LinkedHashMap(instructions) == expected

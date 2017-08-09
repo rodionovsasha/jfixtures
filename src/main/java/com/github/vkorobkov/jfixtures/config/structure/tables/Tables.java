@@ -26,6 +26,10 @@ public class Tables extends Section {
         return (String)readProperty(SECTION_PRIMARY_KEY, "column").orElse(PK_DEFAULT_COLUMN_NAME);
     }
 
+    public CleanMethod getCleanMethod() {
+        return CleanMethod.valueOfIgnoreCase((String)readProperty("clean_method").orElse("delete"));
+    }
+
     @SuppressWarnings("unchecked")
     private <T> Optional<T> readProperty(String... sections) {
         return (Optional<T>)getMatchingTables()
