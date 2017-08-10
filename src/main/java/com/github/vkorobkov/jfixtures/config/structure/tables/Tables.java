@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 public class Tables extends Section {
     private static final String SECTION_PRIMARY_KEY = "pk";
     private static final String PK_DEFAULT_COLUMN_NAME = "id";
-    private static final String TABLE_NAME_PLACEHOLDER = "$TABLE_NAME";
 
     private final String name;
 
