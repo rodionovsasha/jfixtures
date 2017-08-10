@@ -1,6 +1,7 @@
 package com.github.vkorobkov.jfixtures.sql
 
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
+import com.github.vkorobkov.jfixtures.instructions.CustomSql
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
 import com.github.vkorobkov.jfixtures.loader.FixtureValue
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
@@ -112,4 +113,28 @@ class SqlBaseTest extends Specification {
         expect:
         sql.escapeValue(FixtureValue.ofSql("SELECT 1")) == "SELECT 1"
     }
+
+    def "add Custom Sql test"() {
+        given:
+        def addCustomSql = new CustomSql("users", "BEGIN TRANSACTION;")
+
+        when:
+        sql.addCustomSql(appender, addCustomSql)
+
+        then:
+        appender as String == "BEGIN TRANSACTION;\n"
+    }
+
+    def "rethrows exception of appender on add Custom Sql"() {
+        given:
+        appender = Spy(StringAppender)
+        1 * appender.append(_ as CharSequence) >> { text -> throw new IOException() }
+
+        when:
+        sql.addCustomSql(appender, new CustomSql("users", "BEGIN TRANSACTION;"))
+
+        then:
+        thrown(IOException)
+    }
+
 }
