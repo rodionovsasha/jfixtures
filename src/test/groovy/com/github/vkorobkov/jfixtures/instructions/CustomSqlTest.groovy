@@ -8,7 +8,6 @@ class CustomSqlTest extends Specification {
         CustomSql customSql = new CustomSql("users", "BEGIN TRANSACTION;")
 
         then:
-        customSql.table == "users"
         customSql.instruction == "BEGIN TRANSACTION;"
     }
 
@@ -17,7 +16,6 @@ class CustomSqlTest extends Specification {
         CustomSql customSql = new CustomSql("users", "// Doing table \$TABLE_NAME")
 
         then:
-        customSql.table == "users"
         customSql.instruction == "// Doing table users"
     }
 
