@@ -1,9 +1,6 @@
 package com.github.vkorobkov.jfixtures.sql;
 
-import com.github.vkorobkov.jfixtures.instructions.CleanTable;
-import com.github.vkorobkov.jfixtures.instructions.InsertRow;
-import com.github.vkorobkov.jfixtures.instructions.Instruction;
-import com.github.vkorobkov.jfixtures.instructions.InstructionVisitor;
+import com.github.vkorobkov.jfixtures.instructions.*;
 import lombok.AllArgsConstructor;
 
 import java.util.Collection;
@@ -25,5 +22,10 @@ public class SqlBridge implements InstructionVisitor {
     @Override
     public void visit(InsertRow insertRow) {
         sql.insertRow(appender, insertRow);
+    }
+
+    @Override
+    public void visit(CustomSql customSql) {
+        sql.addCustomSql(appender, customSql);
     }
 }

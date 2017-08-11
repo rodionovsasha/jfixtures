@@ -6,4 +6,7 @@ public interface InstructionVisitor {
     }
 
     void visit(InsertRow insertRow);
+
+    default void visit(CustomSql customSql) {
+    }
 }

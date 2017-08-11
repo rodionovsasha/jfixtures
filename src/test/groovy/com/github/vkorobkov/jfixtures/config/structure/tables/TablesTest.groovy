@@ -55,6 +55,17 @@ class TablesTest extends Specification {
             ]
     ]
 
+    def BEFORE_INSERTS_CONFIG = [
+            transactional_users: [
+                    applies_to  : "users",
+                    before_inserts: "BEGIN TRANSACTION;",
+            ],
+            transactional_friends   : [
+                    applies_to  : ["friends", "mates"],
+                    before_inserts: ["// Doing table \$TABLE_NAME", "BEGIN TRANSACTION;"],
+            ]
+    ]
+
     def "shouldAutoGeneratePk returns true by default"() {
         expect:
         shouldAutoGeneratePk(SAMPLE_CONFIG, "mates")
@@ -106,6 +117,18 @@ class TablesTest extends Specification {
         getCleanMethod(CLEAN_UP_CONFIG_REGEXP, "users") == CleanMethod.DELETE
     }
 
+    def "getBeforeInserts returns 'empty value' by default"() {
+        expect:
+        getBeforeInserts(SAMPLE_CONFIG, "users") == []
+    }
+
+    def "should return before_inserts if set"() {
+        expect:
+        getBeforeInserts(BEFORE_INSERTS_CONFIG, "users") == ["BEGIN TRANSACTION;"]
+        getBeforeInserts(BEFORE_INSERTS_CONFIG, "friends") == ["// Doing table \$TABLE_NAME", "BEGIN TRANSACTION;"]
+        getBeforeInserts(BEFORE_INSERTS_CONFIG, "mates") == ["// Doing table \$TABLE_NAME", "BEGIN TRANSACTION;"]
+    }
+
     private static def shouldAutoGeneratePk(content, String name) {
         getTablesConfig(content, name).shouldAutoGeneratePk()
     }
@@ -116,6 +139,10 @@ class TablesTest extends Specification {
 
     private static def getCleanMethod(content, String name) {
         getTablesConfig(content, name).getCleanMethod()
+    }
+
+    private static def getBeforeInserts(content, String name) {
+        getTablesConfig(content, name).getBeforeInserts()
     }
 
     private static def getTablesConfig(content, String name) {

@@ -1,6 +1,7 @@
 package com.github.vkorobkov.jfixtures.sql;
 
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
+import com.github.vkorobkov.jfixtures.instructions.CustomSql;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.loader.FixtureValue;
 import com.github.vkorobkov.jfixtures.util.SqlUtil;
@@ -31,6 +32,12 @@ public interface SqlBase extends Sql {
             .collect(Collectors.joining(", "));
 
         appender.append("INSERT INTO ", table, " (", columns, ") VALUES (", values, ");\n");
+    }
+
+    @SneakyThrows
+    @Override
+    default void addCustomSql(Appender appender, CustomSql customSql) {
+        appender.append(customSql.getInstruction(), "\n");
     }
 
     default String escapeTableOrColumn(String name) {

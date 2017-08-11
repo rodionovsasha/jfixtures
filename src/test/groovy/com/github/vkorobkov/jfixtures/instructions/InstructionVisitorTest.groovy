@@ -14,6 +14,12 @@ class InstructionVisitorTest extends Specification {
         visitor.visit(new CleanTable("users"))
     }
 
+    def "visiting CustomSql is doing nothing"() {
+        expect:
+        visitor.visit(new CustomSql("users", "BEGIN TRANSACTION;"))
+    }
+
+
     static class TestVisitor implements InstructionVisitor {
         @Override
         void visit(InsertRow insertRow) {
