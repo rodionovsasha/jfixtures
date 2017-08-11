@@ -2,6 +2,7 @@ package com.github.vkorobkov.jfixtures.processor
 
 import com.github.vkorobkov.jfixtures.config.ConfigLoader
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
+import com.github.vkorobkov.jfixtures.instructions.CustomSql
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
 import com.github.vkorobkov.jfixtures.instructions.Instruction
 import com.github.vkorobkov.jfixtures.loader.FixtureValue
@@ -281,6 +282,32 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         deletions.find { it.table == "friends" }
         deletions.find { it.table == "mates" }
         deletions.find { it.table != "users" }
+    }
+
+    def "before_insert instructions should be added"() {
+        when:
+        def instructions = load("basic_fixtures_with_before_inserts.yml")
+
+        then:
+        def customSql = instructions.findAll { it instanceof CustomSql }
+        customSql.size() == 2
+
+        and:
+        customSql.get(0).instruction == "// Doing table users"
+        customSql.get(1).instruction == "BEGIN TRANSACTION;"
+    }
+
+    def "after_insert instructions should be added"() {
+        when:
+        def instructions = load("basic_fixtures_with_after_inserts.yml")
+
+        then:
+        def customSql = instructions.findAll { it instanceof CustomSql }
+        customSql.size() == 2
+
+        and:
+        customSql.get(0).instruction == "// Completed table users"
+        customSql.get(1).instruction == "COMMIT TRANSACTION;"
     }
 
     boolean assertInsertInstructions(Map instructions, Map expected) {

@@ -1,0 +1,25 @@
+".conf.yml":
+  tables:
+    transactional_users:
+      applies_to: users
+      before_inserts:
+        - // Doing table $TABLE_NAME
+        - BEGIN TRANSACTION;
+
+"users.yml":
+  vlad:
+    first_name: Vladimir
+    age: 29
+    sex: man
+
+"friends.yml":
+  semen:
+    first_name: Semen
+    age: 30
+    sex: man
+
+"mates.yml":
+  igor:
+    first_name: Igor
+    age: 31
+    sex: man

@@ -42,6 +42,13 @@ public class Tables extends Section {
         return instructions;
     }
 
+    public List<String> getAfterInserts() {
+        List<String> instructions = new ArrayList<>();
+        CollectionUtil.flattenRecursively(readProperty("after_inserts").orElse(Collections.emptyList()),
+                new SplitStringConsumer(instructions::add));
+        return instructions;
+    }
+
     @SuppressWarnings("unchecked")
     private <T> Optional<T> readProperty(String... sections) {
         return (Optional<T>)getMatchingTables()

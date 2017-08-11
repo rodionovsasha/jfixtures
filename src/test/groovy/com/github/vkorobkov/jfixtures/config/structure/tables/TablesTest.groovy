@@ -66,6 +66,17 @@ class TablesTest extends Specification {
             ]
     ]
 
+    def AFTER_INSERTS_CONFIG = [
+            transactional_users: [
+                    applies_to  : "users",
+                    after_inserts: "COMMIT TRANSACTION;",
+            ],
+            transactional_friends   : [
+                    applies_to  : ["friends", "mates"],
+                    after_inserts: ["// Completed table \$TABLE_NAME", "COMMIT TRANSACTION;"],
+            ]
+    ]
+
     def "shouldAutoGeneratePk returns true by default"() {
         expect:
         shouldAutoGeneratePk(SAMPLE_CONFIG, "mates")
@@ -129,6 +140,18 @@ class TablesTest extends Specification {
         getBeforeInserts(BEFORE_INSERTS_CONFIG, "mates") == ["// Doing table \$TABLE_NAME", "BEGIN TRANSACTION;"]
     }
 
+    def "getAfterInserts returns 'empty value' by default"() {
+        expect:
+        getAfterInserts(SAMPLE_CONFIG, "users") == []
+    }
+
+    def "should return after_inserts if set"() {
+        expect:
+        getAfterInserts(AFTER_INSERTS_CONFIG, "users") == ["COMMIT TRANSACTION;"]
+        getAfterInserts(AFTER_INSERTS_CONFIG, "friends") == ["// Completed table \$TABLE_NAME", "COMMIT TRANSACTION;"]
+        getAfterInserts(AFTER_INSERTS_CONFIG, "mates") == ["// Completed table \$TABLE_NAME", "COMMIT TRANSACTION;"]
+    }
+
     private static def shouldAutoGeneratePk(content, String name) {
         getTablesConfig(content, name).shouldAutoGeneratePk()
     }
@@ -143,6 +166,10 @@ class TablesTest extends Specification {
 
     private static def getBeforeInserts(content, String name) {
         getTablesConfig(content, name).getBeforeInserts()
+    }
+
+    private static def getAfterInserts(content, String name) {
+        getTablesConfig(content, name).getAfterInserts()
     }
 
     private static def getTablesConfig(content, String name) {
