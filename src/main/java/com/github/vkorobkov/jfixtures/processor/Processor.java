@@ -43,16 +43,13 @@ public class Processor {
     private void handleFixtureInstructions(Fixture fixture) {
         val table = context.getConfig().table(fixture.name);
         List<Instruction> fixtureInstructions = new ArrayList<>();
-        List<String> beforeInsertInstructions = table.getBeforeInserts();
 
         if (CleanMethod.DELETE == table.getCleanMethod()) {
             fixtureInstructions.add(cleanupTable(fixture));
         }
 
-        if (!beforeInsertInstructions.isEmpty()) {
-            fixtureInstructions.addAll(beforeInsertInstructions.stream()
-                    .map(s -> customSql(fixture.name, s)).collect(Collectors.toList()));
-        }
+        fixtureInstructions.addAll(table.getBeforeInserts().stream()
+                .map(s -> customSql(fixture.name, s)).collect(Collectors.toList()));
 
         fixtureInstructions.addAll(processRows(fixture));
         context.getInstructions().addAll(fixtureInstructions);

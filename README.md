@@ -306,7 +306,7 @@ doing so:
 
 The first variant is preferable, of course - it is simple and natural for relational databases, does not need any
 extra knowledge or skills to implement it. However, due to some reasons, your DB design might not have the default
-values for cases like that: for example, if the architect or DBA prefer to set these values explicitely from your app,
+values for cases like that: for example, if the architect or DBA prefer to set these values explicitly from your app,
 or if it is a legacy problem and the DB refactoring is risky/going to take much/etc or when you need to put values
 which are different from table's default values in SQL.
 
@@ -387,7 +387,7 @@ all the concerns from `concerns` section will be applied.
 
 The order of items in `apply:to` does not matter; any duplicates are ignored;
 The order of items in `apply:concerns` matters: concerns will be applied in the same order as they were defined,
-from left to right. Duplicates are not getting removed. Whem many concerns, they are getting merged, it means, 
+from left to right. Duplicates are not getting removed. When many concerns, they are getting merged, it means, 
 that the further concerns complement(add rows) or override(replace rows) the previous ones.
 
 Note, that columns in fixtures have a priority over the columns from `columns:concerns`. It means that when
@@ -446,7 +446,7 @@ matches the `applies_to` value(s). If the same property exists in two or more ma
 property value value will be taken.
 
 The value of `applies_to` could be:
-* A string which strinctly matches table name
+* A string which strictly matches table name
 * A regexp for pattern matching. Regexp should start from `/` symbol
 * It could be a comma separate list of strings and/or regexps
 * It could be an array of the any type above
@@ -454,7 +454,7 @@ The value of `applies_to` could be:
 
 ### Enable/disable primary key generation (id column)
 By default, JFixtures automatically generates primary key(`id` column) for every row.
-If this is not a desireable behaviour, it could be switched off:
+If this is not a desirable behaviour, it could be switched off:
 ```yaml
 tables:
   friends_do_not_have_generated_pk: # do not generate id for friends table automatically
@@ -466,15 +466,42 @@ tables:
 If your table(s) need custom PK name(other than `id` which is used by default) use `pk:column` table property: 
 ```yaml
 tables:
-  friends_has_custom_ok:
+  friends_has_custom_pk:
     applies_to: "friends"
     pk:
       column: friend_id # Friends table now has PK named "friend_id"
 ```
 ### Enable/disable table cleanup (delete from table before insert)
-There is a table property named `clean_up` which is reponsible for cleaning the data from the table(s) before JFixtures
+There is a table property named `clean_up` which is responsible for cleaning the data from the table(s) before JFixtures
 inserts the data. It could have following values: `delete` or `none`. When `delete`, JFixtures will invoke
 `DELETE FROM $table` SQL instructions to clean a table. When `none`, the table won't be cleaned. By default,
 if the property is not specified, its value is `delete`.
 
+```yaml
+tables:
+  no_clean_up:
+    applies_to: "friends"
+    clean_up: "none"
+  clean_up_table:
+    applies_to: "users"
+    clean_method: "delete"
+```
 If configuration for clean method is not set the system will delete from table before insert by default.
+
+### Addition custom SQL before inserts
+Sometimes we need to write a custom SQL before insert instructions (e.g.`BEGIN TRANSACTION;`).
+It is possible to do using `before_inserts` property.
+This custom SQL will be added before insert instructions and after cleanup instruction (if present).
+
+```yaml
+tables:
+  transactional_users:
+    applies_to: users, friends
+      before_inserts:
+        - // Doing table $TABLE_NAME
+        - BEGIN TRANSACTION;
+```
+The `before-insert` property could be: a single value or a list(or list of lists with any depth).  
+The `$TABLE_NAME` placeholder is replaced with the real table name. 
+
+Before-insert instructions order is not changed, duplicates(if any) are not removed.

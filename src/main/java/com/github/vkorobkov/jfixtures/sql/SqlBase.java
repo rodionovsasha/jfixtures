@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public interface SqlBase extends Sql {
-    String TABLE_NAME_PLACEHOLDER = "$TABLE_NAME";
-
     @SneakyThrows
     @Override
     default void cleanTable(Appender appender, CleanTable cleanTable) {
@@ -39,7 +37,7 @@ public interface SqlBase extends Sql {
     @SneakyThrows
     @Override
     default void addCustomSql(Appender appender, CustomSql customSql) {
-        appender.append(customSql.getInstruction().replace(TABLE_NAME_PLACEHOLDER, customSql.getTable()), "\n");
+        appender.append(customSql.getInstruction(), "\n");
     }
 
     default String escapeTableOrColumn(String name) {
