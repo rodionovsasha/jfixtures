@@ -36,8 +36,16 @@ public class Tables extends Section {
     }
 
     public List<String> getBeforeInserts() {
+        return readArrayRecursively("before_inserts");
+    }
+
+    public List<String> getAfterInserts() {
+        return readArrayRecursively("after_inserts");
+    }
+
+    private List<String> readArrayRecursively(String... sections) {
         List<String> instructions = new ArrayList<>();
-        CollectionUtil.flattenRecursively(readProperty("before_inserts").orElse(Collections.emptyList()),
+        CollectionUtil.flattenRecursively(readProperty(sections).orElse(Collections.emptyList()),
                 new SplitStringConsumer(instructions::add));
         return instructions;
     }

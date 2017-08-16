@@ -3,14 +3,14 @@ package com.github.vkorobkov.jfixtures
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 
-class BeforeInsertsTest extends Specification implements YamlVirtualFolder {
+class AfterInsertsTest extends Specification implements YamlVirtualFolder {
     def DEFAULT_EXPECTED_SQL = """DELETE FROM "users";
             |INSERT INTO "users" ("id", "name", "age") VALUES (10000, 'Vladimir', 29);
             |""".stripMargin()
     def CUSTOM_EXPECTED_SQL = """DELETE FROM "users";
-            |// Doing table users
-            |BEGIN TRANSACTION;
             |INSERT INTO "users" ("id", "name", "age") VALUES (10000, 'Vladimir', 29);
+            |// Completed table users
+            |COMMIT TRANSACTION;
             |""".stripMargin()
 
     def "should not insert any custom SQL by default"() {

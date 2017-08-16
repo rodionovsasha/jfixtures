@@ -491,7 +491,7 @@ If configuration for clean method is not set the system will delete from table b
 ### Addition custom SQL before inserts
 Sometimes we need to write a custom SQL before insert instructions (e.g.`BEGIN TRANSACTION;`).
 It is possible to do using `before_inserts` property.
-This custom SQL will be added before insert instructions and after cleanup instruction (if present).
+This custom SQL will be added `before_inserts` instructions and after cleanup instruction (if present).
 
 ```yaml
 tables:
@@ -505,3 +505,21 @@ The `before-insert` property could be: a single value or a list(or list of lists
 The `$TABLE_NAME` placeholder is replaced with the real table name. 
 
 Before-insert instructions order is not changed, duplicates(if any) are not removed.
+
+### Addition custom SQL after inserts
+Sometimes we need to write a custom SQL after insert instructions (e.g.`COMMIT TRANSACTION;`).
+It is possible to do using `after_inserts` property.
+This custom SQL will be added `after_inserts` instructions and after cleanup instruction (if present).
+
+```yaml
+tables:
+  transactional_users:
+    applies_to: users, friends
+      after_inserts:
+        - // Completed table $TABLE_NAME
+        - COMMIT TRANSACTION;
+```
+The `after_inserts-insert` property could be: a single value or a list(or list of lists with any depth).  
+The `$TABLE_NAME` placeholder is replaced with the real table name. 
+
+After-insert instructions order is not changed, duplicates(if any) are not removed.

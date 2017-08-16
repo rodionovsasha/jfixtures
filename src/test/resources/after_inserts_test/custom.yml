@@ -1,0 +1,12 @@
+".conf.yml":
+  tables:
+    transactional_users:
+      applies_to: users
+      after_inserts:
+        - // Completed table $TABLE_NAME
+        - COMMIT TRANSACTION;
+
+"users.yml":
+  vlad:
+    name: Vladimir
+    age: 29

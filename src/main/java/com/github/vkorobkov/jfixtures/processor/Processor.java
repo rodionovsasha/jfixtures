@@ -52,6 +52,9 @@ public class Processor {
                 .map(s -> customSql(fixture.name, s)).collect(Collectors.toList()));
 
         fixtureInstructions.addAll(processRows(fixture));
+
+        fixtureInstructions.addAll(table.getAfterInserts().stream()
+                .map(s -> customSql(fixture.name, s)).collect(Collectors.toList()));
         context.getInstructions().addAll(fixtureInstructions);
     }
 
