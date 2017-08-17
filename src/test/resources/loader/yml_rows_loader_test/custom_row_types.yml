@@ -1,7 +1,3 @@
 vlad:
-  first_name:
-    value: Vladimir
-    type: auto
-  age:
-    value: DEFAULT
-    type: sql
+  first_name: Vladimir
+  age: sql:DEFAULT

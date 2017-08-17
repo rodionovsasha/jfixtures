@@ -1,33 +1,27 @@
 package com.github.vkorobkov.jfixtures.loader;
 
+import com.github.vkorobkov.jfixtures.util.StringUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @EqualsAndHashCode
 @Getter
 public final class FixtureValue {
+    public static final String PREFIX_SQL = "sql:";
+    public static final String PREFIX_TEXT = "text:";
+
     private final Object value;
     private final ValueType type;
 
-    private FixtureValue(Object value, ValueType type) {
-        this.value = value;
-        this.type = type;
-    }
-
-    public static FixtureValue ofAuto(Object value) {
-        return new FixtureValue(value, ValueType.AUTO);
-    }
-
-    public static FixtureValue ofSql(String sql) {
-        return new FixtureValue(sql, ValueType.SQL);
-    }
-
-    public boolean isString() {
-        return isStandardType(String.class);
-    }
-
-    public boolean isSql() {
-        return type == ValueType.SQL;
+    public FixtureValue(Object value) {
+        if (value instanceof String) {
+            String str = (String)value;
+            this.type = determineType(str);
+            this.value = StringUtil.removePrefixes(str, PREFIX_SQL, PREFIX_TEXT);
+        } else {
+            this.value = value;
+            this.type = ValueType.AUTO;
+        }
     }
 
     @Override
@@ -35,7 +29,7 @@ public final class FixtureValue {
         return String.valueOf(value);
     }
 
-    private boolean isStandardType(Class<?> typeToCheck) {
-        return type == ValueType.AUTO && typeToCheck.isAssignableFrom(value.getClass());
+    private ValueType determineType(String value) {
+        return value.startsWith(PREFIX_SQL) ? ValueType.SQL : ValueType.TEXT;
     }
 }

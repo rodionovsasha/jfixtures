@@ -8,8 +8,8 @@ class InsertRowTest extends Specification {
     def "constructor test"() {
         given:
         def values = [
-            "id": FixtureValue.ofAuto(5),
-            "name": FixtureValue.ofAuto("Vlad")
+            "id": new FixtureValue(5),
+            "name": new FixtureValue("Vlad")
         ]
 
         when:
@@ -27,8 +27,8 @@ class InsertRowTest extends Specification {
     def "values collection is immutable"() {
         given:
         def values = [
-            "id": FixtureValue.ofAuto(5),
-            "name": FixtureValue.ofAuto("Vlad")
+            "id": new FixtureValue(5),
+            "name": new FixtureValue("Vlad")
         ]
 
         when:
@@ -41,7 +41,7 @@ class InsertRowTest extends Specification {
 
     def "value toString() dummy test"() {
         expect:
-        FixtureValue.ofAuto("5").toString() == FixtureValue.ofAuto("5").toString()
+        new FixtureValue("5").toString() == new FixtureValue("5").toString()
     }
 
     def "visitor accepts instruction"() {

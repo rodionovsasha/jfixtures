@@ -69,16 +69,16 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         and:
         def vlad = users[0]
         vlad.name == "vlad"
-        vlad.columns.first_name == FixtureValue.ofAuto("Vladimir")
-        vlad.columns.age == FixtureValue.ofAuto(29)
-        vlad.columns.sex == FixtureValue.ofAuto("man")
+        vlad.columns.first_name == new FixtureValue("Vladimir")
+        vlad.columns.age == new FixtureValue(29)
+        vlad.columns.sex == new FixtureValue("man")
 
         and:
         def dima = users[1]
         dima.name == "diman"
-        dima.columns.first_name == FixtureValue.ofAuto("Dmitry")
-        dima.columns.age == FixtureValue.ofAuto(28)
-        dima.columns.sex == FixtureValue.ofAuto("man")
+        dima.columns.first_name == new FixtureValue("Dmitry")
+        dima.columns.age == new FixtureValue(28)
+        dima.columns.sex == new FixtureValue("man")
     }
 
     def "'users' table copies fields from the base table"() {
@@ -91,16 +91,16 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         and:
         def vlad = users[0]
         vlad.name == "vlad"
-        vlad.columns.first_name == FixtureValue.ofAuto("Vladimir")
-        vlad.columns.age == FixtureValue.ofAuto(29)
-        vlad.columns.sex == FixtureValue.ofAuto("man")
+        vlad.columns.first_name == new FixtureValue("Vladimir")
+        vlad.columns.age == new FixtureValue(29)
+        vlad.columns.sex == new FixtureValue("man")
 
         and:
         def dima = users[1]
         dima.name == "diman"
-        dima.columns.first_name == FixtureValue.ofAuto("Dmitry")
-        dima.columns.age == FixtureValue.ofAuto(28)
-        dima.columns.sex == FixtureValue.ofAuto("man")
+        dima.columns.first_name == new FixtureValue("Dmitry")
+        dima.columns.age == new FixtureValue(28)
+        dima.columns.sex == new FixtureValue("man")
     }
 
     def "every table copies super base table fields"() {
@@ -110,15 +110,15 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         then:
         def user = fixtures.get("users").rows.first()
         user.name == "vlad"
-        user.columns.first_name == FixtureValue.ofAuto("Vladimir")
-        user.columns.age == FixtureValue.ofAuto(29)
-        user.columns.version == FixtureValue.ofAuto(1)
+        user.columns.first_name == new FixtureValue("Vladimir")
+        user.columns.age == new FixtureValue(29)
+        user.columns.version == new FixtureValue(1)
 
         and:
         def role = fixtures.get("roles").rows.first()
         role.name == "vlad"
-        role.columns.role == FixtureValue.ofAuto("admin")
-        role.columns.version == FixtureValue.ofAuto(1)
+        role.columns.role == new FixtureValue("admin")
+        role.columns.version == new FixtureValue(1)
     }
 
     Map<String, Fixture> load(String ymlFile) {
