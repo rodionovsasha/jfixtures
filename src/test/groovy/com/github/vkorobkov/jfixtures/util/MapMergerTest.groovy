@@ -16,7 +16,7 @@ class MapMergerTest extends Specification {
         def with = [age: 30, lang: "Java"]
 
         when:
-        def result = MapMerger.merge(from, with, null)
+        def result = MapMerger.merge(from, with)
 
         then:
         result == [name: "Vlad", age: 30, lang: "Java"]
@@ -28,7 +28,7 @@ class MapMergerTest extends Specification {
         def with = [lang: "Java"]
 
         when:
-        def result = MapMerger.merge(from, with, null)
+        def result = MapMerger.merge(from, with)
 
         then:
         result == [name: "Vlad", age: 29, lang: "Java"]
@@ -40,7 +40,7 @@ class MapMergerTest extends Specification {
         def with = [langs: [first: "Java", second: "Groovy"]]
 
         when:
-        def result = MapMerger.merge(from, with, null)
+        def result = MapMerger.merge(from, with)
 
         then:
         result == [name: "Vlad", age: 29, langs: [first: "Java", second: "Groovy"]]
@@ -52,60 +52,34 @@ class MapMergerTest extends Specification {
         def with = [langs: [second: "Basic", third: "Ruby"]]
 
         when:
-        def result = MapMerger.merge(from, with, null)
+        def result = MapMerger.merge(from, with)
 
         then:
         result == [name: "Vlad", age: 29, langs: [first: "Java", second: "Basic", third: "Ruby"]]
     }
 
-    def "user defined merging a leaf into a node"() {
+    def "returns leaf when merging leaf into noe"() {
         given:
         def from = [name: "Vlad", age: 29, langs: [first: "Java", second: "Groovy"]]
         def with = [langs: "Basic"]
 
         when:
-        def result = MapMerger.merge(from, with, { intoItem, withItem -> intoItem << ["default": withItem] })
+        def result = MapMerger.merge(from, with)
 
         then:
-        result == [name: "Vlad", age: 29, langs: [first: "Java", second: "Groovy", default: "Basic"]]
+        result == [name: "Vlad", age: 29, langs: "Basic"]
     }
 
-    def "user defined merging a node into a leaf"() {
+    def "returns node when merge node into leaf"() {
         given:
         def from = [name: "Vlad", age: 29, langs: "Basic"]
         def with = [langs: [first: "Java", second: "Groovy"]]
 
         when:
-        def result = MapMerger.merge(from, with, { intoItem, withItem -> withItem << ["default": intoItem] })
+        def result = MapMerger.merge(from, with)
 
         then:
-        result == [name: "Vlad", age: 29, langs: [first: "Java", second: "Groovy", default: "Basic"]]
-    }
-
-    def "mutating into_map in resolver do not change the source maps"() {
-        given:
-        def from = [name: "Vlad", age: 29, langs: [first: "Java", second: "Groovy"]]
-        def with = [langs: "Basic"]
-
-        when:
-        MapMerger.merge(from, with, { intoItem, withItem -> intoItem << ["default": withItem] })
-
-        then:
-        from == [name: "Vlad", age: 29, langs: [first: "Java", second: "Groovy"]]
-        with == [langs: "Basic"]
-    }
-
-    def "mutating with_map in resolver do not change the source maps"() {
-        given:
-        def from = [name: "Vlad", age: 29, langs: "Basic"]
-        def with = [langs: [first: "Java", second: "Groovy"]]
-
-        when:
-        def result = MapMerger.merge(from, with, { intoItem, withItem -> withItem << ["default": intoItem] })
-
-        then:
-        from == [name: "Vlad", age: 29, langs: "Basic"]
-        with == [langs: [first: "Java", second: "Groovy"]]
+        result == [name: "Vlad", age: 29, langs: [first: "Java", second: "Groovy"]]
     }
 
     def "mutating of result does not affect the source lists"() {
@@ -114,7 +88,7 @@ class MapMergerTest extends Specification {
         def with = [langs: [third: "Ruby"], companies: [current: "Credo", past: "Wiley", next: "transisland"]]
 
         when:
-        def result = MapMerger.merge(from, with, null)
+        def result = MapMerger.merge(from, with)
 
         then:
         result == [
@@ -140,7 +114,7 @@ class MapMergerTest extends Specification {
         def with = [name: "Vlad", age: 29, langs: [first: "Java", second: "Groovy"]]
 
         when:
-        def result = MapMerger.merge(from, with, null)
+        def result = MapMerger.merge(from, with)
 
         then:
         result == [name: "Vlad", age: 29, langs: [first: "Java", second: "Groovy"]]
@@ -152,7 +126,7 @@ class MapMergerTest extends Specification {
         def with = [:]
 
         when:
-        def result = MapMerger.merge(from, with, null)
+        def result = MapMerger.merge(from, with)
 
         then:
         result == [name: "Vlad", age: 29, langs: [first: "Java", second: "Groovy"]]
@@ -164,7 +138,7 @@ class MapMergerTest extends Specification {
         def with = [age: 30, lang: "Java"]
 
         when:
-        def result = MapMerger.merge(from, with, null)
+        def result = MapMerger.merge(from, with)
 
         then:
         result.toMapString() == [name: "Vlad", age: 30, lang: "Java"].toMapString()
@@ -172,6 +146,6 @@ class MapMergerTest extends Specification {
 
     def "returns empty map when merges two empty maps"() {
         expect:
-        MapMerger.merge([:], [:], null).isEmpty()
+        MapMerger.merge([:], [:]).isEmpty()
     }
 }

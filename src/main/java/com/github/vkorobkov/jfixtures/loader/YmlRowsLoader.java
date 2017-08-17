@@ -1,7 +1,6 @@
 package com.github.vkorobkov.jfixtures.loader;
 
 import com.github.vkorobkov.jfixtures.util.MapMerger;
-import com.github.vkorobkov.jfixtures.util.RowMergeConflictResolver;
 import com.github.vkorobkov.jfixtures.util.StreamUtil;
 import com.github.vkorobkov.jfixtures.util.YmlUtil;
 import lombok.AllArgsConstructor;
@@ -28,7 +27,7 @@ public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
 
     private FixtureRow fixtureRow(Map.Entry<String, ?> sourceRow) {
         Map row = Optional.ofNullable((Map)sourceRow.getValue()).orElse(Collections.emptyMap());
-        Map merged = MapMerger.merge(base, row, RowMergeConflictResolver.INSTANCE);
+        Map merged = MapMerger.merge(base, row);
         return new FixtureRow(sourceRow.getKey(), loadColumns(merged));
     }
 
@@ -41,16 +40,7 @@ public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
     }
 
     private FixtureValue columnValue(Map.Entry<String, Object> entry) {
-        Object value = entry.getValue();
-        ValueType type = ValueType.AUTO;
-
-        if (value instanceof Map) {
-            Map node = (Map)value;
-            type = ValueType.valueOfIgnoreCase((String)node.get("type"));
-            value = node.get("value");
-        }
-
-        return type == ValueType.SQL ? FixtureValue.ofSql(String.valueOf(value)) : FixtureValue.ofAuto(value);
+        return new FixtureValue(entry.getValue());
     }
 
     private Map<String, Object> loadYamlContent(Path file) {

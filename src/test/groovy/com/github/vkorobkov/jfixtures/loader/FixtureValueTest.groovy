@@ -5,40 +5,60 @@ import spock.lang.Specification
 
 class FixtureValueTest extends Specification {
 
-    def "constructor test"() {
-        expect:
-        FixtureValue.ofAuto(5).value == 5
-    }
-
     def "equals"() {
         expect:
         EqualsVerifier.forClass(FixtureValue).verify()
     }
 
-    def "isString returns true of value has a string type"(value, result) {
+    def "detects text type without text: prefix"() {
+        when:
+        def fixture = new FixtureValue("Vlad")
+
+        then:
+        fixture.type == ValueType.TEXT
+        fixture.value == "Vlad"
+    }
+
+    def "detects text type with text: prefix"() {
+        when:
+        def fixture = new FixtureValue("text:Vlad")
+
+        then:
+        fixture.type == ValueType.TEXT
+        fixture.value == "Vlad"
+    }
+
+    def "does not trim leading spaces for text with prefix"() {
         expect:
-        FixtureValue.ofAuto(value).string == result
+        new FixtureValue("text: Vlad").value == " Vlad"
+    }
+
+    def "detects sql type with sql: prefix"() {
+        when:
+        def fixture = new FixtureValue("sql:DEFAULT")
+
+        then:
+        fixture.type == ValueType.SQL
+        fixture.value == "DEFAULT"
+    }
+
+    def "does not trim leading spaces for sql with prefix"() {
+        expect:
+        new FixtureValue("sql: DEFAULT").value == " DEFAULT"
+    }
+
+    def "detects non string types as auto types"() {
+        when:
+        def fixture = new FixtureValue(value)
+
+        then:
+        fixture.type == ValueType.AUTO
+        fixture.value == value
 
         where:
-        value | result
-        "str" | true
-        'c' as char | false
-        true | false
-        100 | false
-    }
-
-    def "isString returns false when SQL type"() {
-        expect:
-        !FixtureValue.ofSql("SELECT 1;").isString()
-    }
-
-    def "isSql returns true for SQL type"() {
-        expect:
-        FixtureValue.ofSql("SELECT 1;").isSql()
-    }
-
-    def "isSql returns false for auto type"() {
-        expect:
-        !FixtureValue.ofAuto("vlad").isSql()
+        _ | value
+        _ | true
+        _ | 50
+        _ | 100500L
     }
 }
