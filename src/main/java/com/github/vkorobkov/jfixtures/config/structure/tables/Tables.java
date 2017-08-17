@@ -39,6 +39,10 @@ public class Tables extends Section {
         return readArrayRecursively("before_inserts");
     }
 
+    public List<String> getBeforeCleanup() {
+        return readArrayRecursively("before_cleanup");
+    }
+
     public List<String> getAfterInserts() {
         return readArrayRecursively("after_inserts");
     }

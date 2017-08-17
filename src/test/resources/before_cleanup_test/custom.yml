@@ -1,0 +1,12 @@
+".conf.yml":
+  tables:
+    transactional_users:
+      applies_to: users
+      before_cleanup:
+        - // Beginning of the table $TABLE_NAME
+        - BEGIN TRANSACTION;
+
+"users.yml":
+  vlad:
+    name: Vladimir
+    age: 29

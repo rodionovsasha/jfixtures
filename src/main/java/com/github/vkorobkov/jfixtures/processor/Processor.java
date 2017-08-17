@@ -44,6 +44,9 @@ public class Processor {
         val table = context.getConfig().table(fixture.name);
         List<Instruction> fixtureInstructions = new ArrayList<>();
 
+        fixtureInstructions.addAll(table.getBeforeCleanup().stream()
+                .map(s -> customSql(fixture.name, s)).collect(Collectors.toList()));
+
         if (CleanMethod.DELETE == table.getCleanMethod()) {
             fixtureInstructions.add(cleanupTable(fixture));
         }
