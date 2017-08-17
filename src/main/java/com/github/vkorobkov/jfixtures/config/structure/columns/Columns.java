@@ -3,7 +3,6 @@ package com.github.vkorobkov.jfixtures.config.structure.columns;
 import com.github.vkorobkov.jfixtures.config.structure.Section;
 import com.github.vkorobkov.jfixtures.config.yaml.Node;
 import com.github.vkorobkov.jfixtures.util.MapMerger;
-import com.github.vkorobkov.jfixtures.util.RowMergeConflictResolver;
 
 import java.util.Collections;
 import java.util.Map;
@@ -19,7 +18,7 @@ public class Columns extends Section {
         return applyStream()
             .flatMap(apply -> apply.concernsForTable(table))
             .map(this::getConcern)
-            .reduce((from, to) -> (Map<String, Object>) MapMerger.merge(from, to, RowMergeConflictResolver.INSTANCE))
+            .reduce((from, to) -> (Map<String, Object>) MapMerger.merge(from, to))
             .orElse(Collections.emptyMap());
     }
 

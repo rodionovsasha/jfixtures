@@ -10,6 +10,6 @@ public class IncrementalSequence implements Sequence {
 
     @Override
     public FixtureValue next(String rowName) {
-        return FixtureValue.ofAuto(value.getAndIncrement());
+        return new FixtureValue(value.getAndIncrement());
     }
 }

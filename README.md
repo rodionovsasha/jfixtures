@@ -251,9 +251,7 @@ But there is a way to say to JFixtures "leave the value as it is, don't convert 
 ```yaml
 vlad:
     # take a look at "value" and "type" subnodes - that switched off the conversion of the value into a string
-    name:
-      value: SELECT name FROM names ORDER BY name LIMIT 1
-      type: sql
+    name: sql:SELECT name FROM names ORDER BY name LIMIT 1
     role: dev
     age: 29
 ```
@@ -264,6 +262,18 @@ INSERT INTO "users" ("id", "name", "role", "age") VALUES (10000, SELECT name FRO
 ```
 The `name` column was not converted to a string because we asked not to. The `role` column was converted to a string
 by the default behaviour of JFixtures.
+
+Note, that if you want to explicitely use a value as a SQL string, add a special `text:` prefix 1:
+```yaml
+vlad:
+    name: text:100500 # make 100500 string not a number
+    role: dev
+```
+turns into
+```postgresql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name", "role") VALUES (10000, '100500', 'dev');
+```
 
 ## How to add a custom database support (e.g. H2)
 It is a quite simple:

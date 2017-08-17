@@ -165,6 +165,8 @@
                     <excludes>
                         <!--Excluded until Jacoco gets fixed with yellow branches in finally blocks-->
                         <exclude>com/github/vkorobkov/jfixtures/util/WithResource*.class</exclude>
+                        <!--A simple plain enum. Jacoco complaints that the constructor of it should be tested-->
+                        <exclude>com/github/vkorobkov/jfixtures/loader/ValueType*.class</exclude>
                     </excludes>
                     <rules>
                         <rule>

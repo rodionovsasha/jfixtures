@@ -40,9 +40,9 @@ class H2Test extends Specification {
     def "insert row test"() {
         given:
         def insertRow = new InsertRow("admin.users", "vlad", [
-            id: FixtureValue.ofAuto(1),
-            name: FixtureValue.ofAuto("Vlad"),
-            age : FixtureValue.ofAuto(29)
+            id: new FixtureValue(1),
+            name: new FixtureValue("Vlad"),
+            age : new FixtureValue(29)
         ])
 
         when:
@@ -55,9 +55,9 @@ class H2Test extends Specification {
     def "insert row with special chars test"() {
         given:
         def insertRow = new InsertRow("admin.users", "vlad", [
-                id: FixtureValue.ofAuto(1),
-                name: FixtureValue.ofAuto("':;#\"*[@"),
-                age : FixtureValue.ofAuto(29)
+                id: new FixtureValue(1),
+                name: new FixtureValue("':;#\"*[@"),
+                age : new FixtureValue(29)
         ])
 
         when:
