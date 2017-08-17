@@ -250,7 +250,6 @@ For the DB this is just a string literal but not a SQL expression.
 But there is a way to say to JFixtures "leave the value as it is, don't convert it to string":
 ```yaml
 vlad:
-    # take a look at "value" and "type" subnodes - that switched off the conversion of the value into a string
     name: sql:SELECT name FROM names ORDER BY name LIMIT 1
     role: dev
     age: 29
