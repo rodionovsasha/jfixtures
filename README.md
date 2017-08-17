@@ -532,3 +532,21 @@ The `after_inserts-insert` property could be: a single value or a list(or list o
 The `$TABLE_NAME` placeholder is replaced with the real table name. 
 
 After-insert instructions order is not changed, duplicates(if any) are not removed.
+
+### Addition custom SQL before cleanup table
+Sometimes we need to write a custom SQL before cleanup instructions (e.g.`BEGIN TRANSACTION;` should got before `DELETE FROM "users"`).
+It is possible to do using `before_cleanup` property.
+This custom SQL will be added `before_cleanup` instructions and after cleanup instruction (if present).
+
+```yaml
+tables:
+  transactional_users:
+    applies_to: users, friends
+      before_cleanup:
+        - // Beginning of the table $TABLE_NAME
+        - BEGIN TRANSACTION;
+```
+The `before-cleanup` property could be: a single value or a list(or list of lists with any depth).  
+The `$TABLE_NAME` placeholder is replaced with the real table name. 
+
+Before-cleanup instructions order is not changed, duplicates(if any) are not removed.

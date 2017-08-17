@@ -77,6 +77,17 @@ class TablesTest extends Specification {
             ]
     ]
 
+    def BEFORE_CLEANUP_CONFIG = [
+            transactional_users: [
+                    applies_to  : "users",
+                    before_cleanup: "BEGIN TRANSACTION;",
+            ],
+            transactional_friends   : [
+                    applies_to  : ["friends", "mates"],
+                    before_cleanup: ["// Beginning of the table \$TABLE_NAME", "BEGIN TRANSACTION;"],
+            ]
+    ]
+
     def "shouldAutoGeneratePk returns true by default"() {
         expect:
         shouldAutoGeneratePk(SAMPLE_CONFIG, "mates")
@@ -152,6 +163,18 @@ class TablesTest extends Specification {
         getAfterInserts(AFTER_INSERTS_CONFIG, "mates") == ["// Completed table \$TABLE_NAME", "COMMIT TRANSACTION;"]
     }
 
+    def "getBeforeCleanup returns 'empty value' by default"() {
+        expect:
+        getBeforeCleanup(SAMPLE_CONFIG, "users") == []
+    }
+
+    def "should return before_cleanup if set"() {
+        expect:
+        getBeforeCleanup(BEFORE_CLEANUP_CONFIG, "users") == ["BEGIN TRANSACTION;"]
+        getBeforeCleanup(BEFORE_CLEANUP_CONFIG, "friends") == ["// Beginning of the table \$TABLE_NAME", "BEGIN TRANSACTION;"]
+        getBeforeCleanup(BEFORE_CLEANUP_CONFIG, "mates") == ["// Beginning of the table \$TABLE_NAME", "BEGIN TRANSACTION;"]
+    }
+
     private static def shouldAutoGeneratePk(content, String name) {
         getTablesConfig(content, name).shouldAutoGeneratePk()
     }
@@ -170,6 +193,10 @@ class TablesTest extends Specification {
 
     private static def getAfterInserts(content, String name) {
         getTablesConfig(content, name).getAfterInserts()
+    }
+
+    private static def getBeforeCleanup(content, String name) {
+        getTablesConfig(content, name).getBeforeCleanup()
     }
 
     private static def getTablesConfig(content, String name) {

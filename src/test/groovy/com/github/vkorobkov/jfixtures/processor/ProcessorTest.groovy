@@ -284,7 +284,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         deletions.find { it.table != "users" }
     }
 
-    def "before_insert instructions should be added"() {
+    def "before_inserts instructions should be added"() {
         when:
         def instructions = load("basic_fixtures_with_before_inserts.yml")
 
@@ -297,7 +297,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         customSql.get(1).instruction == "BEGIN TRANSACTION;"
     }
 
-    def "after_insert instructions should be added"() {
+    def "after_inserts instructions should be added"() {
         when:
         def instructions = load("basic_fixtures_with_after_inserts.yml")
 
@@ -308,6 +308,19 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         and:
         customSql.get(0).instruction == "// Completed table users"
         customSql.get(1).instruction == "COMMIT TRANSACTION;"
+    }
+
+    def "before_cleanup instructions should be added"() {
+        when:
+        def instructions = load("basic_fixtures_with_before_cleanup.yml")
+
+        then:
+        def customSql = instructions.findAll { it instanceof CustomSql }
+        customSql.size() == 2
+
+        and:
+        customSql.get(0).instruction == "// Doing table users"
+        customSql.get(1).instruction == "BEGIN TRANSACTION;"
     }
 
     boolean assertInsertInstructions(Map instructions, Map expected) {
