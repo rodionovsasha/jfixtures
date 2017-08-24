@@ -9,6 +9,7 @@ public enum SqlType {
     H2(new H2()),
     CLICKHOUSE(new ClickHouse()),
     MSSQL(new MsSql()),
+    SYBASE(new SybaseSql()),
     ORACLE(new OracleSql());
 
     @Getter

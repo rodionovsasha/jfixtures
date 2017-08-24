@@ -33,6 +33,10 @@ public final class JFixtures {
         return new JFixturesResultImpl(fixturesFolder, new MsSql());
     }
 
+    public static JFixturesResult sybase(String fixturesFolder) {
+        return new JFixturesResultImpl(fixturesFolder, new SybaseSql());
+    }
+
     public static JFixturesResult byDialect(String fixturesFolder, SqlType sqlType) {
         return new JFixturesResultImpl(fixturesFolder, sqlType.getSqlDialect());
     }

@@ -125,4 +125,17 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
         then:
         new File(outputPath).text == MSSQL_EXPECTED_SQL
     }
+
+    def "Sybase fixture to a string"() {
+        expect:
+        JFixtures.sybase(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
+    }
+
+    def "Sybase fixture to a file"() {
+        when:
+        JFixtures.sybase(tmpFolderPath as String).toFile(outputPath)
+
+        then:
+        new File(outputPath).text == DEFAULT_EXPECTED_SQL
+    }
 }

@@ -23,9 +23,9 @@ class MySqlTest extends Specification {
         sql.escapeTableOrColumn(unescaped) == escaped
 
         where:
-        unescaped | escaped
-        "users" | '`users`'
-        "admin.users" | '`admin`.`users`'
+        unescaped        | escaped
+        "users"          | '`users`'
+        "admin.users"    | '`admin`.`users`'
         "admin.users.id" | '`admin`.`users`.`id`'
     }
 
@@ -40,9 +40,9 @@ class MySqlTest extends Specification {
     def "insert row test"() {
         given:
         def insertRow = new InsertRow("admin.users", "vlad", [
-            id: new FixtureValue(1),
-            name: new FixtureValue("Vlad"),
-            age : new FixtureValue(29)
+                id  : new FixtureValue(1),
+                name: new FixtureValue("Vlad"),
+                age : new FixtureValue(29)
         ])
 
         when:
