@@ -17,6 +17,9 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
     def MYSQL_EXPECTED_SQL = """DELETE FROM `users`;
             |INSERT INTO `users` (`id`, `name`, `age`) VALUES (1, 'Vlad', 29);
             |""".stripMargin()
+    def MSSQL_EXPECTED_SQL = """DELETE FROM [users];
+            |INSERT INTO [users] ([id], [name], [age]) VALUES (1, 'Vlad', 29);
+            |""".stripMargin()
 
     void setup() {
         tmpFolderPath = unpackYamlToTempFolder("default.yml")
@@ -108,5 +111,18 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
 
         then:
         new File(outputPath).text == DEFAULT_EXPECTED_SQL
+    }
+
+    def "MSSQL fixture to a string"() {
+        expect:
+        JFixtures.msSql(tmpFolderPath as String).asString() == MSSQL_EXPECTED_SQL
+    }
+
+    def "MSSQL fixture to a file"() {
+        when:
+        JFixtures.msSql(tmpFolderPath as String).toFile(outputPath)
+
+        then:
+        new File(outputPath).text == MSSQL_EXPECTED_SQL
     }
 }

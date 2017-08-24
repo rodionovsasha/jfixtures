@@ -8,6 +8,7 @@ public enum SqlType {
     MYSQL(new MySql()),
     H2(new H2()),
     CLICKHOUSE(new ClickHouse()),
+    MSSQL(new MsSql()),
     ORACLE(new OracleSql());
 
     @Getter

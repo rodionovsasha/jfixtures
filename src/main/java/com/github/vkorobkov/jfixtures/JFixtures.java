@@ -3,10 +3,7 @@ package com.github.vkorobkov.jfixtures;
 import com.github.vkorobkov.jfixtures.fluent.JFixturesResult;
 import com.github.vkorobkov.jfixtures.fluent.JFixturesResultImpl;
 import com.github.vkorobkov.jfixtures.sql.SqlType;
-import com.github.vkorobkov.jfixtures.sql.dialects.ClickHouse;
-import com.github.vkorobkov.jfixtures.sql.dialects.H2;
-import com.github.vkorobkov.jfixtures.sql.dialects.MySql;
-import com.github.vkorobkov.jfixtures.sql.dialects.PgSql;
+import com.github.vkorobkov.jfixtures.sql.dialects.*;
 
 public final class JFixtures {
     private JFixtures() {
@@ -29,7 +26,11 @@ public final class JFixtures {
     }
 
     public static JFixturesResult oracle(String fixturesFolder) {
-        return new JFixturesResultImpl(fixturesFolder, new PgSql());
+        return new JFixturesResultImpl(fixturesFolder, new OracleSql());
+    }
+
+    public static JFixturesResult msSql(String fixturesFolder) {
+        return new JFixturesResultImpl(fixturesFolder, new MsSql());
     }
 
     public static JFixturesResult byDialect(String fixturesFolder, SqlType sqlType) {

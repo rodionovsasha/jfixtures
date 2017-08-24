@@ -15,9 +15,14 @@ public final class SqlUtil {
     }
 
     public static String surround(String string, String with) {
-        with = Objects.requireNonNull(with, "Can not surround string with null values");
-        return with
+        return surround(string, with, with);
+    }
+
+    public static String surround(String string, String startsWith, String endsWith) {
+        startsWith = Objects.requireNonNull(startsWith, "Can not surround string with null start prefix");
+        endsWith = Objects.requireNonNull(endsWith, "Can not surround string with null end suffix");
+        return startsWith
                 + Objects.requireNonNull(string, "The input string can not be null")
-                + with;
+                + endsWith;
     }
 }
