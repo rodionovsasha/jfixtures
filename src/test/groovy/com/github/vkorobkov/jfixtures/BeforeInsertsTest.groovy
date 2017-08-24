@@ -18,7 +18,7 @@ class BeforeInsertsTest extends Specification implements YamlVirtualFolder {
         def folder = unpackYamlToTempFolder("default.yml")
 
         expect:
-        JFixtures.postgres(folder as String).asString() == DEFAULT_EXPECTED_SQL
+        JFixtures.sql99(folder as String).asString() == DEFAULT_EXPECTED_SQL
 
         cleanup:
         folder.toFile().deleteDir()
@@ -29,7 +29,7 @@ class BeforeInsertsTest extends Specification implements YamlVirtualFolder {
         def folder = unpackYamlToTempFolder("custom.yml")
 
         expect:
-        JFixtures.postgres(folder as String).asString() == CUSTOM_EXPECTED_SQL
+        JFixtures.sql99(folder as String).asString() == CUSTOM_EXPECTED_SQL
 
         cleanup:
         folder.toFile().deleteDir()

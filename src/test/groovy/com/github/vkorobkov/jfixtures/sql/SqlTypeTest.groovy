@@ -1,13 +1,9 @@
 package com.github.vkorobkov.jfixtures.sql
 
-import com.github.vkorobkov.jfixtures.sql.dialects.ClickHouse
-import com.github.vkorobkov.jfixtures.sql.dialects.H2
 import com.github.vkorobkov.jfixtures.sql.dialects.MsSql
 import com.github.vkorobkov.jfixtures.sql.dialects.MySql
-import com.github.vkorobkov.jfixtures.sql.dialects.OracleSql
-import com.github.vkorobkov.jfixtures.sql.dialects.PgSql
-import com.github.vkorobkov.jfixtures.sql.dialects.SQLiteSql
-import com.github.vkorobkov.jfixtures.sql.dialects.SybaseSql
+import com.github.vkorobkov.jfixtures.sql.dialects.Sql99
+
 import spock.lang.Specification
 
 class SqlTypeTest extends Specification {
@@ -16,15 +12,10 @@ class SqlTypeTest extends Specification {
         SqlType.valueOf(value) == expected
 
         where:
-        value        | expected
-        "POSTGRES"   | SqlType.POSTGRES
-        "MYSQL"      | SqlType.MYSQL
-        "H2"         | SqlType.H2
-        "CLICKHOUSE" | SqlType.CLICKHOUSE
-        "ORACLE"     | SqlType.ORACLE
-        "MSSQL"      | SqlType.MSSQL
-        "SYBASE"     | SqlType.SYBASE
-        "SQLITE"     | SqlType.SQLITE
+        value   | expected
+        "MYSQL" | SqlType.MYSQL
+        "MSSQL" | SqlType.MSSQL
+        "SQL99" | SqlType.SQL99
     }
 
     def "SqlType throws exception when wrong value is provided"() {
@@ -37,13 +28,8 @@ class SqlTypeTest extends Specification {
 
     def "SqlType get sql dialects"() {
         expect:
-        SqlType.POSTGRES.sqlDialect.class == PgSql
         SqlType.MYSQL.sqlDialect.class == MySql
-        SqlType.H2.sqlDialect.class == H2
-        SqlType.CLICKHOUSE.sqlDialect.class == ClickHouse
-        SqlType.ORACLE.sqlDialect.class == OracleSql
         SqlType.MSSQL.sqlDialect.class == MsSql
-        SqlType.SYBASE.sqlDialect.class == SybaseSql
-        SqlType.SQLITE.sqlDialect.class == SQLiteSql
+        SqlType.SQL99.sqlDialect.class == Sql99
     }
 }

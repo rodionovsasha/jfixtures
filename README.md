@@ -11,14 +11,9 @@ the data into a plain SQL. At some degree it is a port of
 (or any other JVM language such as groovy, scala, e.t.c.)
 
 Databases which JFixtures supports:
-* Postgres
 * MySql
-* H2
-* Yandex ClickHouse
-* Oracle
 * MSSQL
-* Sybase
-* SQLite
+* All databases with standard SQL-99 dialect (such as Oracle, Sybase, Postgres, H2, SQLite and etc.)
 
 ## What's wrong with SQL ?
 
@@ -52,12 +47,12 @@ last. That means poor developer has to remember the whole tables hierarchy.
 
 * Human readable test data description with a set of yaml files
 * SQL script as a result
-* Supports Postgres SQL, MySql, H2, Yandex ClickHouse, Oracle, MSSQL, Sybase, SQLite at the moment
+* Supports MySql, MSSQL and all databases with standard SQL-99
 * Human readable, defined by user, string keys for each row instead of numeric IDs
 * Numeric PK's are auto generated, however, user can specify them manually
 * Foreign key values get calculated automatically(see example below)
 * Table references are defined explicitly in a special `.conf.yml` file.
-* Tables in output SQL script appear in the right order(according to references between the tavles)
+* Tables in output SQL script appear in the right order(according to references between the tables)
 * Early errors detection: fixture processing fails on sytax errors, circular references, incorrect foreign key value,
 e.t.c.
 * A small java library with only dependency(org.yaml:snakeyaml)
@@ -112,7 +107,7 @@ java code(later I am planning to create also an executable JAR file and a maven 
 ```java
 import com.github.vkorobkov.jfixtures.JFixtures;
 
-JFixtures.postgres("/path/to/fixtures/folder").toFile("output.sql");
+JFixtures.sql99("/path/to/fixtures/folder").toFile("output.sql");
 ```
 
 That's all! Output SQL file will contain all the required INSERT instructions or correct order, with correct 
@@ -154,7 +149,7 @@ writes a SQL file as the output:
 ```java
 import com.github.vkorobkov.jfixtures.JFixtures;
 
-JFixtures.postgres("/path/to/fixtures").toFile("test-data.sql");
+JFixtures.sql99("/path/to/fixtures").toFile("test-data.sql");
 ```
 So this code scans for fixtures(YML files) in `/path/to/fixtures` folder and will write the output into `test-data.sql`
 file. If output file had presented before you launched the processing, it will be _recreated_.
@@ -164,7 +159,7 @@ sql against already opened SQL connection in your custom code or in your tests:
 ```java
 import com.github.vkorobkov.jfixtures.JFixtures;
 
-String sqlInstructions = JFixtures.postgres("/path/to/fixtures").asString();
+String sqlInstructions = JFixtures.sql99("/path/to/fixtures").asString();
 ```
 
 For another kind of database, for example, MySql, just use corresponding method of `JFixtures` class:
@@ -229,7 +224,7 @@ alex:
     second_name: Krasnov
     age: 20
 ```
-JFixture coverts the fixture in the following SQL code(I selected Postgres dialect):
+JFixture coverts the fixture in the following SQL code(I selected SQL-99 standard dialect):
 ```postgresql
 DELETE FROM "users";
 INSERT INTO "users" ("id", "first_name", "second_name", "age") VALUES (10000, 'Vladimir''s name', 'Korobkov', 29);
