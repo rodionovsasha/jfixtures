@@ -8,7 +8,7 @@ trait H2Test extends YamlVirtualFolder {
     Sql getSql() { DataSourceUtil.sql }
 
     def executeFixtures(folderPath) {
-        sql.execute(JFixtures.h2(folderPath as String).asString())
+        sql.execute(JFixtures.sql99(folderPath as String).asString())
     }
 
     def recreateTable(tableName, tableColumns) {

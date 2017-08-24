@@ -13,7 +13,6 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
     def DEFAULT_EXPECTED_SQL = """DELETE FROM "users";
             |INSERT INTO "users" ("id", "name", "age") VALUES (1, 'Vlad', 29);
             |""".stripMargin()
-
     def MYSQL_EXPECTED_SQL = """DELETE FROM `users`;
             |INSERT INTO `users` (`id`, `name`, `age`) VALUES (1, 'Vlad', 29);
             |""".stripMargin()
@@ -35,19 +34,6 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
         new JFixtures()
     }
 
-    def "postgres fixture to string"() {
-        expect:
-        JFixtures.postgres(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
-    }
-
-    def "postgres fixture to file"() {
-        when:
-        JFixtures.postgres(tmpFolderPath as String).toFile(outputPath)
-
-        then:
-        new File(outputPath).text == DEFAULT_EXPECTED_SQL
-    }
-
     def "mysql fixture to string"() {
         expect:
         JFixtures.mysql(tmpFolderPath as String).asString() == MYSQL_EXPECTED_SQL
@@ -61,53 +47,14 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
         new File(outputPath).text == MYSQL_EXPECTED_SQL
     }
 
-    def "h2 fixture to a string"() {
-        expect:
-        JFixtures.h2(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
-    }
-
-    def "h2 fixture to a file"() {
-        when:
-        JFixtures.h2(tmpFolderPath as String).toFile(outputPath)
-
-        then:
-        new File(outputPath).text == DEFAULT_EXPECTED_SQL
-    }
-
-    def "ClickHouse fixture to a string"() {
-        expect:
-        JFixtures.clickHouse(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
-    }
-
-    def "ClickHouse fixture to a file"() {
-        when:
-        JFixtures.clickHouse(tmpFolderPath as String).toFile(outputPath)
-
-        then:
-        new File(outputPath).text == DEFAULT_EXPECTED_SQL
-    }
-
     def "by dialect fixture to a string"() {
         expect:
-        JFixtures.byDialect(tmpFolderPath as String, SqlType.POSTGRES).asString() == DEFAULT_EXPECTED_SQL
+        JFixtures.byDialect(tmpFolderPath as String, SqlType.SQL99).asString() == DEFAULT_EXPECTED_SQL
     }
 
     def "by dialect fixture to a file"() {
         when:
-        JFixtures.byDialect(tmpFolderPath as String, SqlType.POSTGRES).toFile(outputPath)
-
-        then:
-        new File(outputPath).text == DEFAULT_EXPECTED_SQL
-    }
-
-    def "Oracle fixture to a string"() {
-        expect:
-        JFixtures.oracle(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
-    }
-
-    def "Oracle fixture to a file"() {
-        when:
-        JFixtures.oracle(tmpFolderPath as String).toFile(outputPath)
+        JFixtures.byDialect(tmpFolderPath as String, SqlType.SQL99).toFile(outputPath)
 
         then:
         new File(outputPath).text == DEFAULT_EXPECTED_SQL
@@ -126,27 +73,14 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
         new File(outputPath).text == MSSQL_EXPECTED_SQL
     }
 
-    def "Sybase fixture to a string"() {
-        expect:
-        JFixtures.sybase(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
-    }
-
-    def "Sybase fixture to a file"() {
-        when:
-        JFixtures.sybase(tmpFolderPath as String).toFile(outputPath)
-
-        then:
-        new File(outputPath).text == DEFAULT_EXPECTED_SQL
-    }
-
     def "SQLite fixture to a string"() {
         expect:
-        JFixtures.sqlite(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
+        JFixtures.sql99(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
     }
 
     def "SQLite fixture to a file"() {
         when:
-        JFixtures.sqlite(tmpFolderPath as String).toFile(outputPath)
+        JFixtures.sql99(tmpFolderPath as String).toFile(outputPath)
 
         then:
         new File(outputPath).text == DEFAULT_EXPECTED_SQL
