@@ -37,6 +37,10 @@ public final class JFixtures {
         return new JFixturesResultImpl(fixturesFolder, new SybaseSql());
     }
 
+    public static JFixturesResult sqlite(String fixturesFolder) {
+        return new JFixturesResultImpl(fixturesFolder, new SQLiteSql());
+    }
+
     public static JFixturesResult byDialect(String fixturesFolder, SqlType sqlType) {
         return new JFixturesResultImpl(fixturesFolder, sqlType.getSqlDialect());
     }

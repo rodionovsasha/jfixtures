@@ -138,4 +138,17 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
         then:
         new File(outputPath).text == DEFAULT_EXPECTED_SQL
     }
+
+    def "SQLite fixture to a string"() {
+        expect:
+        JFixtures.sqlite(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
+    }
+
+    def "SQLite fixture to a file"() {
+        when:
+        JFixtures.sqlite(tmpFolderPath as String).toFile(outputPath)
+
+        then:
+        new File(outputPath).text == DEFAULT_EXPECTED_SQL
+    }
 }
