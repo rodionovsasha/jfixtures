@@ -22,11 +22,11 @@ class H2Test extends Specification {
         sql.escapeTableOrColumn(unescaped) == escaped
 
         where:
-        unescaped | escaped
-        "users" | '"users"'
-        "admin.users" | '"admin"."users"'
+        unescaped        | escaped
+        "users"          | '"users"'
+        "admin.users"    | '"admin"."users"'
         "admin.users.id" | '"admin"."users"."id"'
-        "':;#\"*[@" | '"\':;#"*[@"'
+        "':;#\"*[@"      | '"\':;#"*[@"'
     }
 
     def "clean table"() {
@@ -40,9 +40,9 @@ class H2Test extends Specification {
     def "insert row test"() {
         given:
         def insertRow = new InsertRow("admin.users", "vlad", [
-            id: new FixtureValue(1),
-            name: new FixtureValue("Vlad"),
-            age : new FixtureValue(29)
+                id  : new FixtureValue(1),
+                name: new FixtureValue("Vlad"),
+                age : new FixtureValue(29)
         ])
 
         when:
@@ -55,7 +55,7 @@ class H2Test extends Specification {
     def "insert row with special chars test"() {
         given:
         def insertRow = new InsertRow("admin.users", "vlad", [
-                id: new FixtureValue(1),
+                id  : new FixtureValue(1),
                 name: new FixtureValue("':;#\"*[@"),
                 age : new FixtureValue(29)
         ])

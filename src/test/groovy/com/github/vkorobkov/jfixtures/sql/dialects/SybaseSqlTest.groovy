@@ -8,13 +8,13 @@ import com.github.vkorobkov.jfixtures.sql.Sql
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
 import spock.lang.Specification
 
-class PgSqlTest extends Specification {
+class SybaseSqlTest extends Specification {
 
     Sql sql
     Appender appender
 
     void setup() {
-        sql = new PgSql()
+        sql = new SybaseSql()
         appender = new StringAppender()
     }
 
