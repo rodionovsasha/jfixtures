@@ -10,6 +10,7 @@ public enum SqlType {
     CLICKHOUSE(new ClickHouse()),
     MSSQL(new MsSql()),
     SYBASE(new SybaseSql()),
+    SQLITE(new SQLiteSql()),
     ORACLE(new OracleSql());
 
     @Getter
