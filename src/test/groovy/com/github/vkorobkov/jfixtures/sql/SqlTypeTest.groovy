@@ -3,6 +3,7 @@ package com.github.vkorobkov.jfixtures.sql
 import com.github.vkorobkov.jfixtures.sql.dialects.ClickHouse
 import com.github.vkorobkov.jfixtures.sql.dialects.H2
 import com.github.vkorobkov.jfixtures.sql.dialects.MySql
+import com.github.vkorobkov.jfixtures.sql.dialects.OracleSql
 import com.github.vkorobkov.jfixtures.sql.dialects.PgSql
 import spock.lang.Specification
 
@@ -17,6 +18,7 @@ class SqlTypeTest extends Specification {
         "MYSQL"      | SqlType.MYSQL
         "H2"         | SqlType.H2
         "CLICKHOUSE" | SqlType.CLICKHOUSE
+        "ORACLE"     | SqlType.ORACLE
     }
 
     def "SqlType throws exception when wrong value is provided"() {
@@ -33,5 +35,6 @@ class SqlTypeTest extends Specification {
         SqlType.MYSQL.sqlDialect.class == MySql
         SqlType.H2.sqlDialect.class == H2
         SqlType.CLICKHOUSE.sqlDialect.class == ClickHouse
+        SqlType.ORACLE.sqlDialect.class == OracleSql
     }
 }

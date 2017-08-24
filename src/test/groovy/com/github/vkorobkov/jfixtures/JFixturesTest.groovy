@@ -96,4 +96,17 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
         then:
         new File(outputPath).text == DEFAULT_EXPECTED_SQL
     }
+
+    def "Oracle fixture to a string"() {
+        expect:
+        JFixtures.oracle(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
+    }
+
+    def "Oracle fixture to a file"() {
+        when:
+        JFixtures.oracle(tmpFolderPath as String).toFile(outputPath)
+
+        then:
+        new File(outputPath).text == DEFAULT_EXPECTED_SQL
+    }
 }
