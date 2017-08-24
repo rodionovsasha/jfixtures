@@ -28,6 +28,10 @@ public final class JFixtures {
         return new JFixturesResultImpl(fixturesFolder, new ClickHouse());
     }
 
+    public static JFixturesResult oracle(String fixturesFolder) {
+        return new JFixturesResultImpl(fixturesFolder, new PgSql());
+    }
+
     public static JFixturesResult byDialect(String fixturesFolder, SqlType sqlType) {
         return new JFixturesResultImpl(fixturesFolder, sqlType.getSqlDialect());
     }
