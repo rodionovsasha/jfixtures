@@ -16,6 +16,7 @@ Databases which JFixtures supports:
 * H2
 * Yandex ClickHouse
 * Oracle
+* MSSQL
 
 ## What's wrong with SQL ?
 
@@ -49,7 +50,7 @@ last. That means poor developer has to remember the whole tables hierarchy.
 
 * Human readable test data description with a set of yaml files
 * SQL script as a result
-* Supports Postgres SQL, MySql, H2, Yandex ClickHouse, Oracle at the moment
+* Supports Postgres SQL, MySql, H2, Yandex ClickHouse, Oracle, MSSQL at the moment
 * Human readable, defined by user, string keys for each row instead of numeric IDs
 * Numeric PK's are auto generated, however, user can specify them manually
 * Foreign key values get calculated automatically(see example below)

@@ -53,4 +53,9 @@ class SqlUtilTest extends Specification {
         then:
         thrown(NullPointerException)
     }
+
+    def "surrounds string with start prefix and end suffix"() {
+        expect:
+        SqlUtil.surround("hello", "[", "]") == "[hello]"
+    }
 }
