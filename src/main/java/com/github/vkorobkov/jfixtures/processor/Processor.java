@@ -10,6 +10,7 @@ import com.github.vkorobkov.jfixtures.loader.Fixture;
 import com.github.vkorobkov.jfixtures.loader.FixtureRow;
 import com.github.vkorobkov.jfixtures.loader.FixtureValue;
 import com.github.vkorobkov.jfixtures.processor.sequence.IncrementalSequence;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class Processor {
     private final ColumnProcessor columnProcessor;
     private final Context context;
@@ -41,23 +43,25 @@ public class Processor {
     }
 
     private void handleFixtureInstructions(Fixture fixture) {
-        val table = context.getConfig().table(fixture.name);
+        val tableName = fixture.name;
+        val table = context.getConfig().table(tableName);
+        log.info("Processing table '" + tableName + "'");
         List<Instruction> fixtureInstructions = new ArrayList<>();
 
         fixtureInstructions.addAll(table.getBeforeCleanup().stream()
-                .map(s -> customSql(fixture.name, s)).collect(Collectors.toList()));
+                .map(s -> customSql(tableName, s)).collect(Collectors.toList()));
 
         if (CleanMethod.DELETE == table.getCleanMethod()) {
             fixtureInstructions.add(cleanupTable(fixture));
         }
 
         fixtureInstructions.addAll(table.getBeforeInserts().stream()
-                .map(s -> customSql(fixture.name, s)).collect(Collectors.toList()));
+                .map(s -> customSql(tableName, s)).collect(Collectors.toList()));
 
         fixtureInstructions.addAll(processRows(fixture));
 
         fixtureInstructions.addAll(table.getAfterInserts().stream()
-                .map(s -> customSql(fixture.name, s)).collect(Collectors.toList()));
+                .map(s -> customSql(tableName, s)).collect(Collectors.toList()));
         context.getInstructions().addAll(fixtureInstructions);
     }
 
