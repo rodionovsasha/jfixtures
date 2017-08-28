@@ -1,7 +1,6 @@
 package com.github.vkorobkov.jfixtures.loader;
 
 import com.github.vkorobkov.jfixtures.config.structure.Root;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import java.io.IOException;
@@ -11,7 +10,6 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Slf4j
 public class FixturesLoader {
     private final String path;
     private final Root config;
@@ -51,7 +49,6 @@ public class FixturesLoader {
     private Fixture loadFixture(Path file) {
         String name =  getFixtureName(file);
         val baseColumns = config.columns().forTable(name);
-        log.info("Processing table '" + name + "'");
         return new Fixture(name, new YmlRowsLoader(file, baseColumns));
     }
 
