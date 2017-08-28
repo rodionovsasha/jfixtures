@@ -1,5 +1,6 @@
 package com.github.vkorobkov.jfixtures.sql;
 
+import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.CustomSql;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
@@ -7,6 +8,7 @@ import com.github.vkorobkov.jfixtures.loader.FixtureValue;
 import com.github.vkorobkov.jfixtures.loader.ValueType;
 import com.github.vkorobkov.jfixtures.util.SqlUtil;
 import lombok.SneakyThrows;
+import lombok.val;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -15,8 +17,14 @@ public interface SqlBase extends Sql {
     @SneakyThrows
     @Override
     default void cleanTable(Appender appender, CleanTable cleanTable) {
-        String table = escapeTableOrColumn(cleanTable.getTable());
-        appender.append("DELETE FROM ", table, ";\n");
+        val table = escapeTableOrColumn(cleanTable.getTable());
+        val cleanMethod = cleanTable.getCleanMethod();
+
+        if (CleanMethod.DELETE == cleanMethod) {
+            appender.append("DELETE FROM ", table, ";\n");
+        } else if (CleanMethod.TRUNCATE == cleanMethod) {
+            appender.append("TRUNCATE TABLE ", table, ";\n");
+        }
     }
 
     @SneakyThrows

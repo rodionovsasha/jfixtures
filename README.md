@@ -479,11 +479,12 @@ tables:
     pk:
       column: friend_id # Friends table now has PK named "friend_id"
 ```
-### Enable/disable table cleanup (delete from table before insert)
+### Enable/disable table cleanup (delete from table or truncate table before insert)
 There is a table property named `clean_up` which is responsible for cleaning the data from the table(s) before JFixtures
-inserts the data. It could have following values: `delete` or `none`. When `delete`, JFixtures will invoke
-`DELETE FROM $table` SQL instructions to clean a table. When `none`, the table won't be cleaned. By default,
-if the property is not specified, its value is `delete`.
+inserts the data. It could have following values: `delete`, `truncate` or `none`.  
+When `delete`, JFixtures will invoke `DELETE FROM $table` SQL instructions to clean a table.  
+When `truncate`, JFixtures will invoke `TRUNCATE TABLE $table` SQL instructions to clean a table.  
+When `none`, the table won't be cleaned. By default, if the property is not specified, its value is `delete`.
 
 ```yaml
 tables:
@@ -492,7 +493,7 @@ tables:
     clean_up: "none"
   clean_up_table:
     applies_to: "users"
-    clean_method: "delete"
+    clean_method: "delete" # might be delete, truncate or none
 ```
 If configuration for clean method is not set the system will delete from table before insert by default.
 

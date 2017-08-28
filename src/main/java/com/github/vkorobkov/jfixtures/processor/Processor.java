@@ -45,14 +45,16 @@ public class Processor {
     private void handleFixtureInstructions(Fixture fixture) {
         val tableName = fixture.name;
         val table = context.getConfig().table(tableName);
+        val cleanMethod = table.getCleanMethod();
+
         log.info("Processing table '" + tableName + "'");
         List<Instruction> fixtureInstructions = new ArrayList<>();
 
         fixtureInstructions.addAll(table.getBeforeCleanup().stream()
                 .map(s -> customSql(tableName, s)).collect(Collectors.toList()));
 
-        if (CleanMethod.DELETE == table.getCleanMethod()) {
-            fixtureInstructions.add(cleanupTable(fixture));
+        if (CleanMethod.DELETE == cleanMethod || CleanMethod.TRUNCATE == cleanMethod) {
+            fixtureInstructions.add(cleanupTable(fixture, table.getCleanMethod()));
         }
 
         fixtureInstructions.addAll(table.getBeforeInserts().stream()
@@ -65,8 +67,8 @@ public class Processor {
         context.getInstructions().addAll(fixtureInstructions);
     }
 
-    private Instruction cleanupTable(Fixture fixture) {
-        return new CleanTable(fixture.name);
+    private Instruction cleanupTable(Fixture fixture, CleanMethod cleanMethod) {
+        return new CleanTable(fixture.name, cleanMethod);
     }
 
     private Instruction customSql(String table, String instruction) {

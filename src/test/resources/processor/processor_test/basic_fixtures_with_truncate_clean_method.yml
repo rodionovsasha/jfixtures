@@ -1,0 +1,17 @@
+".conf.yml":
+  tables:
+    clean_up_with_truncate:
+      applies_to: "friends"
+      clean_method: "truncate"
+
+"users.yml":
+  vlad:
+    first_name: Vladimir
+    age: 29
+    sex: man
+
+"friends.yml":
+  semen:
+    first_name: Semen
+    age: 30
+    sex: man

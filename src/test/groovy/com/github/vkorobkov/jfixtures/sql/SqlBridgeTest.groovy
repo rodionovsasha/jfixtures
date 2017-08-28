@@ -1,5 +1,6 @@
 package com.github.vkorobkov.jfixtures.sql
 
+import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
@@ -21,9 +22,9 @@ class SqlBridgeTest extends Specification {
     def "bride calls sql passing appender and keeping the order"() {
         given:
         def instructions = [
-            new CleanTable("users"),
-            new InsertRow("users", "vlad", [:]),
-            new InsertRow("users", "diman", [:]),
+                new CleanTable("users", CleanMethod.DELETE),
+                new InsertRow("users", "vlad", [:]),
+                new InsertRow("users", "diman", [:]),
         ]
 
         when:

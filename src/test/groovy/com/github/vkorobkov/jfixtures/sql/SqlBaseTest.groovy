@@ -1,5 +1,6 @@
 package com.github.vkorobkov.jfixtures.sql
 
+import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
 import com.github.vkorobkov.jfixtures.instructions.CustomSql
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
@@ -9,7 +10,6 @@ import com.github.vkorobkov.jfixtures.testutil.SqBaseTestImpl
 import spock.lang.Specification
 
 class SqlBaseTest extends Specification {
-
     SqlBase sql
     Appender appender
 
@@ -35,7 +35,7 @@ class SqlBaseTest extends Specification {
 
     def "clean table without schema"() {
         when:
-        sql.cleanTable(appender, new CleanTable("users"))
+        sql.cleanTable(appender, new CleanTable("users", CleanMethod.DELETE))
 
         then:
         appender as String == "DELETE FROM [users];\n"
@@ -43,18 +43,26 @@ class SqlBaseTest extends Specification {
 
     def "clean table with schema"() {
         when:
-        sql.cleanTable(appender, new CleanTable("admin.users"))
+        sql.cleanTable(appender, new CleanTable("admin.users", CleanMethod.DELETE))
 
         then:
         appender as String == "DELETE FROM [admin].[users];\n"
     }
 
+    def "clean table with truncate"() {
+        when:
+        sql.cleanTable(appender, new CleanTable("users", CleanMethod.TRUNCATE))
+
+        then:
+        appender as String == "TRUNCATE TABLE [users];\n"
+    }
+
     def "insert row test"() {
         given:
         def insertRow = new InsertRow("admin.users", "vlad", [
-            id: new FixtureValue(1),
-            name: new FixtureValue("Vlad"),
-            age : new FixtureValue(29)
+                id  : new FixtureValue(1),
+                name: new FixtureValue("Vlad"),
+                age : new FixtureValue(29)
         ])
 
         when:
@@ -70,7 +78,7 @@ class SqlBaseTest extends Specification {
         1 * appender.append(_ as CharSequence) >> { text -> throw new IOException() }
 
         when:
-        sql.cleanTable(appender, new CleanTable("users"))
+        sql.cleanTable(appender, new CleanTable("users", CleanMethod.DELETE))
 
         then:
         thrown(IOException)
@@ -104,9 +112,9 @@ class SqlBaseTest extends Specification {
 
         where:
         unescaped | escaped
-        true | 'true'
-        40 | '40'
-        3.14 | '3.14'
+        true      | 'true'
+        40        | '40'
+        3.14      | '3.14'
     }
 
     def "does not escape SQL value"() {

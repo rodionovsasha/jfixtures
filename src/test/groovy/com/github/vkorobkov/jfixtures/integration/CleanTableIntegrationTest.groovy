@@ -12,6 +12,7 @@ class CleanTableIntegrationTest extends Specification implements H2Test {
         recreateTable("friends", "ID INT, NAME VARCHAR(50), AGE INT")
         recreateTable("mates", "ID INT, NAME VARCHAR(50), AGE INT")
         recreateTable("users", "ID INT, NAME VARCHAR(50), AGE INT")
+        recreateTable("dudes", "ID INT, NAME VARCHAR(50), AGE INT")
     }
 
     def cleanup() {
@@ -39,6 +40,18 @@ class CleanTableIntegrationTest extends Specification implements H2Test {
 
         then:
         def results = sql.rows("SELECT * FROM friends")
+        results.size() == 1
+    }
+
+    def "should truncate from table when clean_method has 'truncate' value"() {
+        given:
+        sql.execute("INSERT INTO dudes (\"id\", \"name\", \"age\") VALUES (10000, 'Homer', 39);")
+
+        when:
+        executeFixtures(tmpCleanFolder)
+
+        then:
+        def results = sql.rows("SELECT * FROM dudes")
         results.size() == 1
     }
 

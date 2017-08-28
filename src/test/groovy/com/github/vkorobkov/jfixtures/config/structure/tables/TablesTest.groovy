@@ -34,13 +34,17 @@ class TablesTest extends Specification {
     ]
 
     def CLEAN_UP_CONFIG = [
-            no_clean_up: [
+            no_clean_up           : [
                     applies_to  : "users",
                     clean_method: "none",
             ],
-            clean_up   : [
+            clean_up_with_delete  : [
                     applies_to  : "friends",
                     clean_method: "delete",
+            ],
+            clean_up_with_truncate: [
+                    applies_to  : "mates",
+                    clean_method: "truncate",
             ]
     ]
 
@@ -56,34 +60,34 @@ class TablesTest extends Specification {
     ]
 
     def BEFORE_INSERTS_CONFIG = [
-            transactional_users: [
-                    applies_to  : "users",
+            transactional_users  : [
+                    applies_to    : "users",
                     before_inserts: "BEGIN TRANSACTION;",
             ],
-            transactional_friends   : [
-                    applies_to  : ["friends", "mates"],
+            transactional_friends: [
+                    applies_to    : ["friends", "mates"],
                     before_inserts: ["// Doing table \$TABLE_NAME", "BEGIN TRANSACTION;"],
             ]
     ]
 
     def AFTER_INSERTS_CONFIG = [
-            transactional_users: [
-                    applies_to  : "users",
+            transactional_users  : [
+                    applies_to   : "users",
                     after_inserts: "COMMIT TRANSACTION;",
             ],
-            transactional_friends   : [
-                    applies_to  : ["friends", "mates"],
+            transactional_friends: [
+                    applies_to   : ["friends", "mates"],
                     after_inserts: ["// Completed table \$TABLE_NAME", "COMMIT TRANSACTION;"],
             ]
     ]
 
     def BEFORE_CLEANUP_CONFIG = [
-            transactional_users: [
-                    applies_to  : "users",
+            transactional_users  : [
+                    applies_to    : "users",
                     before_cleanup: "BEGIN TRANSACTION;",
             ],
-            transactional_friends   : [
-                    applies_to  : ["friends", "mates"],
+            transactional_friends: [
+                    applies_to    : ["friends", "mates"],
                     before_cleanup: ["// Beginning of the table \$TABLE_NAME", "BEGIN TRANSACTION;"],
             ]
     ]
@@ -131,6 +135,7 @@ class TablesTest extends Specification {
         expect:
         getCleanMethod(CLEAN_UP_CONFIG, "users") == CleanMethod.NONE
         getCleanMethod(CLEAN_UP_CONFIG, "friends") == CleanMethod.DELETE
+        getCleanMethod(CLEAN_UP_CONFIG, "mates") == CleanMethod.TRUNCATE
     }
 
     def "should return clean_method if set for any table"() {

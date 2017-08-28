@@ -1,5 +1,6 @@
 package com.github.vkorobkov.jfixtures.sql.dialects
 
+import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
 import com.github.vkorobkov.jfixtures.loader.FixtureValue
@@ -31,10 +32,18 @@ class MsSqlTest extends Specification {
 
     def "clean table"() {
         when:
-        sql.cleanTable(appender, new CleanTable("admin.users"))
+        sql.cleanTable(appender, new CleanTable("admin.users", CleanMethod.DELETE))
 
         then:
         appender as String == 'DELETE FROM [admin].[users];\n'
+    }
+
+    def "clean table with truncate"() {
+        when:
+        sql.cleanTable(appender, new CleanTable("admin.users", CleanMethod.TRUNCATE))
+
+        then:
+        appender as String == 'TRUNCATE TABLE [admin].[users];\n'
     }
 
     def "insert row test"() {
