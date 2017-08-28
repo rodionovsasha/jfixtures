@@ -5,7 +5,7 @@
 
     <groupId>com.github.vkorobkov</groupId>
     <artifactId>jfixtures</artifactId>
-    <version>1.0.21</version>
+    <version>1.0.22</version>
     <packaging>jar</packaging>
 
     <name>JFixtures</name>
@@ -47,6 +47,7 @@
         <!--Project dependencies version-->
         <lombok.version>1.16.18</lombok.version>
         <snakeyaml.version>1.18</snakeyaml.version>
+        <logback.version>1.2.3</logback.version>
 
         <!--Test dependencies versions-->
         <spock-core.version>1.1-groovy-2.4</spock-core.version>
@@ -75,6 +76,18 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
             <scope>provided</scope>
         </dependency>
 
