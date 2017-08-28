@@ -273,7 +273,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         def insertions = instructions.findAll { it instanceof InsertRow }
         insertions.size() == 3
         def deletions = instructions.findAll { it instanceof CleanTable }
-        deletions.size() == 2
+        deletions.size() == 3
 
         and:
         insertions.find { it.table == "mates" }
@@ -282,9 +282,11 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         deletions.find { it.table == "friends" }
         deletions.find { it.table == "mates" }
+        deletions.find { it.table == "users" }
 
         deletions.get(0).cleanMethod == CleanMethod.DELETE
-        deletions.get(1).cleanMethod == CleanMethod.DELETE
+        deletions.get(1).cleanMethod == CleanMethod.NONE
+        deletions.get(2).cleanMethod == CleanMethod.DELETE
 
         deletions.find { it.table != "users" }
     }

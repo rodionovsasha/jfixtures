@@ -45,6 +45,14 @@ class Sql99Test extends Specification {
         appender as String == 'TRUNCATE TABLE "admin"."users";\n'
     }
 
+    def "no clean table with none"() {
+        when:
+        sql.cleanTable(appender, new CleanTable("users", CleanMethod.NONE))
+
+        then:
+        appender as String == ""
+    }
+
     def "insert row test"() {
         given:
         def insertRow = new InsertRow("admin.users", "vlad", [

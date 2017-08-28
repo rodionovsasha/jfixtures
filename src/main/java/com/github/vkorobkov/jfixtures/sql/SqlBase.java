@@ -1,6 +1,5 @@
 package com.github.vkorobkov.jfixtures.sql;
 
-import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.CustomSql;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
@@ -20,10 +19,17 @@ public interface SqlBase extends Sql {
         val table = escapeTableOrColumn(cleanTable.getTable());
         val cleanMethod = cleanTable.getCleanMethod();
 
-        if (CleanMethod.DELETE == cleanMethod) {
+        switch (cleanMethod) {
+        case DELETE:
             appender.append("DELETE FROM ", table, ";\n");
-        } else if (CleanMethod.TRUNCATE == cleanMethod) {
+            break;
+        case TRUNCATE:
             appender.append("TRUNCATE TABLE ", table, ";\n");
+            break;
+        case NONE:
+            break;
+        default:
+            throw new IllegalStateException("Unknown clean method");
         }
     }
 

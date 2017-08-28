@@ -12,6 +12,6 @@ public class CleanTable implements Instruction {
 
     @Override
     public void accept(InstructionVisitor visitor) {
-        visitor.visit(this, this.cleanMethod);
+        visitor.visit(this);
     }
 }

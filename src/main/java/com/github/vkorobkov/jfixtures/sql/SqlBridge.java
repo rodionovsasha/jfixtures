@@ -1,6 +1,5 @@
 package com.github.vkorobkov.jfixtures.sql;
 
-import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod;
 import com.github.vkorobkov.jfixtures.instructions.*;
 import lombok.AllArgsConstructor;
 
@@ -16,7 +15,7 @@ public class SqlBridge implements InstructionVisitor {
     }
 
     @Override
-    public void visit(CleanTable cleanTable, CleanMethod cleanMethod) {
+    public void visit(CleanTable cleanTable) {
         sql.cleanTable(appender, cleanTable);
     }
 

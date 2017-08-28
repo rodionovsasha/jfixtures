@@ -1,7 +1,6 @@
 package com.github.vkorobkov.jfixtures.processor;
 
 import com.github.vkorobkov.jfixtures.config.structure.Root;
-import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.CustomSql;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
@@ -45,7 +44,6 @@ public class Processor {
     private void handleFixtureInstructions(Fixture fixture) {
         val tableName = fixture.name;
         val table = context.getConfig().table(tableName);
-        val cleanMethod = table.getCleanMethod();
 
         log.info("Processing table '" + tableName + "'");
         List<Instruction> fixtureInstructions = new ArrayList<>();
@@ -53,9 +51,7 @@ public class Processor {
         fixtureInstructions.addAll(table.getBeforeCleanup().stream()
                 .map(s -> customSql(tableName, s)).collect(Collectors.toList()));
 
-        if (CleanMethod.DELETE == cleanMethod || CleanMethod.TRUNCATE == cleanMethod) {
-            fixtureInstructions.add(cleanupTable(fixture, table.getCleanMethod()));
-        }
+        fixtureInstructions.add(new CleanTable(tableName, table.getCleanMethod()));
 
         fixtureInstructions.addAll(table.getBeforeInserts().stream()
                 .map(s -> customSql(tableName, s)).collect(Collectors.toList()));
@@ -65,10 +61,6 @@ public class Processor {
         fixtureInstructions.addAll(table.getAfterInserts().stream()
                 .map(s -> customSql(tableName, s)).collect(Collectors.toList()));
         context.getInstructions().addAll(fixtureInstructions);
-    }
-
-    private Instruction cleanupTable(Fixture fixture, CleanMethod cleanMethod) {
-        return new CleanTable(fixture.name, cleanMethod);
     }
 
     private Instruction customSql(String table, String instruction) {

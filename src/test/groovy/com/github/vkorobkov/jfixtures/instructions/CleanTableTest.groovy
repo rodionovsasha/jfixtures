@@ -18,6 +18,6 @@ class CleanTableTest extends Specification {
         instruction.accept(visitor)
 
         then:
-        1 * visitor.visit(instruction, CleanMethod.DELETE)
+        1 * visitor.visit(instruction)
     }
 }
