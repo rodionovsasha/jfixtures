@@ -284,11 +284,10 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         deletions.find { it.table == "mates" }
         deletions.find { it.table == "users" }
 
-        deletions.get(0).cleanMethod == CleanMethod.DELETE
-        deletions.get(1).cleanMethod == CleanMethod.NONE
-        deletions.get(2).cleanMethod == CleanMethod.DELETE
+        deletions.find { it.cleanMethod == CleanMethod.DELETE && it.table == "friends"}
+        deletions.find { it.cleanMethod == CleanMethod.DELETE && it.table == "mates"}
+        deletions.find { it.cleanMethod == CleanMethod.NONE && it.table == "users" }
 
-        deletions.find { it.table != "users" }
     }
 
     def "truncate instructions when clean_method is 'truncate'"() {
@@ -305,10 +304,8 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         insertions.find { it.table == "users" }
         insertions.find { it.table == "friends" }
 
-        truncations.find { it.table == "friends" }
-        truncations.get(1).cleanMethod == CleanMethod.TRUNCATE
-
-        truncations.find { it.table != "users" }
+        truncations.find {it.cleanMethod == CleanMethod.TRUNCATE && it.table == "friends" }
+        truncations.find {it.cleanMethod == CleanMethod.DELETE && it.table == "users" }
     }
 
     def "before_inserts instructions should be added"() {
