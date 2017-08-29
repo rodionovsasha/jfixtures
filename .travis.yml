@@ -1,5 +1,8 @@
 language: java
 
+notifications:
+  slack: jfixtures:jOwrd0VAUWmsEqAMtfwqOM9J
+
 env:
   global:
     # OSSRH_JIRA_USERNAME
