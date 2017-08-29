@@ -1,5 +1,6 @@
-package com.github.vkorobkov.jfixtures.fluent
+package com.github.vkorobkov.jfixtures.fluent.impl
 
+import com.github.vkorobkov.jfixtures.fluent.JFixturesResult
 import com.github.vkorobkov.jfixtures.sql.Appender
 import com.github.vkorobkov.jfixtures.sql.SqlBase
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
@@ -9,8 +10,7 @@ import spock.lang.Specification
 
 import java.nio.file.Path
 
-class JFixturesResultImplTest extends Specification implements YamlVirtualFolder {
-
+class SqlJFixturesResultImplTest extends Specification implements YamlVirtualFolder {
     Path tmlFolderPath
     String outputPath
     SqlBase sql
@@ -28,7 +28,7 @@ class JFixturesResultImplTest extends Specification implements YamlVirtualFolder
         tmlFolderPath = unpackYamlToTempFolder("default.yml")
         outputPath = tmlFolderPath.resolve("out.sql") as String
 
-        fixturesResult = new JFixturesResultImpl(tmlFolderPath as String, sql)
+        fixturesResult = new SqlJFixturesResultImpl(tmlFolderPath as String, sql)
     }
 
     void cleanup() {
