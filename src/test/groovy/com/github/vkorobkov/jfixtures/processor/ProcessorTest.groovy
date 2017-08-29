@@ -1,6 +1,7 @@
 package com.github.vkorobkov.jfixtures.processor
 
 import com.github.vkorobkov.jfixtures.config.ConfigLoader
+import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
 import com.github.vkorobkov.jfixtures.instructions.CustomSql
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
@@ -272,7 +273,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         def insertions = instructions.findAll { it instanceof InsertRow }
         insertions.size() == 3
         def deletions = instructions.findAll { it instanceof CleanTable }
-        deletions.size() == 2
+        deletions.size() == 3
 
         and:
         insertions.find { it.table == "mates" }
@@ -281,7 +282,30 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         deletions.find { it.table == "friends" }
         deletions.find { it.table == "mates" }
-        deletions.find { it.table != "users" }
+        deletions.find { it.table == "users" }
+
+        deletions.find { it.cleanMethod == CleanMethod.DELETE && it.table == "friends"}
+        deletions.find { it.cleanMethod == CleanMethod.DELETE && it.table == "mates"}
+        deletions.find { it.cleanMethod == CleanMethod.NONE && it.table == "users" }
+
+    }
+
+    def "truncate instructions when clean_method is 'truncate'"() {
+        when:
+        def instructions = load("basic_fixtures_with_truncate_clean_method.yml")
+
+        then:
+        def insertions = instructions.findAll { it instanceof InsertRow }
+        insertions.size() == 2
+        def truncations = instructions.findAll { it instanceof CleanTable }
+        truncations.size() == 2
+
+        and:
+        insertions.find { it.table == "users" }
+        insertions.find { it.table == "friends" }
+
+        truncations.find {it.cleanMethod == CleanMethod.TRUNCATE && it.table == "friends" }
+        truncations.find {it.cleanMethod == CleanMethod.DELETE && it.table == "users" }
     }
 
     def "before_inserts instructions should be added"() {

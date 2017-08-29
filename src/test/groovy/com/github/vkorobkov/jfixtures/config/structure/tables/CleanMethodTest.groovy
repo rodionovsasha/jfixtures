@@ -8,12 +8,14 @@ class CleanMethodTest extends Specification {
         CleanMethod.valueOfIgnoreCase(value) == expected
 
         where:
-        value    | expected
-        "delete" | CleanMethod.DELETE
-        "Delete" | CleanMethod.DELETE
-        "DELETE" | CleanMethod.DELETE
-        "none"   | CleanMethod.NONE
-        "NONE"   | CleanMethod.NONE
+        value      | expected
+        "delete"   | CleanMethod.DELETE
+        "Delete"   | CleanMethod.DELETE
+        "DELETE"   | CleanMethod.DELETE
+        "none"     | CleanMethod.NONE
+        "NONE"     | CleanMethod.NONE
+        "TRUNCATE" | CleanMethod.TRUNCATE
+        "truncate" | CleanMethod.TRUNCATE
     }
 
     def "CleanMethod throws exception when wrong value is provided"() {

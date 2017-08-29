@@ -1,17 +1,18 @@
 package com.github.vkorobkov.jfixtures.instructions
 
+import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
 import spock.lang.Specification
 
 class CleanTableTest extends Specification {
     def "constructor test"() {
         expect:
-        new CleanTable("users").table == "users"
+        new CleanTable("users", CleanMethod.DELETE).table == "users"
     }
 
     def "visitor accepts instruction"() {
         given:
         def visitor = Mock(InstructionVisitor)
-        def instruction = new CleanTable("users")
+        def instruction = new CleanTable("users", CleanMethod.DELETE)
 
         when:
         instruction.accept(visitor)

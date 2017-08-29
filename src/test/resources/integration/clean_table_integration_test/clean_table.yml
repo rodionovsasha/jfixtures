@@ -3,9 +3,12 @@
     no_clean_up:
       applies_to: "users"
       clean_method: "none"
-    clean_up:
+    clean_up_with_delete:
       applies_to: "friends"
       clean_method: "delete"
+    clean_up_with_truncate:
+      applies_to: "dudes"
+      clean_method: "truncate"
 
 "users.yml":
   vlad:
@@ -21,3 +24,8 @@
   igor:
     name: Igor
     age: 31
+
+"dudes.yml":
+  homer:
+    name: Homer
+    age: 39
