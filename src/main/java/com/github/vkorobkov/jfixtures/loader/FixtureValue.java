@@ -4,6 +4,8 @@ import com.github.vkorobkov.jfixtures.util.StringUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import javax.xml.bind.annotation.XmlValue;
+
 @EqualsAndHashCode
 @Getter
 public final class FixtureValue {
@@ -22,6 +24,11 @@ public final class FixtureValue {
             this.value = value;
             this.type = ValueType.AUTO;
         }
+    }
+
+    @XmlValue
+    public String getStringValue() {
+        return value.toString();
     }
 
     @Override

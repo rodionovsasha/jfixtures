@@ -2,6 +2,7 @@ package com.github.vkorobkov.jfixtures;
 
 import com.github.vkorobkov.jfixtures.fluent.JFixturesResult;
 import com.github.vkorobkov.jfixtures.fluent.impl.SqlJFixturesResultImpl;
+import com.github.vkorobkov.jfixtures.fluent.impl.XmlJFixturesResultImpl;
 import com.github.vkorobkov.jfixtures.sql.SqlType;
 import com.github.vkorobkov.jfixtures.sql.dialects.MsSql;
 import com.github.vkorobkov.jfixtures.sql.dialects.MySql;
@@ -25,5 +26,9 @@ public final class JFixtures {
 
     public static JFixturesResult byDialect(String fixturesFolder, SqlType sqlType) {
         return new SqlJFixturesResultImpl(fixturesFolder, sqlType.getSqlDialect());
+    }
+
+    public static JFixturesResult xml(String fixturesFolder) {
+        return new XmlJFixturesResultImpl(fixturesFolder);
     }
 }

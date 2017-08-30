@@ -4,6 +4,11 @@ import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
 import spock.lang.Specification
 
 class CleanTableTest extends Specification {
+    def "default constructor test"() {
+        expect:
+        new CleanTable()
+    }
+
     def "constructor test"() {
         expect:
         new CleanTable("users", CleanMethod.DELETE).table == "users"
