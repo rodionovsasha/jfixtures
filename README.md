@@ -114,6 +114,13 @@ That's all! Output SQL file will contain all the required INSERT instructions or
 primary/foreign keys and with `DELETE FROM <table>` instruction for cleaning up every table before inserting a new
 test data.````
 
+Another option - ability to export to XML format which keeps tables ordering:
+```java
+import com.github.vkorobkov.jfixtures.JFixtures;
+
+JFixtures.xml("/path/to/fixtures/folder").toFile("output.xml");
+```
+
 No hard magic here - yml file names get converted as they are(but without .yml extension) into table names.
 Each row has a human readable key like `vlad` and `alex` for `user` table and like `skeleton` and `tests`
 for `ticket` table. These keys get converted into a numeric PK columns named `id` for each table. Foreign key values 
@@ -145,7 +152,7 @@ com.github.vkorobkov:jfixtures:jar:1.0.2
 ## Usage
 Once you included a dependency into your project, you're ready to use JFixtures.
 Generally speaking, JFixtures is just a text processor - it expects to receive a folder with fixtures as an input and it 
-writes a SQL file as the output:
+writes a SQL file (or XML) as the output:
 ```java
 import com.github.vkorobkov.jfixtures.JFixtures;
 
