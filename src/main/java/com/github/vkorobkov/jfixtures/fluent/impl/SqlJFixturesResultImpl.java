@@ -7,7 +7,7 @@ import com.github.vkorobkov.jfixtures.sql.appenders.FileAppender;
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender;
 import com.github.vkorobkov.jfixtures.util.WithResource;
 
-public class SqlJFixturesResultImpl extends JFixturesResultImpl {
+public class SqlJFixturesResultImpl extends JFixturesResultBase {
     private final Sql sql;
 
     public SqlJFixturesResultImpl(String fixturesFolder, Sql sql) {
