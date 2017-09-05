@@ -26,14 +26,14 @@ public final class FixtureValue {
         }
     }
 
-    @XmlValue
-    public String getStringValue() {
-        return value.toString();
-    }
-
     @Override
     public String toString() {
         return String.valueOf(value);
+    }
+
+    @XmlValue
+    String getValueAsString() {
+        return value.toString();
     }
 
     private ValueType determineType(String value) {
