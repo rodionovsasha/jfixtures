@@ -33,7 +33,7 @@ public final class FixtureValue {
 
     @XmlValue
     String getValueAsString() {
-        return value.toString();
+        return this.toString();
     }
 
     private ValueType determineType(String value) {
