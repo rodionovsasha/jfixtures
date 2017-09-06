@@ -3,6 +3,11 @@ package com.github.vkorobkov.jfixtures.instructions
 import spock.lang.Specification
 
 class CustomSqlTest extends Specification {
+    def "default constructor test"() {
+        expect:
+        new CustomSql()
+    }
+
     def "constructor test"() {
         when:
         CustomSql customSql = new CustomSql("users", "BEGIN TRANSACTION;")

@@ -4,6 +4,10 @@ import com.github.vkorobkov.jfixtures.loader.FixtureValue
 import spock.lang.Specification
 
 class InsertRowTest extends Specification {
+    def "default constructor test"() {
+        expect:
+        new InsertRow()
+    }
 
     def "constructor test"() {
         given:

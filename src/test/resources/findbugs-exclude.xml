@@ -12,4 +12,8 @@
         <Class name="com.github.vkorobkov.jfixtures.config.structure.tables.Tables"/>
         <Bug pattern="DM_CONVERT_CASE"/>
     </Match>
+    <Match>
+        <Class name="com.github.vkorobkov.jfixtures.loader.FixtureValue"/>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    </Match>
 </FindBugsFilter>
