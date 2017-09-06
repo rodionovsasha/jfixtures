@@ -14,12 +14,10 @@ import lombok.val;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@XmlRootElement(name = "instructions")
 abstract class JFixturesResultBase implements JFixturesResult {
     private String fixturesFolder;
 

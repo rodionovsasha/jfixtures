@@ -1,13 +1,17 @@
 package com.github.vkorobkov.jfixtures.fluent.impl;
 
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.StringWriter;
 
+@NoArgsConstructor
+@XmlRootElement(name = "instructions")
 public class XmlJFixturesResultImpl extends JFixturesResultBase {
     public XmlJFixturesResultImpl(final String fixturesFolder) {
         super(fixturesFolder);
@@ -30,7 +34,7 @@ public class XmlJFixturesResultImpl extends JFixturesResultBase {
 
     @SneakyThrows
     private Marshaller getMarshaller() {
-        val jaxbContext = JAXBContext.newInstance(JFixturesResultBase.class);
+        val jaxbContext = JAXBContext.newInstance(this.getClass());
         val marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         return marshaller;

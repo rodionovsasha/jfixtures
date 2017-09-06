@@ -27,15 +27,15 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
             |        <values>
             |            <entry>
             |                <key>id</key>
-            |                <value>1</value>
+            |                <value type="AUTO">1</value>
             |            </entry>
             |            <entry>
             |                <key>name</key>
-            |                <value>Vlad</value>
+            |                <value type="TEXT">Vlad</value>
             |            </entry>
             |            <entry>
             |                <key>age</key>
-            |                <value>29</value>
+            |                <value type="AUTO">29</value>
             |            </entry>
             |        </values>
             |    </instruction>
