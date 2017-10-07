@@ -9,7 +9,6 @@ import com.github.vkorobkov.jfixtures.instructions.Instruction;
 import com.github.vkorobkov.jfixtures.loader.Fixture;
 import com.github.vkorobkov.jfixtures.loader.FixtureRow;
 import com.github.vkorobkov.jfixtures.loader.FixtureValue;
-import com.github.vkorobkov.jfixtures.processor.sequence.IncrementalSequence;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -70,7 +69,6 @@ public class Processor {
 
     private List<Instruction> processRows(Fixture fixture) {
         String tableName = fixture.name;
-        context.getSequenceRegistry().put(tableName, new IncrementalSequence());
         return fixture.getRows().stream().map(row -> processRow(tableName, row)).collect(Collectors.toList());
     }
 
