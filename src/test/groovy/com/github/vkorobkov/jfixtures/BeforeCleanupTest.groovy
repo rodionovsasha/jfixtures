@@ -5,12 +5,12 @@ import spock.lang.Specification
 
 class BeforeCleanupTest extends Specification implements YamlVirtualFolder {
     def DEFAULT_EXPECTED_SQL = """DELETE FROM "users";
-            |INSERT INTO "users" ("id", "name", "age") VALUES (10000, 'Vladimir', 29);
+            |INSERT INTO "users" ("id", "name", "age") VALUES (${Id.one('vlad')}, 'Vladimir', 29);
             |""".stripMargin()
     def CUSTOM_EXPECTED_SQL = """// Beginning of the table users
             |BEGIN TRANSACTION;
             |DELETE FROM "users";
-            |INSERT INTO "users" ("id", "name", "age") VALUES (10000, 'Vladimir', 29);
+            |INSERT INTO "users" ("id", "name", "age") VALUES (${Id.one('vlad')}, 'Vladimir', 29);
             |""".stripMargin()
 
     def "should not insert any custom SQL by default"() {
