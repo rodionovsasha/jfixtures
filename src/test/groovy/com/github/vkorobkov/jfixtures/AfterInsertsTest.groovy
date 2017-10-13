@@ -5,10 +5,10 @@ import spock.lang.Specification
 
 class AfterInsertsTest extends Specification implements YamlVirtualFolder {
     def DEFAULT_EXPECTED_SQL = """DELETE FROM "users";
-            |INSERT INTO "users" ("id", "name", "age") VALUES (${Id.one('vlad')}, 'Vladimir', 29);
+            |INSERT INTO "users" ("id", "name", "age") VALUES (${IntId.one('vlad')}, 'Vladimir', 29);
             |""".stripMargin()
     def CUSTOM_EXPECTED_SQL = """DELETE FROM "users";
-            |INSERT INTO "users" ("id", "name", "age") VALUES (${Id.one('vlad')}, 'Vladimir', 29);
+            |INSERT INTO "users" ("id", "name", "age") VALUES (${IntId.one('vlad')}, 'Vladimir', 29);
             |// Completed table users
             |COMMIT TRANSACTION;
             |""".stripMargin()

@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.integration
 
-import com.github.vkorobkov.jfixtures.Id
+import com.github.vkorobkov.jfixtures.IntId
 import com.github.vkorobkov.jfixtures.testutil.H2Test
 import spock.lang.Specification
 
@@ -25,7 +25,7 @@ class H2IntegrationTest extends Specification implements H2Test {
         def result = sql.rows("SELECT * FROM users")
         result == [
             [ID: 1, NAME: "Vlad", AGE: 29],
-            [ID: Id.one("semen"), NAME: "Semen's special name:'#\"*[@;", AGE: 32]
+            [ID: IntId.one("semen"), NAME: "Semen's special name:'#\"*[@;", AGE: 32]
         ]
     }
 }

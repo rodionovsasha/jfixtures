@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.processor;
 
-import com.github.vkorobkov.jfixtures.Id;
+import com.github.vkorobkov.jfixtures.IntId;
 import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.CustomSql;
@@ -82,7 +82,7 @@ public class Processor {
         Map<String, FixtureValue> result = new LinkedHashMap<>(row.getColumns().size() + 1);
         val table = context.getConfig().table(tableName);
         if (table.shouldAutoGeneratePk()) {
-            val id = new FixtureValue(Id.one(row.getName()));
+            val id = new FixtureValue(IntId.one(row.getName()));
             result.put(table.getPkColumnName(), id);
         }
         row.getColumns().forEach((name, value) -> {

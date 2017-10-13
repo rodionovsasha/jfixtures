@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.processor
 
-import com.github.vkorobkov.jfixtures.Id
+import com.github.vkorobkov.jfixtures.IntId
 import com.github.vkorobkov.jfixtures.config.ConfigLoader
 import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
@@ -29,7 +29,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         vlad.table == "admin.users"
         vlad.rowName == "vlad"
         assertInsertInstructions(vlad.values, [
-            id: Id.one(vlad.rowName),
+            id: IntId.one(vlad.rowName),
             first_name: "Vladimir",
             age: 29,
             sex: "man"
@@ -40,7 +40,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         diman.table == "admin.users"
         diman.rowName == "diman"
         assertInsertInstructions(diman.values, [
-            id: Id.one(diman.rowName),
+            id: IntId.one(diman.rowName),
             first_name: "Dmitry",
             age: 28,
             sex: "man"
@@ -70,7 +70,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         vlad.table == "users"
         vlad.rowName == "vlad"
         assertInsertInstructions(vlad.values, [
-            id: Id.one(vlad.rowName),
+            id: IntId.one(vlad.rowName),
             first_name: "Dmitry",
             age: 28,
             sex: "man"
@@ -116,17 +116,17 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         and:
         users_to_roles[0].values == [
-            id: new FixtureValue(Id.one("kirill_is_guest")),
+            id: new FixtureValue(IntId.one("kirill_is_guest")),
             user_id: users.find { it.rowName == "kirill" }.values.id,
             role_id: roles.find { it.rowName == "guest" }.values.id,
         ]
         users_to_roles[1].values == [
-            id: new FixtureValue(Id.one("vlad_is_owner")),
+            id: new FixtureValue(IntId.one("vlad_is_owner")),
             user_id: users.find { it.rowName == "vlad" }.values.id,
             role_id: roles.find { it.rowName == "owner" }.values.id,
         ]
         users_to_roles[2].values == [
-            id: new FixtureValue(Id.one("diman_is_commitee")),
+            id: new FixtureValue(IntId.one("diman_is_commitee")),
             user_id: users.find { it.rowName == "diman" }.values.id,
             role_id: roles.find { it.rowName == "commitee" }.values.id,
         ]
@@ -226,7 +226,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         vlad.table == "users"
         vlad.rowName == "vlad"
         assertInsertInstructions(vlad.values, [
-                custom_id: Id.one("vlad"),
+                custom_id: IntId.one("vlad"),
                 first_name: "Vladimir",
                 age: 29,
                 sex: "man"
@@ -242,13 +242,13 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         and:
         def vlad = insertions.find { it.rowName == "vlad" }
-        vlad.values.id == new FixtureValue(Id.one("vlad"))
+        vlad.values.id == new FixtureValue(IntId.one("vlad"))
         vlad.values.login == new FixtureValue("vlad")
-        vlad.values.profile_id == new FixtureValue(Id.one("public"))
+        vlad.values.profile_id == new FixtureValue(IntId.one("public"))
 
         and:
         def profile = insertions.find { it.rowName == "public" }
-        profile.values.custom_id == new FixtureValue(Id.one("public"))
+        profile.values.custom_id == new FixtureValue(IntId.one("public"))
         profile.values.name == new FixtureValue("Vladimir")
         profile.values.age == new FixtureValue(29)
 
