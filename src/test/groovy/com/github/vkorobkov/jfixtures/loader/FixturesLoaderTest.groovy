@@ -81,6 +81,34 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         dima.columns.sex == new FixtureValue("man")
     }
 
+    def "short syntax for row content is loaded well"() {
+        when:
+        def fixtures = load("fixture_with_short_syntax.yml")
+
+        then:
+        def users = fixtures.get("users").rows
+
+        and:
+        with(users[0]) {
+            name == "vlad"
+            with(columns) {
+                first_name == new FixtureValue("Vladimir")
+                age == new FixtureValue(29)
+                sex == new FixtureValue("man")
+            }
+        }
+
+        and:
+        with(users[1]) {
+            name == "diman"
+            with(columns) {
+                first_name == new FixtureValue("Dmitry")
+                age == new FixtureValue(28)
+                sex == new FixtureValue("man")
+            }
+        }
+    }
+
     def "'users' table copies fields from the base table"() {
         when:
         def fixtures = load("base_user_table.yml")
