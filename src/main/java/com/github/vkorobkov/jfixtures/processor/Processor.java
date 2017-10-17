@@ -1,5 +1,6 @@
 package com.github.vkorobkov.jfixtures.processor;
 
+import com.github.vkorobkov.jfixtures.IntId;
 import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.CustomSql;
@@ -8,7 +9,6 @@ import com.github.vkorobkov.jfixtures.instructions.Instruction;
 import com.github.vkorobkov.jfixtures.loader.Fixture;
 import com.github.vkorobkov.jfixtures.loader.FixtureRow;
 import com.github.vkorobkov.jfixtures.loader.FixtureValue;
-import com.github.vkorobkov.jfixtures.processor.sequence.IncrementalSequence;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -69,7 +69,6 @@ public class Processor {
 
     private List<Instruction> processRows(Fixture fixture) {
         String tableName = fixture.name;
-        context.getSequenceRegistry().put(tableName, new IncrementalSequence());
         return fixture.getRows().stream().map(row -> processRow(tableName, row)).collect(Collectors.toList());
     }
 
@@ -83,8 +82,8 @@ public class Processor {
         Map<String, FixtureValue> result = new LinkedHashMap<>(row.getColumns().size() + 1);
         val table = context.getConfig().table(tableName);
         if (table.shouldAutoGeneratePk()) {
-            result.put(table.getPkColumnName(),
-                    context.getSequenceRegistry().nextValue(tableName, row.getName()));
+            val id = new FixtureValue(IntId.one(row.getName()));
+            result.put(table.getPkColumnName(), id);
         }
         row.getColumns().forEach((name, value) -> {
             value = columnProcessor.column(tableName, row.getName(), name, value);
