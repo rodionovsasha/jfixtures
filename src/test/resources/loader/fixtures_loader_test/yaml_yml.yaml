@@ -1,0 +1,15 @@
+"users.yaml":
+    vlad:
+      first_name: Vladimir
+      age: 29
+    diman:
+      first_name: Dmitry
+      age: 28
+
+"users.yml":
+    vlad:
+      first_name: Vladimir
+      age: 29
+    diman:
+      first_name: Dmitry
+      age: 28

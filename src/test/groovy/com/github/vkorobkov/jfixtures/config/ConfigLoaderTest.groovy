@@ -34,7 +34,7 @@ class ConfigLoaderTest extends Specification implements YamlVirtualFolder {
         config.referredTable("content.comment", "ticket_id") == Optional.of("tickets")
     }
 
-    def "getConfigPath throws when exists with both extensions"() {
+    def "getConfigPath throws when config exists with both extensions"() {
         setup:
         def tmlFolderPath = unpackYamlToTempFolder("both_configs.yaml")
         def path = "$tmlFolderPath/default"
