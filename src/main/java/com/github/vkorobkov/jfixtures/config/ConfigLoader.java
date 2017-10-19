@@ -34,11 +34,19 @@ public class ConfigLoader {
         }
     }
 
-    private static Path getConfigPath(String fixturesRoot) {
+    private Path getConfigPath(String fixturesRoot) {
         val rootPath = Paths.get(fixturesRoot);
-        Path configPath = rootPath.resolve(CONF_YAML);
-        if (!configPath.toFile().exists()) {
-            configPath = rootPath.resolve(CONF_YML);
+        val yamlPath = rootPath.resolve(CONF_YAML);
+        val ymlPath = rootPath.resolve(CONF_YML);
+        val yamlFileExists = yamlPath.toFile().exists();
+
+        if (yamlFileExists && ymlPath.toFile().exists()) {
+            throw new ConfigLoaderException("Fixture's config exists with both extensions.");
+        }
+
+        Path configPath = yamlPath;
+        if (!yamlFileExists) {
+            configPath = ymlPath;
         }
         return configPath;
     }
