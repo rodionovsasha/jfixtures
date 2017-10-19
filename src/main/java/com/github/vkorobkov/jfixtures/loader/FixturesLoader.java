@@ -62,12 +62,12 @@ public class FixturesLoader {
 
         if (relativePath.endsWith(YML_EXT)) {
             relativePath = relativePath.substring(0, relativePath.lastIndexOf(YML_EXT));
-            checkDuplicateFixtureExists(path + separator + relativePath + YAML_EXT);
+            checkDuplicatedFixture(path + separator + relativePath + YAML_EXT);
         }
 
         if (relativePath.endsWith(YAML_EXT)) {
             relativePath = relativePath.substring(0, relativePath.lastIndexOf(YAML_EXT));
-            checkDuplicateFixtureExists(path + separator + relativePath + YML_EXT);
+            checkDuplicatedFixture(path + separator + relativePath + YML_EXT);
         }
 
         if (relativePath.contains(".")) {
@@ -78,7 +78,7 @@ public class FixturesLoader {
         return relativePath.replace(separator, ".");
     }
 
-    private void checkDuplicateFixtureExists(String path) {
+    private void checkDuplicatedFixture(String path) {
         if (new File(path).exists()) {
             throw new LoaderException("Fixture '" + path + "' exists with both extensions.");
         }
