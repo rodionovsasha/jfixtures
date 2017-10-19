@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FixturesLoader {
+    private static final String YML_EXT = ".yml";
+    private static final String YAML_EXT = ".yaml";
     private final String path;
     private final Root config;
 
@@ -39,7 +41,8 @@ public class FixturesLoader {
     }
 
     private boolean isYml(Path file) {
-        return file.toFile().getName().endsWith(".yml");
+        val name = file.toFile().getName();
+        return name.endsWith(YAML_EXT) || name.endsWith(YML_EXT);
     }
 
     private boolean isNotConfig(Path file) {
@@ -55,11 +58,25 @@ public class FixturesLoader {
     private String getFixtureName(Path file) {
         String separator = file.getFileSystem().getSeparator();
         String relativePath = Paths.get(path).relativize(file).toString();
-        relativePath = relativePath.substring(0, relativePath.lastIndexOf(".yml"));
+        relativePath = relativePath.substring(0, relativePath.lastIndexOf(YML_EXT));
         if (relativePath.contains(".")) {
             String message = "Do not use dots in file names. Use nested folders instead. Wrong fixture: " + file;
             throw new LoaderException(message);
         }
+        System.out.println("*********** relativePath: " + relativePath);
+
+        /*if (file.endsWith(YML_EXT)) {
+            relativePath = relativePath.substring(0, relativePath.lastIndexOf(YML_EXT));
+            if (new File(relativePath + YAML_EXT).exists()) {
+                throw new LoaderException("Fixture '" + relativePath + "' exists with both extensions.");
+            }
+        }
+        if (file.endsWith(YAML_EXT)) {
+            relativePath = relativePath.substring(0, relativePath.lastIndexOf(YAML_EXT));
+            if (new File(relativePath + YML_EXT).exists()) {
+                throw new LoaderException("Fixture '" + relativePath + "' exists with both extensions.");
+            }
+        }*/
         return relativePath.replace(separator, ".");
     }
 }
