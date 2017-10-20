@@ -22,12 +22,12 @@ public class FixturesLoader {
     public Map<String, Fixture> load() {
         try {
             return Files
-                    .walk(Paths.get(path))
-                    .filter(this::isFile)
-                    .filter(this::isYml)
-                    .filter(this::isNotConfig)
-                    .map(this::loadFixture)
-                    .collect(Collectors.toMap(fixture -> fixture.name, fixture -> fixture));
+                .walk(Paths.get(path))
+                .filter(this::isFile)
+                .filter(this::isYml)
+                .filter(this::isNotConfig)
+                .map(this::loadFixture)
+                .collect(Collectors.toMap(fixture -> fixture.name, fixture -> fixture));
         } catch (IOException cause) {
             String message = "Can not load fixtures from directory: " + path;
             throw new LoaderException(message, cause);

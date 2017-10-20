@@ -21,23 +21,25 @@ public final class YmlUtil {
     @SuppressWarnings("unchecked")
     public static Map<String, Object> load(Path file) throws IOException {
         Object loaded = new Yaml().load(Files.newInputStream(file));
-        return loaded == null ? Collections.emptyMap() : (Map<String, Object>) loaded;
+        return loaded == null ? Collections.emptyMap() : (Map<String, Object>)loaded;
     }
 
-    public static boolean hasYamlTwin(Path yamlFilePath) {
-        val fileCount = Stream.of(YML_EXT, YAML_EXT)
-                .map(ext -> cutOffExtension(yamlFilePath.toString()) + ext)
+    public static boolean hasTwin(Path filePath) {
+        val count = Stream.of(YML_EXT, YAML_EXT)
+                .map(ext -> cutOffExtension(filePath.toString()) + ext)
                 .filter(name -> new File(name).exists())
                 .count();
 
-        if (fileCount == 0) {
-            throw new IllegalArgumentException("Neither " + YAML_EXT + " nor " + YML_EXT + " file extension.");
+        if (count == 0) {
+            throw new IllegalArgumentException("Neither " + YAML_EXT + " nor " + YML_EXT + " file extension: "
+             + filePath);
         }
 
-        return fileCount == 2;
+        return count == 2;
     }
 
-    private static String cutOffExtension(String fullName) {
-        return fullName.substring(0, fullName.lastIndexOf('.'));
+    private static String cutOffExtension(String name) {
+        val lastIndex = name.lastIndexOf(".");
+        return lastIndex == -1 ? name : name.substring(0, lastIndex);
     }
 }

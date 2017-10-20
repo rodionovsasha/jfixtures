@@ -39,37 +39,48 @@ class YmlUtilTest extends Specification implements YamlVirtualFolder {
         yaml.isEmpty()
     }
 
-    def "should not have yml twin"() {
+    def "#hasYamlTwin does not have twin for .yml file"() {
         expect:
-        !YmlUtil.hasYamlTwin(testFolderPath.resolve("simple.yml"))
+        !YmlUtil.hasTwin(testFolderPath.resolve("simple.yml"))
     }
 
-    def "should not have yaml twin"() {
+    def "#hasYamlTwin does not have twin for .yaml file"() {
         expect:
-        !YmlUtil.hasYamlTwin(testFolderPath.resolve("yaml_config.yaml"))
+        !YmlUtil.hasTwin(testFolderPath.resolve("yaml_config.yaml"))
     }
 
-    def "should have yaml twin"() {
+    def "#hasYamlTwin has twin for .yml file"() {
         setup:
         def folder = unpackYamlToTempFolder("twins.yml")
 
         expect:
-        YmlUtil.hasYamlTwin(folder.resolve("simple.yml"))
+        YmlUtil.hasTwin(folder.resolve("user.yml"))
 
         cleanup:
         folder.toFile().deleteDir()
     }
 
-    def "hasYamlTwin throws when neither yaml nor yml extension"() {
+    def "#hasYamlTwin has twin for .yaml file"() {
+        setup:
+        def folder = unpackYamlToTempFolder("twins.yml")
+
+        expect:
+        YmlUtil.hasTwin(folder.resolve("admin.yaml"))
+
+        cleanup:
+        folder.toFile().deleteDir()
+    }
+
+    def "#hasYamlTwin throws when neither yaml nor yml extension"() {
         setup:
         def folder = unpackYamlToTempFolder("txt.yml")
 
         when:
-        YmlUtil.hasYamlTwin(folder.resolve("simple.txt"))
+        YmlUtil.hasTwin(folder.resolve("simple.txt"))
 
         then:
         def e = thrown(IllegalArgumentException)
-        e.message == "Neither .yaml nor .yml file extension."
+        e.message.contains("Neither .yaml nor .yml file extension:")
 
         cleanup:
         folder.toFile().deleteDir()

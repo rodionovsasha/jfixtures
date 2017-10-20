@@ -1,7 +1,15 @@
-"simple.yml":
+"user.yml":
   name: Vlad
   age: 29
 
-"simple.yaml":
+"user.yaml":
+  name: Vlad
+  age: 29
+
+"admin.yaml":
+  name: Vlad
+  age: 29
+
+"admin.yml":
   name: Vlad
   age: 29
