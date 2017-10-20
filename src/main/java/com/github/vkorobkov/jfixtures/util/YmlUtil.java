@@ -25,15 +25,16 @@ public final class YmlUtil {
     }
 
     public static boolean hasYamlTwin(Path yamlFilePath) {
-        val fullName = yamlFilePath.toString();
-        if (!fullName.endsWith(YAML_EXT) && !fullName.endsWith(YML_EXT)) {
+        val fileCount = Stream.of(YML_EXT, YAML_EXT)
+                .map(ext -> cutOffExtension(yamlFilePath.toString()) + ext)
+                .filter(name -> new File(name).exists())
+                .count();
+
+        if (fileCount == 0) {
             throw new IllegalArgumentException("Neither " + YAML_EXT + " nor " + YML_EXT + " file extension.");
         }
 
-        return Stream.of(YML_EXT, YAML_EXT)
-                .map(ext -> cutOffExtension(fullName) + ext)
-                .filter(name -> new File(name).exists())
-                .count() == 2;
+        return fileCount == 2;
     }
 
     private static String cutOffExtension(String fullName) {
