@@ -51,7 +51,7 @@ last. That means poor developer has to remember the whole tables hierarchy.
 * Human readable, defined by user, string keys for each row instead of numeric IDs
 * Numeric PK's are auto generated, however, user can specify them manually
 * Foreign key values get calculated automatically(see example below)
-* Table references are defined explicitly in a special `.conf.yml` file.
+* Table references are defined explicitly in a special `.conf.yml` or `.conf.yaml` file.
 * Tables in output SQL script appear in the right order(according to references between the tables)
 * Early errors detection: fixture processing fails on sytax errors, circular references, incorrect foreign key value,
 e.t.c.
@@ -121,7 +121,7 @@ import com.github.vkorobkov.jfixtures.JFixtures;
 JFixtures.xml("/path/to/fixtures/folder").toFile("output.xml");
 ```
 
-No hard magic here - yml file names get converted as they are(but without .yml extension) into table names.
+No hard magic here - yml file names get converted as they are(but without .yml or .yaml extension) into table names.
 Each row has a human readable key like `vlad` and `alex` for `user` table and like `skeleton` and `tests`
 for `ticket` table. These keys get converted into a numeric PK columns named `id` for each table. Foreign key values 
 get resolved using row keys and table relation definitions from `.conf.yml:`. Tables are getting sorted accordingly: 
