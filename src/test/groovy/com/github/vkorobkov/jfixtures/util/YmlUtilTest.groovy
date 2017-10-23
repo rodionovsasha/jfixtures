@@ -80,7 +80,7 @@ class YmlUtilTest extends Specification implements YamlVirtualFolder {
 
         then:
         def e = thrown(IllegalArgumentException)
-        e.message.contains("Neither .yaml nor .yml file extension:")
+        e.message.contains("it's yaml/yml twin does exist")
 
         cleanup:
         folder.toFile().deleteDir()
@@ -95,7 +95,7 @@ class YmlUtilTest extends Specification implements YamlVirtualFolder {
 
         then:
         def e = thrown(IllegalArgumentException)
-        e.message.contains("Neither .yaml nor .yml file extension:")
+        e.message.contains("it's yaml/yml twin does exist")
 
         cleanup:
         folder.toFile().deleteDir()

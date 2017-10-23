@@ -20,13 +20,13 @@ public final class StringUtil {
 
     public static Path cutOffExtension(Path path) {
         String name = path.getFileName().toString();
-        val dotPisition = name.lastIndexOf('.');
-        if (dotPisition == -1) {
+        val extPosition = name.lastIndexOf('.');
+        if (extPosition == -1) {
             return path;
         }
 
-        name = name.substring(0, dotPisition);
+        name = name.substring(0, extPosition);
         val location = path.getParent();
-        return location != null ? location.resolve(name) : Paths.get(name);
+        return location != null ? path.getParent().resolve(name) : Paths.get(name);
     }
 }

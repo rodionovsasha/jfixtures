@@ -37,8 +37,7 @@ public final class YmlUtil {
                 .count();
 
         if (count == 0) {
-            throw new IllegalArgumentException("Neither " + YAML_EXT + " nor " + YML_EXT + " file extension: "
-             + filePath);
+            throw new IllegalArgumentException("Neither " + filePath + " nor it's yaml/yml twin does exist");
         }
 
         return count == 2;
