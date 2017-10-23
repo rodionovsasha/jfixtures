@@ -18,15 +18,15 @@ public final class StringUtil {
         return s;
     }
 
-    public static Path cutOffExtension(Path filePath) {
-        String fileName = filePath.toFile().getName();
-        val lastIndex = fileName.lastIndexOf('.');
-        if (lastIndex == -1) {
-            return filePath;
+    public static Path cutOffExtension(Path path) {
+        String name = path.getFileName().toString();
+        val dotPisition = name.lastIndexOf('.');
+        if (dotPisition == -1) {
+            return path;
         }
 
-        fileName = fileName.substring(0, lastIndex);
-        val parent = filePath.getParent();
-        return parent != null ? parent.resolve(fileName) : Paths.get(fileName);
+        name = name.substring(0, dotPisition);
+        val location = path.getParent();
+        return location != null ? location.resolve(name) : Paths.get(name);
     }
 }
