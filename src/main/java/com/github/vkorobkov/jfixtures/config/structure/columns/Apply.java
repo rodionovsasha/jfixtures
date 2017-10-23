@@ -28,7 +28,7 @@ class Apply extends Section implements TableMatcher {
     private Stream<String> getConcerns() {
         List<String> result = new ArrayList<>();
         CollectionUtil.flattenRecursively(getNode().child("concerns").required(),
-            new SplitStringConsumer(result::add));
+                new SplitStringConsumer(result::add));
         return result.stream();
     }
 }

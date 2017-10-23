@@ -34,7 +34,7 @@ public class Processor {
     }
 
     private void processFixture(Fixture fixture) {
-        context.getCircularPreventer().doInStack(fixture.name,  () -> {
+        context.getCircularPreventer().doInStack(fixture.name, () -> {
             if (context.getCompletedFixtures().add(fixture.name)) {
                 handleFixtureInstructions(fixture);
             }
@@ -73,7 +73,7 @@ public class Processor {
     }
 
     private Instruction processRow(String tableName, FixtureRow row) {
-        Instruction result =  new InsertRow(tableName, row.getName(), extractRowValues(tableName, row));
+        Instruction result = new InsertRow(tableName, row.getName(), extractRowValues(tableName, row));
         result.accept(context.getRowsIndex());
         return result;
     }

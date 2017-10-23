@@ -16,10 +16,10 @@ public class Columns extends Section {
     @SuppressWarnings("unchecked")
     public Map<String, Object> forTable(String table) {
         return applyStream()
-            .flatMap(apply -> apply.concernsForTable(table))
-            .map(this::getConcern)
-            .reduce((from, to) -> (Map<String, Object>) MapMerger.merge(from, to))
-            .orElse(Collections.emptyMap());
+                .flatMap(apply -> apply.concernsForTable(table))
+                .map(this::getConcern)
+                .reduce((from, to) -> (Map<String, Object>) MapMerger.merge(from, to))
+                .orElse(Collections.emptyMap());
     }
 
     private Stream<Apply> applyStream() {

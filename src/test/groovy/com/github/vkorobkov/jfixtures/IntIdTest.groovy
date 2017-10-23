@@ -36,9 +36,9 @@ class IntIdTest extends Specification {
     def "#many returns the same hashes as #one does, keeping the order"() {
         expect:
         IntId.many("homer", "marge", "bart") == [
-            IntId.one("homer"),
-            IntId.one("marge"),
-            IntId.one("bart")
+                IntId.one("homer"),
+                IntId.one("marge"),
+                IntId.one("bart")
         ]
     }
 

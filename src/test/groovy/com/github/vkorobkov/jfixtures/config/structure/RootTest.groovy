@@ -34,10 +34,10 @@ class RootTest extends Specification {
     def "columns() returns base columns for a specific table"() {
         when:
         def data = [
-            concerns: [has_version: [version: 1]],
-            apply: [
-                users_table_has_version: [to: "users", concerns: "has_version"]
-            ]
+                concerns: [has_version: [version: 1]],
+                apply   : [
+                        users_table_has_version: [to: "users", concerns: "has_version"]
+                ]
         ]
 
         then:

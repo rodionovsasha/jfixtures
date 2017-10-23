@@ -10,7 +10,7 @@ public final class CollectionUtil {
 
     public static void flattenRecursively(Object toFlat, Consumer consumer) {
         if (isIterable(toFlat)) {
-            ((Iterable<Object>)toFlat).forEach(item-> flattenRecursively(item, consumer));
+            ((Iterable<Object>) toFlat).forEach(item -> flattenRecursively(item, consumer));
         } else {
             consumer.accept(toFlat);
         }

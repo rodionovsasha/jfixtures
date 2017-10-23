@@ -52,7 +52,7 @@ public final class Node {
 
     @SuppressWarnings("unchecked")
     public <T> T required() {
-        return (T)content.orElseThrow(() -> new NodeMissingException(name.toString()));
+        return (T) content.orElseThrow(() -> new NodeMissingException(name.toString()));
     }
 
     @Override
@@ -62,8 +62,8 @@ public final class Node {
 
     @SuppressWarnings("unchecked")
     private Map<String, Object> asMap() {
-        return (Map<String, Object>)content
-            .filter(c -> c instanceof Map)
-            .orElse(Collections.emptyMap());
+        return (Map<String, Object>) content
+                .filter(c -> c instanceof Map)
+                .orElse(Collections.emptyMap());
     }
 }

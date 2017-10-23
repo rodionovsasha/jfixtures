@@ -189,12 +189,12 @@
                         <rule>
                             <element>CLASS</element>
                             <limits>
-                                <limit >
+                                <limit>
                                     <counter>LINE</counter>
                                     <value>COVEREDRATIO</value>
                                     <minimum>1.00</minimum>
                                 </limit>
-                                <limit >
+                                <limit>
                                     <counter>BRANCH</counter>
                                     <value>COVEREDRATIO</value>
                                     <minimum>1.00</minimum>

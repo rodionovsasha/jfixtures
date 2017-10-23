@@ -11,9 +11,9 @@ class FixtureTest extends Specification {
     void setup() {
         rowsSupplier = new RowsSupplier()
         userRows = [
-            new FixtureRow("Vlad", [:]),
-            new FixtureRow("Bob", [:]),
-            new FixtureRow("Ned", [:]),
+                new FixtureRow("Vlad", [:]),
+                new FixtureRow("Bob", [:]),
+                new FixtureRow("Ned", [:]),
         ]
     }
 

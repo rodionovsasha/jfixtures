@@ -119,8 +119,8 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         given:
         def path = testResourcePath("simple_rows.yml")
         def base = [
-            "music": "rock!",
-            "sex": "sql:man"
+                "music": "rock!",
+                "sex"  : "sql:man"
         ]
 
         when:

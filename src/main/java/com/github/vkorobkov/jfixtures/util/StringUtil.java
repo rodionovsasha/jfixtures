@@ -4,8 +4,8 @@ public final class StringUtil {
     private StringUtil() {
     }
 
-    public static String removePrefixes(String s, String ... prefixes) {
-        for (String prefix: prefixes) {
+    public static String removePrefixes(String s, String... prefixes) {
+        for (String prefix : prefixes) {
             if (s.startsWith(prefix)) {
                 return s.substring(prefix.length());
             }

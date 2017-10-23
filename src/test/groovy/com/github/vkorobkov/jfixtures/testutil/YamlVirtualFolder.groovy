@@ -12,7 +12,7 @@ trait YamlVirtualFolder implements WithTempFile, WithTestResource {
         def yaml = new Yaml()
 
         def writeContent = { Path path, content ->
-            switch(content) {
+            switch (content) {
                 case Map:
                     path.write(yaml.dumpAsMap(content))
                     break
@@ -34,8 +34,7 @@ trait YamlVirtualFolder implements WithTempFile, WithTestResource {
                         nodeHandler(subName, subContent, path)
                     }
                 }
-            }
-            else {
+            } else {
                 Files.createFile(path)
                 writeContent(path, content)
             }

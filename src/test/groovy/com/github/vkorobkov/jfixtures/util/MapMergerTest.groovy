@@ -92,10 +92,10 @@ class MapMergerTest extends Specification {
 
         then:
         result == [
-            name: "Vlad",
-            age: 29,
-            langs: [first: "Java", second: "Groovy", third: "Ruby"],
-            companies: [current: "Credo", past: "Wiley", next: "transisland"]
+                name     : "Vlad",
+                age      : 29,
+                langs    : [first: "Java", second: "Groovy", third: "Ruby"],
+                companies: [current: "Credo", past: "Wiley", next: "transisland"]
         ]
 
         and:

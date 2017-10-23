@@ -35,7 +35,7 @@ class CircularPreventerTest extends Specification {
     def "fails on transitive circular dependency"() {
         when:
         preventer.doInStack("users", {
-            preventer.doInStack("permissions", { preventer.doInStack("users", callback) } )
+            preventer.doInStack("permissions", { preventer.doInStack("users", callback) })
         })
 
         then:
