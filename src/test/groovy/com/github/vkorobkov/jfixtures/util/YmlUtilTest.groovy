@@ -86,6 +86,36 @@ class YmlUtilTest extends Specification implements YamlVirtualFolder {
         folder.toFile().deleteDir()
     }
 
+    def "#hasYamlTwin throws when file without extension"() {
+        setup:
+        def folder = unpackYamlToTempFolder("txt.yml")
+
+        when:
+        YmlUtil.hasTwin(folder.resolve("config_without_extension"))
+
+        then:
+        def e = thrown(IllegalArgumentException)
+        e.message.contains("Neither .yaml nor .yml file extension:")
+
+        cleanup:
+        folder.toFile().deleteDir()
+    }
+
+    def "#hasYamlTwin throws for directory"() {
+        setup:
+        def folder = unpackYamlToTempFolder("config_with_directory.yml")
+
+        when:
+        YmlUtil.hasTwin(folder.resolve("admin"))
+
+        then:
+        def e = thrown(IllegalArgumentException)
+        e.message.contains("admin is directory and cannot be used as a config file")
+
+        cleanup:
+        folder.toFile().deleteDir()
+    }
+
     private load(String ymlFile) {
         YmlUtil.load(testFolderPath.resolve(ymlFile))
     }

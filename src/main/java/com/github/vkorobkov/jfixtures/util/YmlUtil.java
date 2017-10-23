@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static com.github.vkorobkov.jfixtures.util.StringUtil.cutOffExtension;
+
 public final class YmlUtil {
     private static final String YML_EXT = ".yml";
     private static final String YAML_EXT = ".yaml";
@@ -25,8 +27,12 @@ public final class YmlUtil {
     }
 
     public static boolean hasTwin(Path filePath) {
+        if (filePath.toFile().isDirectory()) {
+            throw new IllegalArgumentException(filePath + " is directory and cannot be used as a config file.");
+        }
+
         val count = Stream.of(YML_EXT, YAML_EXT)
-                .map(ext -> cutOffExtension(filePath.toString()) + ext)
+                .map(ext -> cutOffExtension(filePath) + ext)
                 .filter(name -> new File(name).exists())
                 .count();
 
@@ -36,10 +42,5 @@ public final class YmlUtil {
         }
 
         return count == 2;
-    }
-
-    private static String cutOffExtension(String name) {
-        val lastIndex = name.lastIndexOf(".");
-        return lastIndex == -1 ? name : name.substring(0, lastIndex);
     }
 }
