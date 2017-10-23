@@ -27,13 +27,12 @@ public final class YmlUtil {
     }
 
     public static boolean hasTwin(Path filePath) {
-        if (filePath.toFile().isDirectory()) {
-            throw new IllegalArgumentException(filePath + " is directory and cannot be used as a config file.");
-        }
-
         val count = Stream.of(YML_EXT, YAML_EXT)
                 .map(ext -> cutOffExtension(filePath) + ext)
-                .filter(name -> new File(name).exists())
+                .filter(name -> {
+                    val file = new File(name);
+                    return file.exists() && !file.isDirectory();
+                })
                 .count();
 
         if (count == 0) {

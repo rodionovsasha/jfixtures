@@ -110,7 +110,7 @@ class YmlUtilTest extends Specification implements YamlVirtualFolder {
 
         then:
         def e = thrown(IllegalArgumentException)
-        e.message.contains("admin is directory and cannot be used as a config file")
+        e.message.contains("admin nor it's yaml/yml twin does exist")
 
         cleanup:
         folder.toFile().deleteDir()
