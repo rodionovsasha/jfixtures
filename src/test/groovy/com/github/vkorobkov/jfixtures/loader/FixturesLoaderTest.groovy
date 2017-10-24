@@ -149,6 +149,44 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         role.columns.version == new FixtureValue(1)
     }
 
+    def "should use yaml config"() {
+        when:
+        def fixtures = load("yaml_config.yaml")
+
+        then:
+        def users = fixtures.get("users").rows
+
+        and:
+        def vlad = users[0]
+        vlad.name == "vlad"
+        vlad.columns.first_name == new FixtureValue("Vladimir")
+        vlad.columns.age == new FixtureValue(29)
+
+        and:
+        def dima = users[1]
+        dima.name == "diman"
+        dima.columns.first_name == new FixtureValue("Dmitry")
+        dima.columns.age == new FixtureValue(28)
+    }
+
+    def "load throws when config exists with yaml and yml extensions"() {
+        when:
+        load("yaml_yml.yaml")
+
+        then:
+        def e = thrown(LoaderException)
+        e.message == "Fixture exists with both extensions(yaml/yml)."
+    }
+
+    def "load throws when config exists with yml and yaml extensions"() {
+        when:
+        load("yml_yaml.yml")
+
+        then:
+        def e = thrown(LoaderException)
+        e.message == "Fixture exists with both extensions(yaml/yml)."
+    }
+
     Map<String, Fixture> load(String ymlFile) {
         def path = unpackYamlToTempFolder(ymlFile) as String
         new FixturesLoader(path, ConfigLoader.load(path)).load()
