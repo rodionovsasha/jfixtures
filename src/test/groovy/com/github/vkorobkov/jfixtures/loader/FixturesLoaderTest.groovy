@@ -43,7 +43,7 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         def path = notExistingPath() as String
 
         when:
-        new FixturesLoader(path, new ConfigLoader(path).load()).load()
+        new FixturesLoader(path, ConfigLoader.load(path)).load()
 
         then:
         def exception = thrown(LoaderException)
@@ -151,6 +151,6 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
 
     Map<String, Fixture> load(String ymlFile) {
         def path = unpackYamlToTempFolder(ymlFile) as String
-        new FixturesLoader(path, new ConfigLoader(path).load()).load()
+        new FixturesLoader(path, ConfigLoader.load(path)).load()
     }
 }
