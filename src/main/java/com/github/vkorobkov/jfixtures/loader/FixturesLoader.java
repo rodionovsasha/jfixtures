@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.github.vkorobkov.jfixtures.util.StringUtil.cutOffExtension;
 import static com.github.vkorobkov.jfixtures.util.YmlUtil.YAML_EXT;
 import static com.github.vkorobkov.jfixtures.util.YmlUtil.YML_EXT;
 
@@ -61,16 +62,12 @@ public class FixturesLoader {
     }
 
     private String getFixtureName(Path file) {
-        String separator = file.getFileSystem().getSeparator();
-        String relativePath = Paths.get(path).relativize(file).toString();
+        val separator = file.getFileSystem().getSeparator();
+        val relativePath = Paths.get(path).relativize(file);
+        val justFile = cutOffExtension(relativePath).toString();
+        checkDot(file, justFile);
 
-        return Stream
-                .of(YAML_EXT, YML_EXT)
-                .filter(relativePath::endsWith)
-                .map(ext -> relativePath.substring(0, relativePath.lastIndexOf(ext)))
-                .peek(path -> checkDot(file, path))
-                .findFirst().get()
-                .replace(separator, ".");
+        return justFile.replace(separator, ".");
     }
 
     private String getFileName(Path path) {
