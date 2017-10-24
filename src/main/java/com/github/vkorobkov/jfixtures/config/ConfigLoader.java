@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -27,21 +28,15 @@ public final class ConfigLoader {
     }
 
     private static Node loadRootNode(String fixturesRoot) {
-        Optional<Path> configPath = getConfigPath(fixturesRoot);
-
-        if (configPath.isPresent()) {
-            val path = configPath.get();
-            if (YmlUtil.hasTwin(path)) {
-                throw new ConfigLoaderException("Fixture's config exists with both extensions(yaml/yml).");
-            }
-            try {
-                return Node.root(YmlUtil.load(path));
-            } catch (IOException e) {
-                return loadEmptyRoot();
-            }
-        } else {
-            return loadEmptyRoot();
+        try {
+            val path = getConfigPath(fixturesRoot).get();
+            return Node.root(YmlUtil.load(path));
+        } catch (NoSuchElementException e) {
+            log.info("Neither file '" + CONF_YAML + "' nor '" + CONF_YML + "' not found, using defaults");
+        } catch (IOException e) {
+            log.warn("Config loading failed, using the defaults. Details: " + e);
         }
+        return Node.emptyRoot();
     }
 
     private static Optional<Path> getConfigPath(String fixturesRoot) {
@@ -49,11 +44,13 @@ public final class ConfigLoader {
                 .of(CONF_YAML, CONF_YML)
                 .map(Paths.get(fixturesRoot)::resolve)
                 .filter(Files::exists)
+                .peek(ConfigLoader::checkTwin)
                 .findFirst();
     }
 
-    private static Node loadEmptyRoot() {
-        log.warn("Neither file '" + CONF_YAML + "' nor '" + CONF_YML + "' not found, using defaults");
-        return Node.emptyRoot();
+    private static void checkTwin(Path path) {
+        if (YmlUtil.hasTwin(path)) {
+            throw new ConfigLoaderException("Fixture's config exists with both extensions(yaml/yml).");
+        }
     }
 }
