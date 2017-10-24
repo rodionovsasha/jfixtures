@@ -1,0 +1,7 @@
+"/default":
+  ".conf.yaml":
+    refs:
+      users:
+        avatar_id: images
+      "content.comment":
+        ticket_id: tickets
