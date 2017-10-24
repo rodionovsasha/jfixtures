@@ -56,7 +56,7 @@ public class FixturesLoader {
     }
 
     private Fixture loadFixture(Path file) {
-        String name = getFixtureName(file);
+        val name = getFixtureName(file);
         val baseColumns = config.columns().forTable(name);
         return new Fixture(name, new YmlRowsLoader(file, baseColumns));
     }
