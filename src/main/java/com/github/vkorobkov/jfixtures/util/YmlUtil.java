@@ -29,7 +29,9 @@ public final class YmlUtil {
     public static boolean hasTwin(Path filePath) {
         val count = Stream.of(YML_EXT, YAML_EXT)
                 .map(ext -> cutOffExtension(filePath) + ext)
-                .filter(YmlUtil::isFileExist)
+                .map(Paths::get)
+                .filter(Files::exists)
+                .filter(path -> !Files.isDirectory(path))
                 .count();
 
         if (count == 0) {
@@ -37,10 +39,5 @@ public final class YmlUtil {
         }
 
         return count == 2;
-    }
-
-    private static boolean isFileExist(String name) {
-        val path = Paths.get(name);
-        return Files.exists(path) && !Files.isDirectory(path);
     }
 }
