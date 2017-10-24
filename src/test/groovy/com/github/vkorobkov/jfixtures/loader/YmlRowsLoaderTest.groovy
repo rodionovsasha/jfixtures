@@ -63,8 +63,7 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         loadRows(path)
 
         then:
-        def exception = thrown(LoaderException)
-        exception.cause instanceof NoSuchFileException
+        thrown(NoSuchFileException)
     }
 
     def "no rows when loads an empty fixture"() {
