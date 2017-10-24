@@ -5,7 +5,6 @@ import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.config.yaml.Node;
 import com.github.vkorobkov.jfixtures.util.YmlUtil;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,13 +25,12 @@ public final class ConfigLoader {
     }
 
     private static Node loadRootNode(String fixturesRoot) {
-        val path = getConfigPath(fixturesRoot);
-        if (path.isPresent()) {
-            return Node.root(YmlUtil.load(path.get()));
-        }
-
-        log.info("Neither file '" + CONF_YAML + "' nor '" + CONF_YML + "' not found, using defaults");
-        return Node.emptyRoot();
+        return getConfigPath(fixturesRoot)
+                .map(path -> Node.root(YmlUtil.load(path)))
+                .orElseGet(() -> {
+                    log.info("Neither file '" + CONF_YAML + "' nor '" + CONF_YML + "' not found, using defaults");
+                    return Node.emptyRoot();
+                });
     }
 
     private static Optional<Path> getConfigPath(String fixturesRoot) {
