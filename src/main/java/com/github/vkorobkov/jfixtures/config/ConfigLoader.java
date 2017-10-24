@@ -7,11 +7,9 @@ import com.github.vkorobkov.jfixtures.util.YmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -28,14 +26,12 @@ public final class ConfigLoader {
     }
 
     private static Node loadRootNode(String fixturesRoot) {
-        try {
-            val path = getConfigPath(fixturesRoot).get();
-            return Node.root(YmlUtil.load(path));
-        } catch (NoSuchElementException e) {
-            log.info("Neither file '" + CONF_YAML + "' nor '" + CONF_YML + "' not found, using defaults");
-        } catch (IOException e) {
-            log.warn("Config loading failed, using the defaults. Details: " + e);
+        val path = getConfigPath(fixturesRoot);
+        if (path.isPresent()) {
+            return Node.root(YmlUtil.load(path.get()));
         }
+
+        log.info("Neither file '" + CONF_YAML + "' nor '" + CONF_YML + "' not found, using defaults");
         return Node.emptyRoot();
     }
 

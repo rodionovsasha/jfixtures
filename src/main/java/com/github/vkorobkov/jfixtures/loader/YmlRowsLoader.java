@@ -5,7 +5,6 @@ import com.github.vkorobkov.jfixtures.util.StreamUtil;
 import com.github.vkorobkov.jfixtures.util.YmlUtil;
 import lombok.AllArgsConstructor;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Supplier;
@@ -18,7 +17,7 @@ public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
 
     @Override
     public Collection<FixtureRow> get() {
-        return loadYamlContent(file)
+        return YmlUtil.load(file)
             .entrySet()
             .stream()
             .map(this::fixtureRow)
@@ -41,14 +40,5 @@ public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
 
     private FixtureValue columnValue(Map.Entry<String, Object> entry) {
         return new FixtureValue(entry.getValue());
-    }
-
-    private Map<String, Object> loadYamlContent(Path file) {
-        try {
-            return YmlUtil.load(file);
-        } catch (IOException cause) {
-            String message = "Can not load fixture file: " + file;
-            throw new LoaderException(message, cause);
-        }
     }
 }
