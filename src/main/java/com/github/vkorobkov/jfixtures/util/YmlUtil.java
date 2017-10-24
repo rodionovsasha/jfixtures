@@ -3,10 +3,10 @@ package com.github.vkorobkov.jfixtures.util;
 import lombok.val;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -29,10 +29,7 @@ public final class YmlUtil {
     public static boolean hasTwin(Path filePath) {
         val count = Stream.of(YML_EXT, YAML_EXT)
                 .map(ext -> cutOffExtension(filePath) + ext)
-                .filter(name -> {
-                    val file = new File(name);
-                    return file.exists() && !file.isDirectory();
-                })
+                .filter(YmlUtil::isFileExist)
                 .count();
 
         if (count == 0) {
@@ -40,5 +37,10 @@ public final class YmlUtil {
         }
 
         return count == 2;
+    }
+
+    private static boolean isFileExist(String name) {
+        val path = Paths.get(name);
+        return Files.exists(path) && !Files.isDirectory(path);
     }
 }

@@ -3,8 +3,7 @@
     name: Vlad
     age: 29
 
-"/config":
-  "config.yaml":
-    name: Vlad
-    age: 29
-    "/config.yml":
+"config.yaml":
+  name: Vlad
+  age: 29
+"/config.yml":

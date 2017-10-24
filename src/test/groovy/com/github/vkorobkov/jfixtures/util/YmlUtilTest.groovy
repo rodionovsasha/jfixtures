@@ -116,6 +116,17 @@ class YmlUtilTest extends Specification implements YamlVirtualFolder {
         folder.toFile().deleteDir()
     }
 
+    def "#hasYamlTwin does not have twin for for directory"() {
+        when:
+        def folder = unpackYamlToTempFolder("config_with_directory.yml")
+
+        then:
+        !YmlUtil.hasTwin(folder.resolve("config.yaml"))
+
+        cleanup:
+        folder.toFile().deleteDir()
+    }
+
     private load(String ymlFile) {
         YmlUtil.load(testFolderPath.resolve(ymlFile))
     }
