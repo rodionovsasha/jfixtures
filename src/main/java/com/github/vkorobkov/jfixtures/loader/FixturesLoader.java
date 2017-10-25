@@ -62,9 +62,9 @@ public class FixturesLoader {
     }
 
     private String getFixtureName(Path file) {
-        val separator = file.getFileSystem().getSeparator();
-        val relativePath = Paths.get(path).relativize(file);
-        val justFile = cutOffExtension(relativePath).toString();
+        String separator = file.getFileSystem().getSeparator();
+        Path relativePath = Paths.get(path).relativize(file);
+        String justFile = cutOffExtension(relativePath).toString();
         checkDot(file, justFile);
 
         return justFile.replace(separator, ".");
