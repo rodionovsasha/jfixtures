@@ -354,7 +354,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
     List<Instruction> load(String ymlFile) {
         def path = unpackYamlToTempFolder(ymlFile) as String
-        def config = new ConfigLoader(path).load()
+        def config = ConfigLoader.load(path)
         def fixtures = new FixturesLoader(path, config).load()
         new Processor(fixtures, config).process()
     }

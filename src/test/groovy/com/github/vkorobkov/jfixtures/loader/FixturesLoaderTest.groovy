@@ -43,7 +43,7 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         def path = notExistingPath() as String
 
         when:
-        new FixturesLoader(path, new ConfigLoader(path).load()).load()
+        new FixturesLoader(path, ConfigLoader.load(path)).load()
 
         then:
         def exception = thrown(LoaderException)
@@ -79,6 +79,34 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         dima.columns.first_name == new FixtureValue("Dmitry")
         dima.columns.age == new FixtureValue(28)
         dima.columns.sex == new FixtureValue("man")
+    }
+
+    def "short syntax for row content is loaded well"() {
+        when:
+        def fixtures = load("fixture_with_short_syntax.yml")
+
+        then:
+        def users = fixtures.get("users").rows
+
+        and:
+        with(users[0]) {
+            name == "vlad"
+            with(columns) {
+                first_name == new FixtureValue("Vladimir")
+                age == new FixtureValue(29)
+                sex == new FixtureValue("man")
+            }
+        }
+
+        and:
+        with(users[1]) {
+            name == "diman"
+            with(columns) {
+                first_name == new FixtureValue("Dmitry")
+                age == new FixtureValue(28)
+                sex == new FixtureValue("man")
+            }
+        }
     }
 
     def "'users' table copies fields from the base table"() {
@@ -121,8 +149,37 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         role.columns.version == new FixtureValue(1)
     }
 
+    def "#load consumes fixture with .yaml extension"() {
+        when:
+        def fixtures = load("yaml_config.yaml")
+
+        then:
+        def users = fixtures.get("users").rows
+
+        and:
+        def vlad = users[0]
+        vlad.name == "vlad"
+        vlad.columns.first_name == new FixtureValue("Vladimir")
+        vlad.columns.age == new FixtureValue(29)
+
+        and:
+        def dima = users[1]
+        dima.name == "diman"
+        dima.columns.first_name == new FixtureValue("Dmitry")
+        dima.columns.age == new FixtureValue(28)
+    }
+
+    def "#load throws when a yaml fixture has a twin"() {
+        when:
+        load("yaml_yml.yaml")
+
+        then:
+        def e = thrown(LoaderException)
+        e.message == "Fixture exists with both extensions(yaml/yml)."
+    }
+
     Map<String, Fixture> load(String ymlFile) {
         def path = unpackYamlToTempFolder(ymlFile) as String
-        new FixturesLoader(path, new ConfigLoader(path).load()).load()
+        new FixturesLoader(path, ConfigLoader.load(path)).load()
     }
 }

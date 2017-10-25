@@ -2,6 +2,7 @@ language: java
 
 notifications:
   slack: jfixtures:jOwrd0VAUWmsEqAMtfwqOM9J
+  email: false
 
 env:
   global:
