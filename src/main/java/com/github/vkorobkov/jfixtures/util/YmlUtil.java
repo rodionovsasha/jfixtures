@@ -14,8 +14,8 @@ import java.util.stream.Stream;
 import static com.github.vkorobkov.jfixtures.util.StringUtil.cutOffExtension;
 
 public final class YmlUtil {
-    private static final String YML_EXT = ".yml";
-    private static final String YAML_EXT = ".yaml";
+    public static final String YML_EXT = ".yml";
+    public static final String YAML_EXT = ".yaml";
 
     private YmlUtil() {
     }
