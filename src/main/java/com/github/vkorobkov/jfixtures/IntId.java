@@ -6,12 +6,12 @@ import java.util.stream.Collectors;
 
 public final class IntId {
     public static final int LOWER_BOUND = 100_000;
-    private static final int RANGE = Integer.MAX_VALUE - LOWER_BOUND;
+    public static final int RANGE = Integer.MAX_VALUE - LOWER_BOUND;
 
     private IntId() {
     }
 
-    public static List<Integer> many(String... aliases) {
+    public static List<Integer> many(String ... aliases) {
         return Arrays.stream(aliases).map(IntId::one).collect(Collectors.toList());
     }
 

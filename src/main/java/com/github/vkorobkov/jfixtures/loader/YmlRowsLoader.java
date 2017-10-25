@@ -19,23 +19,23 @@ public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
     @Override
     public Collection<FixtureRow> get() {
         return loadYamlContent(file)
-                .entrySet()
-                .stream()
-                .map(this::fixtureRow)
-                .collect(Collectors.toList());
+            .entrySet()
+            .stream()
+            .map(this::fixtureRow)
+            .collect(Collectors.toList());
     }
 
     private FixtureRow fixtureRow(Map.Entry<String, ?> sourceRow) {
-        Map row = Optional.ofNullable((Map) sourceRow.getValue()).orElse(Collections.emptyMap());
+        Map row = Optional.ofNullable((Map)sourceRow.getValue()).orElse(Collections.emptyMap());
         Map merged = MapMerger.merge(base, row);
         return new FixtureRow(sourceRow.getKey(), loadColumns(merged));
     }
 
     private Map<String, FixtureValue> loadColumns(Object row) {
         @SuppressWarnings("unchecked")
-        Map<String, Object> data = (Map<String, Object>) row;
+        Map<String, Object> data = (Map<String, Object>)row;
         return data.entrySet().stream().collect(
-                Collectors.toMap(Map.Entry::getKey, this::columnValue, StreamUtil.throwingMerger(), LinkedHashMap::new)
+            Collectors.toMap(Map.Entry::getKey, this::columnValue, StreamUtil.throwingMerger(), LinkedHashMap::new)
         );
     }
 

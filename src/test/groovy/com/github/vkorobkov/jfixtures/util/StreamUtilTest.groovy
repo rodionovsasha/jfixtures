@@ -38,7 +38,7 @@ class StreamUtilTest extends Specification {
 
     static mapCollector() {
         Collectors.toMap({ Dummy d -> d.name }, { Dummy d -> d.age }, StreamUtil.throwingMerger(),
-                { new LinkedHashMap() })
+            { new LinkedHashMap()} )
     }
 
     static class Dummy {

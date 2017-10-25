@@ -13,7 +13,7 @@ class CollectionUtilTest extends Specification {
     def "flattenRecursively() flattens nested arrays keeping the order"() {
         given:
         def input = [
-                0, ["admins", "su", "roots"], [[1, 3, 5], [2, 4, 6]], 56, 12
+            0, ["admins", "su", "roots"], [[1, 3, 5], [2, 4, 6]], 56, 12
         ]
 
         when:
@@ -21,7 +21,7 @@ class CollectionUtilTest extends Specification {
 
         then:
         result == [
-                0, "admins", "su", "roots", 1, 3, 5, 2, 4, 6, 56, 12
+            0, "admins", "su", "roots", 1, 3, 5, 2, 4, 6, 56, 12
         ]
     }
 

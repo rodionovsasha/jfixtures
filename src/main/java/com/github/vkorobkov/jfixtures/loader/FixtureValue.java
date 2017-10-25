@@ -19,7 +19,7 @@ public final class FixtureValue {
 
     public FixtureValue(Object value) {
         if (value instanceof String) {
-            String str = (String) value;
+            String str = (String)value;
             this.type = determineType(str);
             this.value = StringUtil.removePrefixes(str, PREFIX_SQL, PREFIX_TEXT);
         } else {

@@ -8,7 +8,7 @@ class ConfigLoaderTest extends Specification implements YamlVirtualFolder {
         setup:
         def tmlFolderPath = unpackYamlToTempFolder("default.yml")
         def path = "$tmlFolderPath/default"
-        def config = new ConfigLoader(path).load()
+        def config =  new ConfigLoader(path).load()
 
         expect:
         config.referredTable("users", "avatar_id") == Optional.of("images")

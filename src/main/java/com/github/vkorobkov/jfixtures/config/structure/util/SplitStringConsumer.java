@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+
 @AllArgsConstructor
 public class SplitStringConsumer implements Consumer {
 
@@ -12,9 +13,11 @@ public class SplitStringConsumer implements Consumer {
 
     @Override
     public void accept(Object value) {
-        Arrays.stream((String.valueOf(value)).split(","))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .forEach(delegate);
+        Arrays
+            .asList((String.valueOf(value)).split(","))
+            .stream()
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .forEach(delegate);
     }
 }

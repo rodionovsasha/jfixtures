@@ -24,15 +24,15 @@ public class Tables extends Section {
     }
 
     public boolean shouldAutoGeneratePk() {
-        return (boolean) readProperty(SECTION_PRIMARY_KEY, "generate").orElse(true);
+        return (boolean)readProperty(SECTION_PRIMARY_KEY, "generate").orElse(true);
     }
 
     public String getPkColumnName() {
-        return (String) readProperty(SECTION_PRIMARY_KEY, "column").orElse(PK_DEFAULT_COLUMN_NAME);
+        return (String)readProperty(SECTION_PRIMARY_KEY, "column").orElse(PK_DEFAULT_COLUMN_NAME);
     }
 
     public CleanMethod getCleanMethod() {
-        return CleanMethod.valueOfIgnoreCase((String) readProperty("clean_method").orElse("delete"));
+        return CleanMethod.valueOfIgnoreCase((String)readProperty("clean_method").orElse("delete"));
     }
 
     public List<String> getBeforeInserts() {
@@ -56,7 +56,7 @@ public class Tables extends Section {
 
     @SuppressWarnings("unchecked")
     private <T> Optional<T> readProperty(String... sections) {
-        return (Optional<T>) getMatchingTables()
+        return (Optional<T>)getMatchingTables()
                 .map(node -> node.dig(sections).optional())
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -69,6 +69,6 @@ public class Tables extends Section {
 
     private boolean matchNodeToTable(Node node) {
         Object appliesTo = node.child("applies_to").required();
-        return ((TableMatcher) () -> appliesTo).tableMatches(this.name);
+        return ((TableMatcher)() -> appliesTo).tableMatches(this.name);
     }
 }

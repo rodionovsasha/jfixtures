@@ -12,8 +12,8 @@ class InsertRowTest extends Specification {
     def "constructor test"() {
         given:
         def values = [
-                "id"  : new FixtureValue(5),
-                "name": new FixtureValue("Vlad")
+            "id": new FixtureValue(5),
+            "name": new FixtureValue("Vlad")
         ]
 
         when:
@@ -31,8 +31,8 @@ class InsertRowTest extends Specification {
     def "values collection is immutable"() {
         given:
         def values = [
-                "id"  : new FixtureValue(5),
-                "name": new FixtureValue("Vlad")
+            "id": new FixtureValue(5),
+            "name": new FixtureValue("Vlad")
         ]
 
         when:

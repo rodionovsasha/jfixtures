@@ -79,9 +79,9 @@ class NodeTest extends Specification {
 
         where:
         node << [
-                Node.root(name: "Vlad", age: 29),
-                Node.root(name: "Vlad"),
-                Node.root(authors: [name: "Bill"]).child("authors"),
+            Node.root(name: "Vlad", age: 29),
+            Node.root(name: "Vlad"),
+            Node.root(authors: [name: "Bill"]).child("authors"),
         ]
     }
 
@@ -186,35 +186,35 @@ class NodeTest extends Specification {
 
     def getNodesWithoutChildren() {
         [
-                Node.emptyRoot(),
-                Node.root("Value"),
-                Node.root([:]),
-                Node.root([1, 2, 3])
+            Node.emptyRoot(),
+            Node.root("Value"),
+            Node.root([:]),
+            Node.root([1, 2, 3])
         ]
     }
 
     def getEmptyNodes() {
         [
-                Node.emptyRoot(),
-                Node.root(name: "vlad").child("lastName"),
-                Node.root(authors: [name: "vlad"]).dig("authors", "age")
+            Node.emptyRoot(),
+            Node.root(name: "vlad").child("lastName"),
+            Node.root(authors: [name: "vlad"]).dig("authors", "age")
         ]
     }
 
     def getNotEmptyNodes() {
         [
-                Node.root("vlad"),
-                Node.root(name: "vlad").child("name"),
-                Node.root(authors: [name: "vlad"]).dig("authors", "name")
+            Node.root("vlad"),
+            Node.root(name: "vlad").child("name"),
+            Node.root(authors: [name: "vlad"]).dig("authors", "name")
         ]
     }
 
     def getDifferentRootNodes() {
         [
-                Node.emptyRoot(),
-                Node.root("Hello"),
-                Node.root(refs: [1, 2, 3], columns: ["id", "name"], tables: ["users", "roles"]),
-                Node.root(["one", "two", "three", "fire!"])
+            Node.emptyRoot(),
+            Node.root("Hello"),
+            Node.root(refs: [1, 2,3], columns: ["id", "name"], tables: ["users", "roles"]),
+            Node.root(["one", "two", "three", "fire!"])
         ]
     }
 }

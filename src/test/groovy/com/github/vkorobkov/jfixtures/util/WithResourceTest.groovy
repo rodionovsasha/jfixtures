@@ -25,7 +25,7 @@ class WithResourceTest extends Specification {
 
     def "closes the resource even when function throws an exception"() {
         given:
-        1 * function.apply(resource) >> { resource ->
+        1 * function.apply(resource) >> { resource->
             throw new RuntimeException("die")
         }
 
@@ -42,7 +42,7 @@ class WithResourceTest extends Specification {
 
     def "broadcasts the exception when the resource is null and function fails"() {
         given:
-        1 * function.apply(null) >> { resource ->
+        1 * function.apply(null) >> { resource->
             throw new RuntimeException("die")
         }
 
@@ -77,7 +77,7 @@ class WithResourceTest extends Specification {
 
     def "add suppressed throwable when both apply and close failed"() {
         given:
-        1 * function.apply(resource) >> { resource ->
+        1 * function.apply(resource) >> { resource->
             throw new RuntimeException("Apply failed")
         }
         1 * resource.close() >> { throw new RuntimeException("Close failed") }

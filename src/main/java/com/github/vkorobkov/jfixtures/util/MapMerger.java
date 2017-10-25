@@ -21,6 +21,6 @@ public final class MapMerger {
     }
 
     private static Object cloneIfMap(Object object) {
-        return object instanceof Map ? new LinkedHashMap((Map) object) : object;
+        return object instanceof Map ? new LinkedHashMap((Map)object) : object;
     }
 }

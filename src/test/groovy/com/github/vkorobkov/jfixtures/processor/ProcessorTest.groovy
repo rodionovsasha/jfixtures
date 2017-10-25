@@ -29,10 +29,10 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         vlad.table == "admin.users"
         vlad.rowName == "vlad"
         assertInsertInstructions(vlad.values, [
-                id        : IntId.one(vlad.rowName),
-                first_name: "Vladimir",
-                age       : 29,
-                sex       : "man"
+            id: IntId.one(vlad.rowName),
+            first_name: "Vladimir",
+            age: 29,
+            sex: "man"
         ])
 
         and:
@@ -40,10 +40,10 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         diman.table == "admin.users"
         diman.rowName == "diman"
         assertInsertInstructions(diman.values, [
-                id        : IntId.one(diman.rowName),
-                first_name: "Dmitry",
-                age       : 28,
-                sex       : "man"
+            id: IntId.one(diman.rowName),
+            first_name: "Dmitry",
+            age: 28,
+            sex: "man"
         ])
     }
 
@@ -70,10 +70,10 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         vlad.table == "users"
         vlad.rowName == "vlad"
         assertInsertInstructions(vlad.values, [
-                id        : IntId.one(vlad.rowName),
-                first_name: "Dmitry",
-                age       : 28,
-                sex       : "man"
+            id: IntId.one(vlad.rowName),
+            first_name: "Dmitry",
+            age: 28,
+            sex: "man"
         ])
     }
 
@@ -116,19 +116,19 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         and:
         users_to_roles[0].values == [
-                id     : new FixtureValue(IntId.one("kirill_is_guest")),
-                user_id: users.find { it.rowName == "kirill" }.values.id,
-                role_id: roles.find { it.rowName == "guest" }.values.id,
+            id: new FixtureValue(IntId.one("kirill_is_guest")),
+            user_id: users.find { it.rowName == "kirill" }.values.id,
+            role_id: roles.find { it.rowName == "guest" }.values.id,
         ]
         users_to_roles[1].values == [
-                id     : new FixtureValue(IntId.one("vlad_is_owner")),
-                user_id: users.find { it.rowName == "vlad" }.values.id,
-                role_id: roles.find { it.rowName == "owner" }.values.id,
+            id: new FixtureValue(IntId.one("vlad_is_owner")),
+            user_id: users.find { it.rowName == "vlad" }.values.id,
+            role_id: roles.find { it.rowName == "owner" }.values.id,
         ]
         users_to_roles[2].values == [
-                id     : new FixtureValue(IntId.one("diman_is_commitee")),
-                user_id: users.find { it.rowName == "diman" }.values.id,
-                role_id: roles.find { it.rowName == "commitee" }.values.id,
+            id: new FixtureValue(IntId.one("diman_is_commitee")),
+            user_id: users.find { it.rowName == "diman" }.values.id,
+            role_id: roles.find { it.rowName == "commitee" }.values.id,
         ]
     }
 
@@ -206,8 +206,8 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         vlad.rowName == "vlad"
         assertInsertInstructions(vlad.values, [
                 first_name: "Vladimir",
-                age       : 29,
-                sex       : "man"
+                age: 29,
+                sex: "man"
         ])
     }
 
@@ -226,10 +226,10 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         vlad.table == "users"
         vlad.rowName == "vlad"
         assertInsertInstructions(vlad.values, [
-                custom_id : IntId.one("vlad"),
+                custom_id: IntId.one("vlad"),
                 first_name: "Vladimir",
-                age       : 29,
-                sex       : "man"
+                age: 29,
+                sex: "man"
         ])
     }
 
@@ -284,8 +284,8 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         deletions.find { it.table == "mates" }
         deletions.find { it.table == "users" }
 
-        deletions.find { it.cleanMethod == CleanMethod.DELETE && it.table == "friends" }
-        deletions.find { it.cleanMethod == CleanMethod.DELETE && it.table == "mates" }
+        deletions.find { it.cleanMethod == CleanMethod.DELETE && it.table == "friends"}
+        deletions.find { it.cleanMethod == CleanMethod.DELETE && it.table == "mates"}
         deletions.find { it.cleanMethod == CleanMethod.NONE && it.table == "users" }
 
     }
@@ -304,8 +304,8 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         insertions.find { it.table == "users" }
         insertions.find { it.table == "friends" }
 
-        truncations.find { it.cleanMethod == CleanMethod.TRUNCATE && it.table == "friends" }
-        truncations.find { it.cleanMethod == CleanMethod.DELETE && it.table == "users" }
+        truncations.find {it.cleanMethod == CleanMethod.TRUNCATE && it.table == "friends" }
+        truncations.find {it.cleanMethod == CleanMethod.DELETE && it.table == "users" }
     }
 
     def "before_inserts instructions should be added"() {
