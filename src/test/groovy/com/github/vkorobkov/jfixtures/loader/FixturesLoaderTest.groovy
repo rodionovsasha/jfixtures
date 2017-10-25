@@ -149,7 +149,7 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         role.columns.version == new FixtureValue(1)
     }
 
-    def "should use yaml config"() {
+    def "#load consumes fixture with .yaml extension"() {
         when:
         def fixtures = load("yaml_config.yaml")
 
@@ -169,18 +169,9 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         dima.columns.age == new FixtureValue(28)
     }
 
-    def "load throws when config exists with yaml and yml extensions"() {
+    def "#load throws when a yaml fixture has a twin"() {
         when:
         load("yaml_yml.yaml")
-
-        then:
-        def e = thrown(LoaderException)
-        e.message == "Fixture exists with both extensions(yaml/yml)."
-    }
-
-    def "load throws when config exists with yml and yaml extensions"() {
-        when:
-        load("yml_yaml.yml")
 
         then:
         def e = thrown(LoaderException)
