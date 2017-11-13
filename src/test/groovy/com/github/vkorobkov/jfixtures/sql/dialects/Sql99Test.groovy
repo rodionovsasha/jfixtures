@@ -58,13 +58,14 @@ class Sql99Test extends Specification {
         def insertRow = new InsertRow("admin.users", "vlad", [
                 id  : new FixtureValue(1),
                 name: new FixtureValue("Vlad"),
-                age : new FixtureValue(29)
+                age : new FixtureValue(29),
+                hobby : new FixtureValue(null),
         ])
 
         when:
         sql.insertRow(appender, insertRow)
 
         then:
-        appender as String == 'INSERT INTO "admin"."users" ("id", "name", "age") VALUES (1, \'Vlad\', 29);\n'
+        appender as String == 'INSERT INTO "admin"."users" ("id", "name", "age", "hobby") VALUES (1, \'Vlad\', 29, NULL);\n'
     }
 }

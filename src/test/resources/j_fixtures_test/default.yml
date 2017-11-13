@@ -1,6 +1,7 @@
-
 "users.yml":
   vlad:
     id: 1
     name: Vlad
     age: 29
+    role: ~
+    hobby: null
