@@ -59,7 +59,7 @@ class Sql99Test extends Specification {
                 id  : new FixtureValue(1),
                 name: new FixtureValue("Vlad"),
                 age : new FixtureValue(29),
-                hobby : new FixtureValue(null),
+                hobby : new FixtureValue(null)
         ])
 
         when:

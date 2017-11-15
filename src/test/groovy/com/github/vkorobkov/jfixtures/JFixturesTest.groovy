@@ -12,13 +12,13 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
     String outputXmlPath
 
     def DEFAULT_EXPECTED_SQL = """DELETE FROM "users";
-            |INSERT INTO "users" ("id", "name", "age", "role", "hobby") VALUES (1, 'Vlad', 29, NULL, NULL);
+            |INSERT INTO "users" ("id", "name", "age") VALUES (1, 'Vlad', 29);
             |""".stripMargin()
     def MYSQL_EXPECTED_SQL = """DELETE FROM `users`;
-            |INSERT INTO `users` (`id`, `name`, `age`, `role`, `hobby`) VALUES (1, 'Vlad', 29, NULL, NULL);
+            |INSERT INTO `users` (`id`, `name`, `age`) VALUES (1, 'Vlad', 29);
             |""".stripMargin()
     def MSSQL_EXPECTED_SQL = """DELETE FROM [users];
-            |INSERT INTO [users] ([id], [name], [age], [role], [hobby]) VALUES (1, 'Vlad', 29, NULL, NULL);
+            |INSERT INTO [users] ([id], [name], [age]) VALUES (1, 'Vlad', 29);
             |""".stripMargin()
     def DEFAULT_EXPECTED_XML = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
             |<instructions>
@@ -36,14 +36,6 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
             |            <entry>
             |                <key>age</key>
             |                <value type="AUTO">29</value>
-            |            </entry>
-            |            <entry>
-            |                <key>role</key>
-            |                <value type="AUTO">null</value>
-            |            </entry>
-            |            <entry>
-            |                <key>hobby</key>
-            |                <value type="AUTO">null</value>
             |            </entry>
             |        </values>
             |    </instruction>

@@ -38,7 +38,6 @@ public interface SqlBase extends Sql {
 
         String values = insertRow.getValues().values().stream()
                 .map(this::escapeValue)
-                .map(this::uppercaseNull)
                 .collect(Collectors.joining(", "));
 
         appender.append("INSERT INTO ", table, " (", columns, ") VALUES (", values, ");\n");
@@ -60,14 +59,6 @@ public interface SqlBase extends Sql {
     default String escapeValue(FixtureValue value) {
         String str = value.toString();
         return value.getType() == ValueType.TEXT ? SqlUtil.escapeString(str) : str;
-    }
-
-    default String uppercaseNull(String value) {
-        String uppercasedNull = "NULL";
-        if (value == null || value.equalsIgnoreCase(uppercasedNull) || value.equals("~")) {
-            return uppercasedNull;
-        }
-        return value;
     }
 
     String escapeTableOrColumnPart(String part);

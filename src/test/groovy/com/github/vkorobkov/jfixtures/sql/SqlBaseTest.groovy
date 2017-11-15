@@ -152,29 +152,4 @@ class SqlBaseTest extends Specification {
         then:
         thrown(IOException)
     }
-
-    def "#uppercaseNull uppercase null value"(nullValue, uppercased) {
-        expect:
-        sql.uppercaseNull(nullValue) == uppercased
-
-        where:
-        nullValue | uppercased
-        "~"       | "NULL"
-        "null"    | "NULL"
-        'null'    | "NULL"
-        "Null"    | "NULL"
-        "nULL"    | "NULL"
-        null      | "NULL"
-    }
-
-    def "#uppercaseNull does not uppercase not null value"(nullValue, uppercased) {
-        expect:
-        sql.uppercaseNull(nullValue) == uppercased
-
-        where:
-        nullValue | uppercased
-        "nulla"   | "nulla"
-        "nul"     | "nul"
-        "'null'"  | "'null'"
-    }
 }

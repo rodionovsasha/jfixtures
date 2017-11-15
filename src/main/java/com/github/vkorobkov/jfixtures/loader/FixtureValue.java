@@ -30,12 +30,12 @@ public final class FixtureValue {
 
     @Override
     public String toString() {
-        return String.valueOf(value);
+        return value == null ? "NULL" : String.valueOf(value);
     }
 
     @XmlValue
     String getXmlRepresentation() {
-        return this.toString();
+        return String.valueOf(value);
     }
 
     private ValueType determineType(String value) {

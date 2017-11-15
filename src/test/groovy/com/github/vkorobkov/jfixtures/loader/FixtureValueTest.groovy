@@ -61,4 +61,19 @@ class FixtureValueTest extends Specification {
         _ | 50
         _ | 100500L
     }
+
+    def "#toString returns uppercased null value"() {
+        expect:
+        new FixtureValue(null).toString() == "NULL"
+    }
+
+    def "#toString does not uppercase not null value"() {
+        expect:
+        new FixtureValue("null").toString() == "null"
+    }
+
+    def "#getXmlRepresentation returns string value"() {
+        expect:
+        new FixtureValue(null).getXmlRepresentation() == "null"
+    }
 }
