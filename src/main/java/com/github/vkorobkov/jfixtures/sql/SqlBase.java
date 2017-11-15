@@ -33,12 +33,12 @@ public interface SqlBase extends Sql {
         String table = escapeTableOrColumn(insertRow.getTable());
 
         String columns = insertRow.getValues().keySet().stream()
-                .map(this::escapeTableOrColumnPart)
-                .collect(Collectors.joining(", "));
+            .map(this::escapeTableOrColumnPart)
+            .collect(Collectors.joining(", "));
 
         String values = insertRow.getValues().values().stream()
-                .map(this::escapeValue)
-                .collect(Collectors.joining(", "));
+            .map(this::escapeValue)
+            .collect(Collectors.joining(", "));
 
         appender.append("INSERT INTO ", table, " (", columns, ") VALUES (", values, ");\n");
     }
@@ -51,13 +51,13 @@ public interface SqlBase extends Sql {
 
     default String escapeTableOrColumn(String name) {
         return Arrays
-                .stream(name.split("\\."))
-                .map(this::escapeTableOrColumnPart)
-                .collect(Collectors.joining("."));
+            .stream(name.split("\\."))
+            .map(this::escapeTableOrColumnPart)
+            .collect(Collectors.joining("."));
     }
 
     default String escapeValue(FixtureValue value) {
-        String str = value.toString();
+        String str = value.getSqlRepresentation();
         return value.getType() == ValueType.TEXT ? SqlUtil.escapeString(str) : str;
     }
 

@@ -28,14 +28,13 @@ public final class FixtureValue {
         }
     }
 
-    @Override
-    public String toString() {
-        return value == null ? "NULL" : String.valueOf(value);
-    }
-
     @XmlValue
     String getXmlRepresentation() {
         return String.valueOf(value);
+    }
+
+    public String getSqlRepresentation() {
+        return value == null ? "NULL" : String.valueOf(value);
     }
 
     private ValueType determineType(String value) {

@@ -1,5 +1,6 @@
-package com.github.vkorobkov.jfixtures
+package com.github.vkorobkov.jfixtures.types
 
+import com.github.vkorobkov.jfixtures.JFixtures
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 

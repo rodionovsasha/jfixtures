@@ -152,4 +152,5 @@ class SqlBaseTest extends Specification {
         then:
         thrown(IOException)
     }
+
 }
