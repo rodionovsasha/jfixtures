@@ -3,11 +3,13 @@ package com.github.vkorobkov.jfixtures.loader;
 import com.github.vkorobkov.jfixtures.util.StringUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 
 @EqualsAndHashCode
+@ToString
 @Getter
 public final class FixtureValue {
     public static final String PREFIX_SQL = "sql:";
