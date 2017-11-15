@@ -1,0 +1,7 @@
+"users.yml":
+  homer:
+    id: 1
+    name: ~
+    age: null
+    role: Null
+    hobby: NULL
