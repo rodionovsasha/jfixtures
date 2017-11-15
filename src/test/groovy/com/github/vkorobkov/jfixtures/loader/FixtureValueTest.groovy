@@ -64,11 +64,17 @@ class FixtureValueTest extends Specification {
 
     def "#getSqlRepresentation returns upper cased null"() {
         expect:
-        new FixtureValue(null).getSqlRepresentation() == "NULL"
+        with(new FixtureValue(null)) {
+            sqlRepresentation == "NULL"
+            type == ValueType.AUTO
+        }
     }
 
     def "#getXmlRepresentation returns lower cased null"() {
         expect:
-        new FixtureValue(null).getXmlRepresentation() == "null"
+        with(new FixtureValue(null)) {
+            xmlRepresentation == "null"
+            type == ValueType.AUTO
+        }
     }
 }
