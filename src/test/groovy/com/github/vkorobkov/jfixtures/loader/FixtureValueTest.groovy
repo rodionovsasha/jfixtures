@@ -61,4 +61,20 @@ class FixtureValueTest extends Specification {
         _ | 50
         _ | 100500L
     }
+
+    def "#getSqlRepresentation returns upper cased null"() {
+        expect:
+        with(new FixtureValue(null)) {
+            sqlRepresentation == "NULL"
+            type == ValueType.AUTO
+        }
+    }
+
+    def "#getXmlRepresentation returns lower cased null"() {
+        expect:
+        with(new FixtureValue(null)) {
+            xmlRepresentation == "null"
+            type == ValueType.AUTO
+        }
+    }
 }

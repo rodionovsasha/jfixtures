@@ -57,7 +57,7 @@ public interface SqlBase extends Sql {
     }
 
     default String escapeValue(FixtureValue value) {
-        String str = value.toString();
+        String str = value.getSqlRepresentation();
         return value.getType() == ValueType.TEXT ? SqlUtil.escapeString(str) : str;
     }
 

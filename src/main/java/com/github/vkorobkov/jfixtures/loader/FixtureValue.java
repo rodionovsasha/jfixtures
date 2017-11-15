@@ -3,11 +3,13 @@ package com.github.vkorobkov.jfixtures.loader;
 import com.github.vkorobkov.jfixtures.util.StringUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 
 @EqualsAndHashCode
+@ToString
 @Getter
 public final class FixtureValue {
     public static final String PREFIX_SQL = "sql:";
@@ -28,14 +30,13 @@ public final class FixtureValue {
         }
     }
 
-    @Override
-    public String toString() {
+    @XmlValue
+    String getXmlRepresentation() {
         return String.valueOf(value);
     }
 
-    @XmlValue
-    String getXmlRepresentation() {
-        return this.toString();
+    public String getSqlRepresentation() {
+        return value == null ? "NULL" : String.valueOf(value);
     }
 
     private ValueType determineType(String value) {
