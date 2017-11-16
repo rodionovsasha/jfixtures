@@ -174,6 +174,9 @@ For another kind of database, for example, MySql, just use corresponding method 
 JFixtures.mysql("/path/to/fixtures").asString();
 ```
 
+Also you can find an example of usage `JFixtures` in a demo project for populating relational database `(H2)` with yml-based test data and testing services here: 
+https://github.com/rodionovsasha/CommentService  
+
 ## Fixtures and tables
 
 Fixture file names get mapped to table names directly without any hidden magic/conventions. These are case sensitive:
