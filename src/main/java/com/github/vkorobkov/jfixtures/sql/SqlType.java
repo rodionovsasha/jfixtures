@@ -1,8 +1,10 @@
 package com.github.vkorobkov.jfixtures.sql;
 
 import com.github.vkorobkov.jfixtures.sql.dialects.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 public enum SqlType {
     MYSQL(new MySql()),
     MSSQL(new MsSql()),
@@ -10,8 +12,4 @@ public enum SqlType {
 
     @Getter
     private final Sql sqlDialect;
-
-    SqlType(Sql sqlDialect) {
-        this.sqlDialect = sqlDialect;
-    }
 }
