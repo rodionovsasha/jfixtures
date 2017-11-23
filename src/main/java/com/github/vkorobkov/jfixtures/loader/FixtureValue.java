@@ -21,7 +21,7 @@ public final class FixtureValue {
 
     public FixtureValue(Object value) {
         if (value instanceof String) {
-            String str = (String)value;
+            String str = (String) value;
             this.type = determineType(str);
             this.value = StringUtil.removePrefixes(str, PREFIX_SQL, PREFIX_TEXT);
         } else {
@@ -36,7 +36,7 @@ public final class FixtureValue {
     }
 
     public String getSqlRepresentation() {
-        return value == null ? "NULL" : String.valueOf(value);
+        return (value instanceof String) ? (String) value : String.valueOf(value).toUpperCase();
     }
 
     private ValueType determineType(String value) {

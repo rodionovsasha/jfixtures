@@ -77,4 +77,12 @@ class FixtureValueTest extends Specification {
             type == ValueType.AUTO
         }
     }
+
+    def "#getSqlRepresentation returns upper cased boolean"() {
+        expect:
+        with(new FixtureValue(true)) {
+            sqlRepresentation == "TRUE"
+            type == ValueType.AUTO
+        }
+    }
 }
