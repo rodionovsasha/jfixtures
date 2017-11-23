@@ -2,6 +2,7 @@ package com.github.vkorobkov.jfixtures.loader;
 
 import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.util.YmlUtil;
+import lombok.AllArgsConstructor;
 import lombok.val;
 
 import java.io.IOException;
@@ -16,14 +17,10 @@ import static com.github.vkorobkov.jfixtures.util.StringUtil.cutOffExtension;
 import static com.github.vkorobkov.jfixtures.util.YmlUtil.YAML_EXT;
 import static com.github.vkorobkov.jfixtures.util.YmlUtil.YML_EXT;
 
+@AllArgsConstructor
 public class FixturesLoader {
     private final String path;
     private final Root config;
-
-    public FixturesLoader(String path, Root config) {
-        this.path = path;
-        this.config = config;
-    }
 
     public Map<String, Fixture> load() {
         try {
