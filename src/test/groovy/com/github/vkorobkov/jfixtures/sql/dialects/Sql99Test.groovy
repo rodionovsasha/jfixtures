@@ -59,13 +59,14 @@ class Sql99Test extends Specification {
                 id  : new FixtureValue(1),
                 name: new FixtureValue("Vlad"),
                 age : new FixtureValue(29),
-                hobby : new FixtureValue(null)
+                hobby : new FixtureValue(null),
+                active : new FixtureValue(true),
         ])
 
         when:
         sql.insertRow(appender, insertRow)
 
         then:
-        appender as String == 'INSERT INTO "admin"."users" ("id", "name", "age", "hobby") VALUES (1, \'Vlad\', 29, NULL);\n'
+        appender as String == 'INSERT INTO "admin"."users" ("id", "name", "age", "hobby", "active") VALUES (1, \'Vlad\', 29, NULL, TRUE);\n'
     }
 }

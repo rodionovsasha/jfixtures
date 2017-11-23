@@ -36,7 +36,15 @@ public final class FixtureValue {
     }
 
     public String getSqlRepresentation() {
-        return value == null ? "NULL" : String.valueOf(value);
+        if (value == null) {
+            return "NULL";
+        }
+
+        if (value instanceof Boolean) {
+            return String.valueOf(value).toUpperCase();
+        }
+
+        return String.valueOf(value);
     }
 
     private ValueType determineType(String value) {

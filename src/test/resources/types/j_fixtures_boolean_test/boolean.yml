@@ -1,0 +1,12 @@
+"users.yml":
+  homer:
+    id: 1
+    name: "homer"
+    active1: true
+    active2: false
+    answer1: NO
+    answer2: YES
+    logical1: True
+    logical2: False
+    option1: on
+    option2: off

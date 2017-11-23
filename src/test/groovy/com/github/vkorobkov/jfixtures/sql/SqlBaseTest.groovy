@@ -120,7 +120,7 @@ class SqlBaseTest extends Specification {
 
         where:
         unescaped | escaped
-        true      | 'true'
+        true      | 'TRUE'
         40        | '40'
         3.14      | '3.14'
     }
@@ -152,5 +152,4 @@ class SqlBaseTest extends Specification {
         then:
         thrown(IOException)
     }
-
 }
