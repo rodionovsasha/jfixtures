@@ -1,5 +1,6 @@
 package com.github.vkorobkov.jfixtures.loader;
 
+import com.github.vkorobkov.jfixtures.Constants;
 import com.github.vkorobkov.jfixtures.util.StringUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public final class FixtureValue {
     private final ValueType type;
 
     public FixtureValue(Object value) {
+        checkSupported(value);
         if (value instanceof String) {
             String str = (String) value;
             this.type = determineType(str);
@@ -41,5 +43,17 @@ public final class FixtureValue {
 
     private ValueType determineType(String value) {
         return value.startsWith(PREFIX_SQL) ? ValueType.SQL : ValueType.TEXT;
+    }
+
+    private void checkSupported(Object value) {
+        if (!isSupported(value)) {
+            String message = "Type [" + value.getClass() + "] is not supported by JFixtures at the moment\n"
+                    + "Read more on " + Constants.WIKI_TYPE_CONVERSIONS;
+            throw new LoaderException(message);
+        }
+    }
+
+    private boolean isSupported(Object value) {
+        return value == null || value instanceof Number || value instanceof String || value instanceof Boolean;
     }
 }
