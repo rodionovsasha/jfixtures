@@ -85,4 +85,30 @@ class FixtureValueTest extends Specification {
             type == ValueType.AUTO
         }
     }
+
+    def "#constructor consumes allowed types"() {
+        expect:
+        new FixtureValue(value)
+
+        where:
+        _ | value
+        _ | null
+        _ | true
+        _ | Boolean.FALSE
+        _ | 5
+        _ | Integer.valueOf(5)
+        _ | 3.14
+        _ | Double.valueOf(3.14)
+        _ | "Hello world"
+    }
+
+    def "#constructor rejects now allowed type"() {
+        when:
+        new FixtureValue([1, 2, 3])
+
+        then:
+        def exception = thrown(LoaderException)
+        exception.message == "Type [class java.util.ArrayList] is not supported by JFixtures at the moment\n" +
+            "Read more on https://github.com/vkorobkov/jfixtures/wiki/Type-conversions"
+    }
 }
