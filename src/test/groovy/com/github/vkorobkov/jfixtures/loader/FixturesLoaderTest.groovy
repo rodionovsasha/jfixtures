@@ -178,6 +178,24 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         e.message == "Fixture exists with both extensions(yaml/yml)."
     }
 
+    def "#load throws when a fixture's parent folder name contains dots"() {
+        when:
+        load("fixture_parent_folder_with_dots.yml")
+
+        then:
+        LoaderException exception = thrown()
+        exception.message.startsWith("Do not use dots in folder names. Wrong fixture folder: parent.folder.with.dots")
+    }
+
+    def "#load throws when a fixture's ancestor folder name contains dots"() {
+        when:
+        load("fixture_ancestor_folder_with_dots.yml")
+
+        then:
+        LoaderException exception = thrown()
+        exception.message.startsWith("Do not use dots in folder names. Wrong fixture folder: ancestor.folder.with.dots/parentFolder")
+    }
+
     Map<String, Fixture> load(String ymlFile) {
         def path = unpackYamlToTempFolder(ymlFile) as String
         new FixturesLoader(path, ConfigLoader.load(path)).load()
