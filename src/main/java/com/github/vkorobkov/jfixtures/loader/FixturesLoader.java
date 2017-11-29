@@ -61,8 +61,9 @@ public class FixturesLoader {
     private String getFixtureName(Path file) {
         String separator = file.getFileSystem().getSeparator();
         Path relativePath = Paths.get(path).relativize(file);
+        checkDotsInFolder(relativePath.getParent());
         String justFile = cutOffExtension(relativePath).toString();
-        checkDot(file, justFile);
+        checkDotsInFile(file, justFile);
 
         return justFile.replace(separator, ".");
     }
@@ -77,9 +78,16 @@ public class FixturesLoader {
         }
     }
 
-    private void checkDot(Path file, String relativePath) {
+    private void checkDotsInFile(Path file, String relativePath) {
         if (relativePath.contains(".")) {
             String message = "Do not use dots in file names. Use nested folders instead. Wrong fixture: " + file;
+            throw new LoaderException(message);
+        }
+    }
+
+    private void checkDotsInFolder(Path folder) {
+        if (folder != null && folder.toString().contains(".")) {
+            String message = "Do not use dots in folder names. Wrong fixture folder: " + folder;
             throw new LoaderException(message);
         }
     }
