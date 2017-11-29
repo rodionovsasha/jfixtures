@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -61,7 +62,7 @@ public class FixturesLoader {
     private String getFixtureName(Path file) {
         String separator = file.getFileSystem().getSeparator();
         Path relativePath = Paths.get(path).relativize(file);
-        checkDotsInFolder(relativePath.getParent());
+        checkDotsInFolder(Optional.ofNullable(relativePath.getParent()));
         String justFile = cutOffExtension(relativePath).toString();
         checkDotsInFile(file, justFile);
 
@@ -85,9 +86,9 @@ public class FixturesLoader {
         }
     }
 
-    private void checkDotsInFolder(Path folder) {
-        if (folder != null && folder.toString().contains(".")) {
-            String message = "Do not use dots in folder names. Wrong fixture folder: " + folder;
+    private void checkDotsInFolder(Optional<Path> folder) {
+        if (folder.isPresent() && folder.toString().contains(".")) {
+            String message = "Do not use dots in folder names. Wrong fixture folder: " + folder.get();
             throw new LoaderException(message);
         }
     }
