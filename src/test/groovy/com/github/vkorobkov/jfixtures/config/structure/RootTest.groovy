@@ -31,19 +31,6 @@ class RootTest extends Specification {
         !root([:]).referredTable("users", "role_id").present
     }
 
-    def "columns() returns base columns for a specific table"() {
-        when:
-        def data = [
-            concerns: [has_version: [version: 1]],
-            apply: [
-                users_table_has_version: [to: "users", concerns: "has_version"]
-            ]
-        ]
-
-        then:
-        root(columns: data).columns().forTable("users") == [version: 1]
-    }
-
     def root(content) {
         new Root(Node.root(content))
     }
