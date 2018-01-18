@@ -180,6 +180,48 @@ class TablesTest extends Specification {
         getBeforeCleanup(BEFORE_CLEANUP_CONFIG, "mates") == ["// Beginning of the table \$TABLE_NAME", "BEGIN TRANSACTION;"]
     }
 
+    def "#getDefaultColumns returns empty map if tables is not matched by the rule"() {
+        expect:
+        getTablesConfig([:], "users").defaultColumns.isEmpty()
+    }
+
+    def "#getDefaultColumns returns a map with base columns"() {
+        given:
+        def config = [
+                base_version: [
+                        applies_to: "users",
+                        default_columns: [version: 1]
+                ]
+        ]
+
+        when:
+        def result = getTablesConfig(config, "users").defaultColumns
+
+        then:
+        result == [version: 1]
+    }
+
+    def "getDefaultColumns merges accross the matching rules"() {
+        given:
+        def config = [
+                base_version: [
+                        applies_to: "users",
+                        default_columns: [version: 1]
+                ],
+
+                base_date: [
+                        applies_to: "users",
+                        default_columns: [version: 2, date: 'NOW()']
+                ]
+        ]
+
+        when:
+        def result = getTablesConfig(config, "users").defaultColumns
+
+        then:
+        result == [version: 2, date: 'NOW()']
+    }
+
     private static def shouldAutoGeneratePk(content, String name) {
         getTablesConfig(content, name).shouldAutoGeneratePk()
     }
