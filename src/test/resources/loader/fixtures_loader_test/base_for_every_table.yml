@@ -1,13 +1,8 @@
 ".conf.yml":
-  columns:
-    concerns:
-      has_version:
-        version: 1
-
-    apply:
-      every_table_has_version:
-        to: /.+
-        concerns: has_version
+  tables:
+    all_tables_have_version:
+      applies_to: /.+
+      default_columns: { version: 1 }
 
 "users.yml":
   vlad:

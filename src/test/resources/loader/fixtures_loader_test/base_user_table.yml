@@ -1,13 +1,8 @@
 ".conf.yml":
-  columns:
-    concerns:
-      has_sex:
-        sex: man
-
-    apply:
-      users_have_sex:
-        to: users
-        concerns: has_sex
+  tables:
+    users_have_sex:
+      applies_to: users
+      default_columns: { sex: man }
 
 "users.yml":
     vlad:

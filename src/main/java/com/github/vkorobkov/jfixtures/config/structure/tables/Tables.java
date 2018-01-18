@@ -5,11 +5,10 @@ import com.github.vkorobkov.jfixtures.config.structure.util.SplitStringConsumer;
 import com.github.vkorobkov.jfixtures.config.structure.util.TableMatcher;
 import com.github.vkorobkov.jfixtures.config.yaml.Node;
 import com.github.vkorobkov.jfixtures.util.CollectionUtil;
+import com.github.vkorobkov.jfixtures.util.MapMerger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.stream.Stream;
 
 public class Tables extends Section {
@@ -47,6 +46,11 @@ public class Tables extends Section {
         return readArrayRecursively("after_inserts");
     }
 
+    public Map<String, Object> getDefaultColumns() {
+        return this.<Map<String, Object>>readProperty(
+                MapMerger::merge, "default_columns").orElse(Collections.emptyMap());
+    }
+
     private List<String> readArrayRecursively(String... sections) {
         List<String> instructions = new ArrayList<>();
         CollectionUtil.flattenRecursively(readProperty(sections).orElse(Collections.emptyList()),
@@ -54,13 +58,16 @@ public class Tables extends Section {
         return instructions;
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> Optional<T> readProperty(String... sections) {
-        return (Optional<T>)getMatchingTables()
-                .map(node -> node.dig(sections).optional())
+    private <T> Optional<T> readProperty(String ... sections) {
+        return readProperty((current, last) -> last, sections);
+    }
+
+    private <T> Optional<T> readProperty(BinaryOperator<T> reducer, String... sections) {
+        return this.<T>getMatchingTables()
+                .map(node -> node.dig(sections).<T>optional())
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .reduce((current, last) -> last);
+                .reduce(reducer);
     }
 
     private Stream<Node> getMatchingTables() {
