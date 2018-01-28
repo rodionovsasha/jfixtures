@@ -4,7 +4,7 @@ import com.github.vkorobkov.jfixtures.fluent.JFixturesResult;
 import com.github.vkorobkov.jfixtures.fluent.impl.SqlJFixturesResultImpl;
 import com.github.vkorobkov.jfixtures.fluent.impl.XmlJFixturesResultImpl;
 import com.github.vkorobkov.jfixtures.sql.SqlType;
-import com.github.vkorobkov.jfixtures.sql.dialects.MsSql;
+import com.github.vkorobkov.jfixtures.sql.dialects.MicrosoftSql;
 import com.github.vkorobkov.jfixtures.sql.dialects.MySql;
 import com.github.vkorobkov.jfixtures.sql.dialects.Sql99;
 
@@ -16,8 +16,8 @@ public final class JFixtures {
         return new SqlJFixturesResultImpl(fixturesFolder, new MySql());
     }
 
-    public static JFixturesResult msSql(String fixturesFolder) {
-        return new SqlJFixturesResultImpl(fixturesFolder, new MsSql());
+    public static JFixturesResult microsoftSql(String fixturesFolder) {
+        return new SqlJFixturesResultImpl(fixturesFolder, new MicrosoftSql());
     }
 
     public static JFixturesResult sql99(String fixturesFolder) {
