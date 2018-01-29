@@ -17,7 +17,7 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
     def MYSQL_EXPECTED_SQL = """DELETE FROM `users`;
             |INSERT INTO `users` (`id`, `name`, `age`) VALUES (1, 'Vlad', 29);
             |""".stripMargin()
-    def MSSQL_EXPECTED_SQL = """DELETE FROM [users];
+    def MICROSOFT_SQL_EXPECTED_SQL = """DELETE FROM [users];
             |INSERT INTO [users] ([id], [name], [age]) VALUES (1, 'Vlad', 29);
             |""".stripMargin()
     def DEFAULT_EXPECTED_XML = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -83,17 +83,17 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
         new File(outputPath).text == DEFAULT_EXPECTED_SQL
     }
 
-    def "MSSQL fixture to a string"() {
+    def "Microsoft SQL fixture to a string"() {
         expect:
-        JFixtures.msSql(tmpFolderPath as String).asString() == MSSQL_EXPECTED_SQL
+        JFixtures.microsoftSql(tmpFolderPath as String).asString() == MICROSOFT_SQL_EXPECTED_SQL
     }
 
-    def "MSSQL fixture to a file"() {
+    def "Microsoft SQL fixture to a file"() {
         when:
-        JFixtures.msSql(tmpFolderPath as String).toFile(outputPath)
+        JFixtures.microsoftSql(tmpFolderPath as String).toFile(outputPath)
 
         then:
-        new File(outputPath).text == MSSQL_EXPECTED_SQL
+        new File(outputPath).text == MICROSOFT_SQL_EXPECTED_SQL
     }
 
     def "SQL99 fixture to a string"() {
