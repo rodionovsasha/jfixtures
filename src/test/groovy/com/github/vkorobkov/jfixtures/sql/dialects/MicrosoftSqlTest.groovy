@@ -10,12 +10,12 @@ import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
 import spock.lang.Specification
 
 
-class MsSqlTest extends Specification {
+class MicrosoftSqlTest extends Specification {
     Sql sql
     Appender appender
 
     void setup() {
-        sql = new MsSql()
+        sql = new MicrosoftSql()
         appender = new StringAppender()
     }
 
