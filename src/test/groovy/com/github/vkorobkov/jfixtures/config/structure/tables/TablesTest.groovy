@@ -156,6 +156,19 @@ class TablesTest extends Specification {
         getBeforeInserts(BEFORE_INSERTS_CONFIG, "mates") == ["// Doing table \$TABLE_NAME", "BEGIN TRANSACTION;"]
     }
 
+    def "#getBeforeInserts allows commas in SQL statements"() {
+        given:
+        def config = [
+            transactional_users  : [
+                applies_to    : "users",
+                before_inserts: "INSERT INTO LOG(time, event) VALUES (NOW(), 'before_table');"
+            ]
+        ]
+
+        expect:
+        getBeforeInserts(config, "users") == ["INSERT INTO LOG(time, event) VALUES (NOW(), 'before_table');"]
+    }
+
     def "getAfterInserts returns 'empty value' by default"() {
         expect:
         getAfterInserts(SAMPLE_CONFIG, "users") == []
@@ -168,6 +181,19 @@ class TablesTest extends Specification {
         getAfterInserts(AFTER_INSERTS_CONFIG, "mates") == ["// Completed table \$TABLE_NAME", "COMMIT TRANSACTION;"]
     }
 
+    def "#getAfterInserts allows commas in SQL statements"() {
+        given:
+        def config = [
+            transactional_users  : [
+                applies_to    : "users",
+                after_inserts: "INSERT INTO LOG(time, event) VALUES (NOW(), 'before_table');"
+            ]
+        ]
+
+        expect:
+        getAfterInserts(config, "users") == ["INSERT INTO LOG(time, event) VALUES (NOW(), 'before_table');"]
+    }
+
     def "getBeforeCleanup returns 'empty value' by default"() {
         expect:
         getBeforeCleanup(SAMPLE_CONFIG, "users") == []
@@ -178,6 +204,19 @@ class TablesTest extends Specification {
         getBeforeCleanup(BEFORE_CLEANUP_CONFIG, "users") == ["BEGIN TRANSACTION;"]
         getBeforeCleanup(BEFORE_CLEANUP_CONFIG, "friends") == ["// Beginning of the table \$TABLE_NAME", "BEGIN TRANSACTION;"]
         getBeforeCleanup(BEFORE_CLEANUP_CONFIG, "mates") == ["// Beginning of the table \$TABLE_NAME", "BEGIN TRANSACTION;"]
+    }
+
+    def "#getBeforeCleanup allows commas in SQL statements"() {
+        given:
+        def config = [
+            transactional_users  : [
+                applies_to    : "users",
+                before_cleanup: "INSERT INTO LOG(time, event) VALUES (NOW(), 'before_table');"
+            ]
+        ]
+
+        expect:
+        getBeforeCleanup(config, "users") == ["INSERT INTO LOG(time, event) VALUES (NOW(), 'before_table');"]
     }
 
     def "#getDefaultColumns returns empty map if tables is not matched by the rule"() {

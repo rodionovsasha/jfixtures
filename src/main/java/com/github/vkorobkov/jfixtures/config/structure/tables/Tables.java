@@ -1,7 +1,6 @@
 package com.github.vkorobkov.jfixtures.config.structure.tables;
 
 import com.github.vkorobkov.jfixtures.config.structure.Section;
-import com.github.vkorobkov.jfixtures.config.structure.util.SplitStringConsumer;
 import com.github.vkorobkov.jfixtures.config.structure.util.TableMatcher;
 import com.github.vkorobkov.jfixtures.config.yaml.Node;
 import com.github.vkorobkov.jfixtures.util.CollectionUtil;
@@ -53,8 +52,10 @@ public class Tables extends Section {
 
     private List<String> readArrayRecursively(String... sections) {
         List<String> instructions = new ArrayList<>();
-        CollectionUtil.flattenRecursively(readProperty(sections).orElse(Collections.emptyList()),
-                new SplitStringConsumer(instructions::add));
+        CollectionUtil.flattenRecursively(
+            readProperty(sections).orElse(Collections.emptyList()),
+            element -> instructions.add(String.valueOf(element))
+        );
         return instructions;
     }
 
