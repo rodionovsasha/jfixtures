@@ -169,6 +169,27 @@ class TablesTest extends Specification {
         getBeforeInserts(config, "users") == ["INSERT INTO LOG(time, event) VALUES (NOW(), 'before_table');"]
     }
 
+    def "#getBeforeInserts concatenates sql fragments across applied rules"() {
+        given:
+        def config = [
+            comment_on_users  : [
+                applies_to    : "users",
+                before_inserts: "-- Starting a new table"
+            ],
+            transactional_users: [
+                applies_to    : "users",
+                before_inserts: ["-- Starting transaction", "BEGIN TRANSACTION"]
+            ]
+        ]
+
+        expect:
+        getBeforeInserts(config, "users") == [
+            "-- Starting a new table",
+            "-- Starting transaction",
+            "BEGIN TRANSACTION"
+        ]
+    }
+
     def "getAfterInserts returns 'empty value' by default"() {
         expect:
         getAfterInserts(SAMPLE_CONFIG, "users") == []
@@ -194,6 +215,27 @@ class TablesTest extends Specification {
         getAfterInserts(config, "users") == ["INSERT INTO LOG(time, event) VALUES (NOW(), 'before_table');"]
     }
 
+    def "#getAfterInserts concatenates sql fragments across applied rules"() {
+        given:
+        def config = [
+            comment_on_users  : [
+                applies_to    : "users",
+                after_inserts: "-- Table is done"
+            ],
+            transactional_users: [
+                applies_to    : "users",
+                after_inserts: ["-- Committing transaction", "COMMIT TRANSACTION"]
+            ]
+        ]
+
+        expect:
+        getAfterInserts(config, "users") == [
+            "-- Table is done",
+            "-- Committing transaction",
+            "COMMIT TRANSACTION"
+        ]
+    }
+
     def "getBeforeCleanup returns 'empty value' by default"() {
         expect:
         getBeforeCleanup(SAMPLE_CONFIG, "users") == []
@@ -217,6 +259,27 @@ class TablesTest extends Specification {
 
         expect:
         getBeforeCleanup(config, "users") == ["INSERT INTO LOG(time, event) VALUES (NOW(), 'before_table');"]
+    }
+
+    def "#getBeforeCleanup concatenates sql fragments across applied rules"() {
+        given:
+        def config = [
+            comment_on_users  : [
+                applies_to    : "users",
+                before_cleanup: "-- Starting a new table"
+            ],
+            transactional_users: [
+                applies_to    : "users",
+                before_cleanup: ["-- Starting transaction", "BEGIN TRANSACTION"]
+            ]
+        ]
+
+        expect:
+        getBeforeCleanup(config, "users") == [
+            "-- Starting a new table",
+            "-- Starting transaction",
+            "BEGIN TRANSACTION"
+        ]
     }
 
     def "#getDefaultColumns returns empty map if tables is not matched by the rule"() {
