@@ -40,6 +40,52 @@ class CollectionUtilTest extends Specification {
         flattenRecursively(name: "vlad", age: 29) == [[name: "vlad", age: 29]]
     }
 
+    def "#mapValues changes every value in the map"() {
+        given:
+        def source = [vlad: 29, homer: 36]
+
+        expect:
+        CollectionUtil.mapValues(source, { it * 2 }) == [vlad: 58, homer: 72]
+    }
+
+    def "#mapValues returns empty map in the source map is empty"() {
+        expect:
+        CollectionUtil.mapValues([:], { it * 2}).isEmpty()
+    }
+
+    def "#merge adds or overwrites the source map with values of another map"() {
+        given:
+        def into = [name: "Vlad", age: 29]
+        def with = [age: 30, born: 1988]
+
+        expect:
+        CollectionUtil.merge(into, with) == [name: "Vlad", age: 30, born: 1988]
+    }
+
+    def "#merge accepts immutable maps because it does not change arguments"() {
+        given:
+        def into = Collections.unmodifiableMap(name: "Vlad", age: 29)
+        def with = Collections.unmodifiableMap(age: 30, born: 1988)
+
+        expect:
+        CollectionUtil.merge(into, with) == [name: "Vlad", age: 30, born: 1988]
+    }
+
+    def "#merge produces a new map, so changing the result does not change arguments"() {
+        given:
+        def into = [name: "Vlad", age: 29]
+        def with = [age: 30, born: 1988]
+
+        when:
+        def result = CollectionUtil.merge(into, with)
+        result["age"] = 100
+        result.remove("born")
+
+        then:
+        into == [name: "Vlad", age: 29]
+        with == [age: 30, born: 1988]
+    }
+
     def flattenRecursively(input) {
         def result = []
         CollectionUtil.flattenRecursively(input, { result << it })

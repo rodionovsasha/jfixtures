@@ -68,8 +68,11 @@ public class Processor {
     }
 
     private List<Instruction> processRows(Fixture fixture) {
-        String tableName = fixture.name;
-        return fixture.getRows().stream().map(row -> processRow(tableName, row)).collect(Collectors.toList());
+        val baseColumns = context.getConfig().table(fixture.name).getDefaultColumns();
+        return fixture.getRows().stream()
+            .map(row -> row.withBaseColumns(baseColumns))
+            .map(row -> processRow(fixture.name, row))
+            .collect(Collectors.toList());
     }
 
     private Instruction processRow(String tableName, FixtureRow row) {
