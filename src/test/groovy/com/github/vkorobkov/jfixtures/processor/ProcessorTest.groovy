@@ -347,15 +347,39 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         customSql.get(1).instruction == "BEGIN TRANSACTION;"
     }
 
+    def "applies base columns to rows which do not have them"() {
+        when:
+        def instructions = load("with_base_cols.yml")
+
+        then:
+        instructions.size() == 4
+
+        and:
+        instructions[0] instanceof CleanTable
+
+        and:
+        assertRow(instructions[1], "vlad", [name: "Vladimir", age: 30, sex: "man", version: 1])
+        assertRow(instructions[2], "homer", [name: "Homer", age: 36, sex: "man", version: 1])
+        assertRow(instructions[3], "alien", [name: "undefined", age: 100, sex: "none", version: 1])
+    }
+
+    private assertRow(row, String name, Map values) {
+        row = row as InsertRow
+        assert row.rowName == name
+        assertInsertInstructions(row.values, values + [id: IntId.one(row.rowName)])
+    }
+
     boolean assertInsertInstructions(Map instructions, Map expected) {
         expected = expected.collectEntries { [it.key, new FixtureValue(it.value)] }
-        new LinkedHashMap(instructions) == expected
+        assert new LinkedHashMap(instructions) == expected
+        true
     }
 
     List<Instruction> load(String ymlFile) {
         def path = unpackYamlToTempFolder(ymlFile) as String
         def config = ConfigLoader.load(path)
-        def fixtures = new FixturesLoader(path, config).load()
+        def fixtures = new FixturesLoader(path).load()
         new Processor(fixtures, config).process()
     }
+
 }

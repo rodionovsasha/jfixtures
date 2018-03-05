@@ -1,6 +1,5 @@
 package com.github.vkorobkov.jfixtures.loader;
 
-import com.github.vkorobkov.jfixtures.util.MapMerger;
 import com.github.vkorobkov.jfixtures.util.StreamUtil;
 import com.github.vkorobkov.jfixtures.util.YmlUtil;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
     private final Path file;
-    private final Map<String, Object> base;
 
     @Override
     public Collection<FixtureRow> get() {
@@ -26,8 +24,7 @@ public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
 
     private FixtureRow fixtureRow(Map.Entry<String, ?> sourceRow) {
         Map row = Optional.ofNullable((Map)sourceRow.getValue()).orElse(Collections.emptyMap());
-        Map merged = MapMerger.merge(base, row);
-        return new FixtureRow(sourceRow.getKey(), loadColumns(merged));
+        return new FixtureRow(sourceRow.getKey(), loadColumns(row));
     }
 
     private Map<String, FixtureValue> loadColumns(Object row) {

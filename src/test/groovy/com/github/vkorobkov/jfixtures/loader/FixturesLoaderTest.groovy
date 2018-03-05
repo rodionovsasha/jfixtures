@@ -1,6 +1,5 @@
 package com.github.vkorobkov.jfixtures.loader
 
-import com.github.vkorobkov.jfixtures.config.ConfigLoader
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 
@@ -43,7 +42,7 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         def path = notExistingPath() as String
 
         when:
-        new FixturesLoader(path, ConfigLoader.load(path)).load()
+        new FixturesLoader(path).load()
 
         then:
         def exception = thrown(LoaderException)
@@ -109,46 +108,6 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         }
     }
 
-    def "'users' table copies fields from the base table"() {
-        when:
-        def fixtures = load("base_user_table.yml")
-
-        then:
-        def users = fixtures.get("users").rows
-
-        and:
-        def vlad = users[0]
-        vlad.name == "vlad"
-        vlad.columns.first_name == new FixtureValue("Vladimir")
-        vlad.columns.age == new FixtureValue(29)
-        vlad.columns.sex == new FixtureValue("man")
-
-        and:
-        def dima = users[1]
-        dima.name == "diman"
-        dima.columns.first_name == new FixtureValue("Dmitry")
-        dima.columns.age == new FixtureValue(28)
-        dima.columns.sex == new FixtureValue("man")
-    }
-
-    def "every table copies super base table fields"() {
-        when:
-        def fixtures = load("base_for_every_table.yml")
-
-        then:
-        def user = fixtures.get("users").rows.first()
-        user.name == "vlad"
-        user.columns.first_name == new FixtureValue("Vladimir")
-        user.columns.age == new FixtureValue(29)
-        user.columns.version == new FixtureValue(1)
-
-        and:
-        def role = fixtures.get("roles").rows.first()
-        role.name == "vlad"
-        role.columns.role == new FixtureValue("admin")
-        role.columns.version == new FixtureValue(1)
-    }
-
     def "#load consumes fixture with .yaml extension"() {
         when:
         def fixtures = load("yaml_config.yaml")
@@ -198,6 +157,6 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
 
     Map<String, Fixture> load(String ymlFile) {
         def path = unpackYamlToTempFolder(ymlFile) as String
-        new FixturesLoader(path, ConfigLoader.load(path)).load()
+        new FixturesLoader(path).load()
     }
 }

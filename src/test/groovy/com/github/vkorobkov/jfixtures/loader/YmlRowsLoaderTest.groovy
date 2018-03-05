@@ -100,7 +100,7 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         dima.columns.isEmpty()
     }
 
-    def "loads explicitly defined SQL type and explicitely auto type"() {
+    def "loads explicitly defined SQL type and explicitly auto type"() {
         given:
         def path = testResourcePath("custom_row_types.yml")
 
@@ -114,38 +114,7 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         vlad.columns.age == new FixtureValue("sql:DEFAULT")
     }
 
-    def "merges base table into fixture"() {
-        given:
-        def path = testResourcePath("simple_rows.yml")
-        def base = [
-            "music": "rock!",
-            "sex": "sql:man"
-        ]
-
-        when:
-        def fixtures = loadRows(path, base)
-
-        then:
-        fixtures.size() == 2
-
-        and:
-        def vlad = fixtures[0]
-        vlad.name == "vlad"
-        vlad.columns.first_name == new FixtureValue("Vladimir")
-        vlad.columns.age == new FixtureValue(29)
-        vlad.columns.sex == new FixtureValue("man")
-        vlad.columns.music == new FixtureValue("rock!")
-
-        and:
-        def dima = fixtures[1]
-        dima.name == "diman"
-        dima.columns.first_name == new FixtureValue("Dmitry")
-        dima.columns.age == new FixtureValue(28)
-        dima.columns.sex == new FixtureValue("man")
-        dima.columns.music == new FixtureValue("rock!")
-    }
-
-    private def loadRows(path, base = [:]) {
-        new YmlRowsLoader(path, base).get()
+    private def loadRows(path) {
+        new YmlRowsLoader(path).get()
     }
 }

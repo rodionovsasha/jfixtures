@@ -1,0 +1,20 @@
+".conf.yml":
+  tables:
+    transactional_users:
+      applies_to: users
+      default_columns:
+        version: 1
+        sex: none
+        name: undefined
+
+"users.yml":
+  vlad:
+    name: Vladimir
+    age: 30
+    sex: man
+  homer:
+    name: Homer
+    age: 36
+    sex: man
+  alien:
+    age: 100

@@ -1,9 +1,7 @@
 package com.github.vkorobkov.jfixtures.loader;
 
-import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.util.YmlUtil;
 import lombok.AllArgsConstructor;
-import lombok.val;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,7 +19,6 @@ import static com.github.vkorobkov.jfixtures.util.YmlUtil.YML_EXT;
 @AllArgsConstructor
 public class FixturesLoader {
     private final String path;
-    private final Root config;
 
     public Map<String, Fixture> load() {
         try {
@@ -55,8 +52,7 @@ public class FixturesLoader {
 
     private Fixture loadFixture(Path file) {
         String name = getFixtureName(file);
-        val baseColumns = config.table(name).getDefaultColumns();
-        return new Fixture(name, new YmlRowsLoader(file, baseColumns));
+        return new Fixture(name, new YmlRowsLoader(file));
     }
 
     private String getFixtureName(Path file) {

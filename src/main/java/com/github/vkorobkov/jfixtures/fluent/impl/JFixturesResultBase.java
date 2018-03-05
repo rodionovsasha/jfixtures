@@ -17,8 +17,8 @@ abstract class JFixturesResultBase implements JFixturesResult {
     private String fixturesFolder;
 
     List<Instruction> getInstructions() {
+        val fixtures = new FixturesLoader(fixturesFolder).load();
         val config = ConfigLoader.load(fixturesFolder);
-        val fixtures = new FixturesLoader(fixturesFolder, config).load();
         return new Processor(fixtures, config).process();
     }
 }
