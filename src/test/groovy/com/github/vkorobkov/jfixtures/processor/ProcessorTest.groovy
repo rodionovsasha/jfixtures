@@ -7,8 +7,8 @@ import com.github.vkorobkov.jfixtures.instructions.CleanTable
 import com.github.vkorobkov.jfixtures.instructions.CustomSql
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
 import com.github.vkorobkov.jfixtures.instructions.Instruction
+import com.github.vkorobkov.jfixtures.loader.DirectoryLoader
 import com.github.vkorobkov.jfixtures.loader.FixtureValue
-import com.github.vkorobkov.jfixtures.loader.FixturesLoader
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 
@@ -378,7 +378,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
     List<Instruction> load(String ymlFile) {
         def path = unpackYamlToTempFolder(ymlFile) as String
         def config = ConfigLoader.load(path)
-        def fixtures = new FixturesLoader(path).load()
+        def fixtures = new DirectoryLoader(path).load()
         new Processor(fixtures, config).process()
     }
 

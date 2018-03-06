@@ -1,21 +1,17 @@
 package com.github.vkorobkov.jfixtures.loader;
 
 import com.github.vkorobkov.jfixtures.util.StreamUtil;
-import com.github.vkorobkov.jfixtures.util.YmlUtil;
 import lombok.AllArgsConstructor;
 
-import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class YmlRowsLoader implements Supplier<Collection<FixtureRow>> {
-    private final Path file;
+public class MapRowsLoader {
+    private final Map<String, Object> rows;
 
-    @Override
-    public Collection<FixtureRow> get() {
-        return YmlUtil.load(file)
+    public Collection<FixtureRow> load() {
+        return rows
             .entrySet()
             .stream()
             .map(this::fixtureRow)

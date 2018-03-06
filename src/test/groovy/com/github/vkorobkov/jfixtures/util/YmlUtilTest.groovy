@@ -3,6 +3,7 @@ package com.github.vkorobkov.jfixtures.util
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 
+import java.nio.file.NoSuchFileException
 import java.nio.file.Path
 
 class YmlUtilTest extends Specification implements YamlVirtualFolder {
@@ -125,6 +126,14 @@ class YmlUtilTest extends Specification implements YamlVirtualFolder {
 
         cleanup:
         folder.toFile().deleteDir()
+    }
+
+    def "#load throws an exception if file does not exist"() {
+        when:
+        load(notExistingPath().toString())
+
+        then:
+        thrown(NoSuchFileException)
     }
 
     private load(String ymlFile) {
