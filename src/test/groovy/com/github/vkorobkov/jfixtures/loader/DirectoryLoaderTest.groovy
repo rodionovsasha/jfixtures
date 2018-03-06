@@ -5,7 +5,7 @@ import spock.lang.Specification
 
 import java.nio.file.NoSuchFileException
 
-class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
+class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
 
     def "loads big fixtures tree"() {
         when:
@@ -42,7 +42,7 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
         def path = notExistingPath() as String
 
         when:
-        new FixturesLoader(path).load()
+        new DirectoryLoader(path).load()
 
         then:
         def exception = thrown(LoaderException)
@@ -157,6 +157,6 @@ class FixturesLoaderTest extends Specification implements YamlVirtualFolder {
 
     Map<String, Fixture> load(String ymlFile) {
         def path = unpackYamlToTempFolder(ymlFile) as String
-        new FixturesLoader(path).load()
+        new DirectoryLoader(path).load()
     }
 }

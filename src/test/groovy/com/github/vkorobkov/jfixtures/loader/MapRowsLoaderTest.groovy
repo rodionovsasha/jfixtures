@@ -1,18 +1,17 @@
 package com.github.vkorobkov.jfixtures.loader
 
-import com.github.vkorobkov.jfixtures.testutil.WithTestResource
 import spock.lang.Specification
 
-import java.nio.file.NoSuchFileException
+class MapRowsLoaderTest extends Specification {
 
-class YmlRowsLoaderTest extends Specification implements WithTestResource {
+    def simpleRows = [
+        vlad:   [first_name: "Vladimir",    age: 29, sex: "man"],
+        diman:  [first_name: "Dmitry",      age: 28, sex: "man"]
+    ]
 
     def "load simple fixture test"() {
-        given:
-        def path = testResourcePath("simple_rows.yml")
-
         when:
-        def fixtures = loadRows(path)
+        def fixtures = loadRows(simpleRows)
 
         then:
         fixtures.size() == 2
@@ -33,56 +32,25 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
     }
 
     def "columns remain the ordering"() {
-        given:
-        def path = testResourcePath("simple_rows.yml")
-
         when:
-        def fixtures = loadRows(path)
+        def fixtures = loadRows(simpleRows)
 
         then:
         def columnsKeys = fixtures[0].columns.keySet().asList()
         columnsKeys == ["first_name", "age", "sex"]
     }
 
-    def "takes the last column value when column duplicates"() {
-        given:
-        def path = testResourcePath("duplicate_columns.yml")
-
-        when:
-        def fixtures = loadRows(path)
-
-        then:
-        fixtures[0].columns.age == new FixtureValue(35)
-    }
-
-    def "throws when file does not exist"() {
-        given:
-        def path = notExistingPath(".yml")
-
-        when:
-        loadRows(path)
-
-        then:
-        thrown(NoSuchFileException)
-    }
-
     def "no rows when loads an empty fixture"() {
-        given:
-        def path = testResourcePath("empty_fixture.yml")
-
         when:
-        def fixtures = loadRows(path)
+        def fixtures = loadRows([:])
 
         then:
         fixtures.empty
     }
 
     def "no columns when row is empty in the fixture"() {
-        given:
-        def path = testResourcePath("with_empty_row.yml")
-
         when:
-        def fixtures = loadRows(path)
+        def fixtures = loadRows(vlad: [first_name: "Vladimir", age: 29, sex: "man"], diman: [:])
 
         then:
         fixtures.size() == 2
@@ -101,11 +69,8 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
     }
 
     def "loads explicitly defined SQL type and explicitly auto type"() {
-        given:
-        def path = testResourcePath("custom_row_types.yml")
-
         when:
-        def fixtures = loadRows(path)
+        def fixtures = loadRows(vlad: [first_name: "Vladimir", age: "sql:DEFAULT"])
 
         then:
         def vlad = fixtures.first()
@@ -114,7 +79,7 @@ class YmlRowsLoaderTest extends Specification implements WithTestResource {
         vlad.columns.age == new FixtureValue("sql:DEFAULT")
     }
 
-    private def loadRows(path) {
-        new YmlRowsLoader(path).get()
+    private def loadRows(rows) {
+        new MapRowsLoader(rows).load()
     }
 }

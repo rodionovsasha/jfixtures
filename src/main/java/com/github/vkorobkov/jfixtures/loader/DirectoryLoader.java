@@ -17,7 +17,7 @@ import static com.github.vkorobkov.jfixtures.util.YmlUtil.YAML_EXT;
 import static com.github.vkorobkov.jfixtures.util.YmlUtil.YML_EXT;
 
 @AllArgsConstructor
-public class FixturesLoader {
+public class DirectoryLoader {
     private final String path;
 
     public Map<String, Fixture> load() {
@@ -52,7 +52,8 @@ public class FixturesLoader {
 
     private Fixture loadFixture(Path file) {
         String name = getFixtureName(file);
-        return new Fixture(name, new YmlRowsLoader(file));
+        Map<String, Object> yamlContent = YmlUtil.load(file);
+        return new Fixture(name, new MapRowsLoader(yamlContent).load());
     }
 
     private String getFixtureName(Path file) {
