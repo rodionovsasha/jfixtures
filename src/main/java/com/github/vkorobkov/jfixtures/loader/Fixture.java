@@ -20,6 +20,15 @@ public final class Fixture {
         this.rows = Collections.unmodifiableCollection(rows);
     }
 
+    public static Collection<Fixture> mergeFixtures(Collection<Fixture> toMerge) {
+        return toMerge.stream().collect(Collectors.toMap(
+            fixture -> fixture.name, // key
+            fixture -> fixture, // value
+            (oldFixture, newFixture) -> oldFixture.mergeRows(newFixture.rows), // merge rows on conflict
+            LinkedHashMap::new // keep order
+        )).values();
+    }
+
     public Fixture mergeRows(Collection<FixtureRow> toMerge) {
         val mergedRows = Stream.concat(this.rows.stream(), toMerge.stream()).collect(
             Collectors.toMap(FixtureRow::getName, row -> row, (oldRow, newRow) -> newRow, LinkedHashMap::new)

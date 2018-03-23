@@ -47,6 +47,17 @@ class FixtureRowTest extends Specification {
         !extendedRow.is(row)
     }
 
+    def "#withBaseColumns keeps the original row name"() {
+        given:
+        def row = new FixtureRow("vlad", columns)
+
+        when:
+        def extendedRow = row.withBaseColumns(age: new FixtureValue(30))
+
+        then:
+        extendedRow.name == "vlad"
+    }
+
     def "#withBaseColumns does not overwrite the existing columns"() {
         given:
         def row = new FixtureRow("vlad", columns)
