@@ -19,16 +19,16 @@ class MapRowsLoaderTest extends Specification {
         and:
         def vlad = fixtures[0]
         vlad.name == "vlad"
-        vlad.columns.first_name == new FixtureValue("Vladimir")
-        vlad.columns.age == new FixtureValue(29)
-        vlad.columns.sex == new FixtureValue("man")
+        vlad.columns.first_name == new Value("Vladimir")
+        vlad.columns.age == new Value(29)
+        vlad.columns.sex == new Value("man")
 
         and:
         def dima = fixtures[1]
         dima.name == "diman"
-        dima.columns.first_name == new FixtureValue("Dmitry")
-        dima.columns.age == new FixtureValue(28)
-        dima.columns.sex == new FixtureValue("man")
+        dima.columns.first_name == new Value("Dmitry")
+        dima.columns.age == new Value(28)
+        dima.columns.sex == new Value("man")
     }
 
     def "columns remain the ordering"() {
@@ -58,9 +58,9 @@ class MapRowsLoaderTest extends Specification {
         and:
         def vlad = fixtures[0]
         vlad.name == "vlad"
-        vlad.columns.first_name == new FixtureValue("Vladimir")
-        vlad.columns.age == new FixtureValue(29)
-        vlad.columns.sex == new FixtureValue("man")
+        vlad.columns.first_name == new Value("Vladimir")
+        vlad.columns.age == new Value(29)
+        vlad.columns.sex == new Value("man")
 
         and:
         def dima = fixtures[1]
@@ -75,8 +75,8 @@ class MapRowsLoaderTest extends Specification {
         then:
         def vlad = fixtures.first()
         vlad.name == "vlad"
-        vlad.columns.first_name == new FixtureValue("Vladimir")
-        vlad.columns.age == new FixtureValue("sql:DEFAULT")
+        vlad.columns.first_name == new Value("Vladimir")
+        vlad.columns.age == new Value("sql:DEFAULT")
     }
 
     private def loadRows(rows) {

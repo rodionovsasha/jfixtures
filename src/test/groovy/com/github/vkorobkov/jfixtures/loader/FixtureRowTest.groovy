@@ -4,12 +4,12 @@ import nl.jqno.equalsverifier.EqualsVerifier
 import spock.lang.Specification
 
 class FixtureRowTest extends Specification {
-    Map<String, FixtureValue> columns
+    Map<String, Value> columns
 
     void setup() {
         columns = [
-            id: new FixtureValue(1),
-            name: new FixtureValue("Vladimir"),
+            id: new Value(1),
+            name: new Value("Vladimir"),
         ]
     }
 
@@ -38,10 +38,10 @@ class FixtureRowTest extends Specification {
         def row = new FixtureRow("vlad", columns)
 
         when:
-        def extendedRow = row.withBaseColumns(age: new FixtureValue(30))
+        def extendedRow = row.withBaseColumns(age: new Value(30))
 
         then:
-        extendedRow.columns == columns + [age: new FixtureValue(30)]
+        extendedRow.columns == columns + [age: new Value(30)]
 
         and:
         !extendedRow.is(row)
@@ -52,7 +52,7 @@ class FixtureRowTest extends Specification {
         def row = new FixtureRow("vlad", columns)
 
         when:
-        def extendedRow = row.withBaseColumns(age: new FixtureValue(30))
+        def extendedRow = row.withBaseColumns(age: new Value(30))
 
         then:
         extendedRow.name == "vlad"
@@ -63,7 +63,7 @@ class FixtureRowTest extends Specification {
         def row = new FixtureRow("vlad", columns)
 
         when:
-        def extendedRow = row.withBaseColumns(id: new FixtureValue(100))
+        def extendedRow = row.withBaseColumns(id: new Value(100))
 
         then:
         extendedRow.columns == columns

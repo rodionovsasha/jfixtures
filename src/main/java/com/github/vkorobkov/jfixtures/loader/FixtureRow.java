@@ -12,14 +12,14 @@ import java.util.Map;
 @Getter
 public final class FixtureRow {
     private final String name;
-    private final Map<String, FixtureValue> columns;
+    private final Map<String, Value> columns;
 
-    public FixtureRow(String name, Map<String, FixtureValue> columns) {
+    public FixtureRow(String name, Map<String, Value> columns) {
         this.name = name;
         this.columns = Collections.unmodifiableMap(columns);
     }
 
-    public FixtureRow withBaseColumns(Map<String, FixtureValue> base) {
+    public FixtureRow withBaseColumns(Map<String, Value> base) {
         if (base.isEmpty()) {
             return this;
         }

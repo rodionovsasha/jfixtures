@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.instructions
 
-import com.github.vkorobkov.jfixtures.loader.FixtureValue
+import com.github.vkorobkov.jfixtures.loader.Value
 import spock.lang.Specification
 
 class InsertRowTest extends Specification {
@@ -12,8 +12,8 @@ class InsertRowTest extends Specification {
     def "constructor test"() {
         given:
         def values = [
-            "id": new FixtureValue(5),
-            "name": new FixtureValue("Vlad")
+            "id": new Value(5),
+            "name": new Value("Vlad")
         ]
 
         when:
@@ -31,8 +31,8 @@ class InsertRowTest extends Specification {
     def "values collection is immutable"() {
         given:
         def values = [
-            "id": new FixtureValue(5),
-            "name": new FixtureValue("Vlad")
+            "id": new Value(5),
+            "name": new Value("Vlad")
         ]
 
         when:
@@ -45,7 +45,7 @@ class InsertRowTest extends Specification {
 
     def "value toString() dummy test"() {
         expect:
-        new FixtureValue("5").toString() == new FixtureValue("5").toString()
+        new Value("5").toString() == new Value("5").toString()
     }
 
     def "visitor accepts instruction"() {

@@ -3,7 +3,7 @@ package com.github.vkorobkov.jfixtures.sql.dialects
 import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
-import com.github.vkorobkov.jfixtures.loader.FixtureValue
+import com.github.vkorobkov.jfixtures.loader.Value
 import com.github.vkorobkov.jfixtures.sql.Appender
 import com.github.vkorobkov.jfixtures.sql.Sql
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
@@ -56,11 +56,11 @@ class Sql99Test extends Specification {
     def "insert row test"() {
         given:
         def insertRow = new InsertRow("admin.users", "vlad", [
-                id  : new FixtureValue(1),
-                name: new FixtureValue("Vlad"),
-                age : new FixtureValue(29),
-                hobby : new FixtureValue(null),
-                active : new FixtureValue(true)
+                id  : new Value(1),
+                name: new Value("Vlad"),
+                age : new Value(29),
+                hobby : new Value(null),
+                active : new Value(true)
         ])
 
         when:
