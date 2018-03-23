@@ -120,4 +120,76 @@ class FixtureTest extends Specification {
         then:
         merged.name == "users"
     }
+
+    def "#mergeFixtures puts fixtures for different tables in sequence"() {
+        given:
+        def users = new Fixture("users", [
+            new FixtureRow("Vlad",  [name: "Vlad", age: 30]),
+            new FixtureRow("Burns", [name: "Mr Burns", age: 130])
+        ])
+        def roles = new Fixture("roles", [
+            new FixtureRow("user",  [type: "user", readAccess: true, writeAccess: false]),
+            new FixtureRow("admin", [type: "admin", readAccess: true, writeAccess: true])
+        ])
+
+        when:
+        def merged = Fixture.mergeFixtures([users, roles])
+
+        then:
+        merged.size() == 2
+
+        and:
+        merged[0] == users
+        merged[1] == roles
+    }
+
+    def "#mergeFixtures concatenates different rows of the same table"() {
+        given:
+        def users1 = new Fixture("users", [
+            new FixtureRow("Vlad",  [name: "Vlad", age: 30]),
+            new FixtureRow("Burns", [name: "Mr Burns", age: 130])
+        ])
+        def users2 = new Fixture("users", [
+            new FixtureRow("Homer", [name: "Homer", age: 40]),
+            new FixtureRow("Bart", [name: "Bart", age: 12])
+        ])
+
+        when:
+        def merged = Fixture.mergeFixtures([users1, users2])
+
+        then:
+        merged.size() == 1
+
+        and:
+        with(merged[0]) {
+            assert name == "users"
+            assert rows.toList() == users1.rows + users2.rows
+        }
+    }
+
+    def "#mergeFixtures replaces old rows with new ones in scope of the same table"() {
+        given:
+        def users1 = new Fixture("users", [
+            new FixtureRow("Vlad",  [name: "Vlad", age: 29]),
+            new FixtureRow("Burns", [name: "Mr Burns", age: 130])
+        ])
+        def users2 = new Fixture("users", [
+            new FixtureRow("Vlad", [name: "Vladimir", age: 30])
+        ])
+
+        when:
+        def merged = Fixture.mergeFixtures([users1, users2])
+
+        then:
+        merged.size() == 1
+
+        and:
+        with(merged[0]) {
+            assert name == "users"
+            assert rows.toList() == [
+                new FixtureRow("Vlad", [name: "Vladimir", age: 30]), new FixtureRow("Burns", [name: "Mr Burns", age: 130])
+            ]
+        }
+
+    }
 }
