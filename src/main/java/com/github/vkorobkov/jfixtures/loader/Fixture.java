@@ -13,9 +13,9 @@ public final class Fixture {
     public final String name;
 
     @Getter
-    private final Collection<FixtureRow> rows;
+    private final Collection<Row> rows;
 
-    public Fixture(String name, Collection<FixtureRow> rows) {
+    public Fixture(String name, Collection<Row> rows) {
         this.name = name;
         this.rows = Collections.unmodifiableCollection(rows);
     }
@@ -29,9 +29,9 @@ public final class Fixture {
         )).values();
     }
 
-    public Fixture mergeRows(Collection<FixtureRow> toMerge) {
+    public Fixture mergeRows(Collection<Row> toMerge) {
         val mergedRows = Stream.concat(this.rows.stream(), toMerge.stream()).collect(
-            Collectors.toMap(FixtureRow::getName, row -> row, (oldRow, newRow) -> newRow, LinkedHashMap::new)
+            Collectors.toMap(Row::getName, row -> row, (oldRow, newRow) -> newRow, LinkedHashMap::new)
         ).values();
         return new Fixture(this.name, mergedRows);
     }
