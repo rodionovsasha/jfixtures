@@ -10,20 +10,20 @@ import java.util.Map;
 
 @EqualsAndHashCode
 @Getter
-public final class FixtureRow {
+public final class Row {
     private final String name;
     private final Map<String, Value> columns;
 
-    public FixtureRow(String name, Map<String, Value> columns) {
+    public Row(String name, Map<String, Value> columns) {
         this.name = name;
         this.columns = Collections.unmodifiableMap(columns);
     }
 
-    public FixtureRow withBaseColumns(Map<String, Value> base) {
+    public Row withBaseColumns(Map<String, Value> base) {
         if (base.isEmpty()) {
             return this;
         }
         val mergedColumns = CollectionUtil.merge(base, columns);
-        return new FixtureRow(name, mergedColumns);
+        return new Row(name, mergedColumns);
     }
 }

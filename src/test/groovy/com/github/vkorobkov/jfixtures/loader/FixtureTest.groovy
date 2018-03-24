@@ -3,13 +3,13 @@ package com.github.vkorobkov.jfixtures.loader
 import spock.lang.Specification
 
 class FixtureTest extends Specification {
-    Collection<FixtureRow> rows
+    Collection<Row> rows
 
     void setup() {
         rows = [
-            new FixtureRow("Vlad", [:]),
-            new FixtureRow("Bob", [:]),
-            new FixtureRow("Ned", [:]),
+                new Row("Vlad", [:]),
+                new Row("Bob", [:]),
+                new Row("Ned", [:]),
         ]
     }
 
@@ -51,48 +51,48 @@ class FixtureTest extends Specification {
     def "#mergeRows adds new rows to the end"() {
         given:
         def fixture = new Fixture("users",
-            [new FixtureRow("Vlad", [age: 30]), new FixtureRow("Mr Burns", [age: 100])]
+            [new Row("Vlad", [age: 30]), new Row("Mr Burns", [age: 100])]
         )
 
         when:
         def merged = fixture.mergeRows([
-            new FixtureRow("Homer", [age: 50]),
-            new FixtureRow("Bart", [age: 12])
+                new Row("Homer", [age: 50]),
+                new Row("Bart", [age: 12])
         ])
 
         then:
         merged.rows.asList() == [
-            new FixtureRow("Vlad", [age: 30]),
-            new FixtureRow("Mr Burns", [age: 100]),
-            new FixtureRow("Homer", [age: 50]),
-            new FixtureRow("Bart", [age: 12])
+                new Row("Vlad", [age: 30]),
+                new Row("Mr Burns", [age: 100]),
+                new Row("Homer", [age: 50]),
+                new Row("Bart", [age: 12])
         ]
     }
 
     def "#mergeRows replaces rows with the same name"() {
         given:
         def fixture = new Fixture("users",
-            [new FixtureRow("Vlad", [age: 29]), new FixtureRow("Mr Burns", [age: 100])]
+            [new Row("Vlad", [age: 29]), new Row("Mr Burns", [age: 100])]
         )
 
         when:
         def merged = fixture.mergeRows([
-            new FixtureRow("Homer", [age: 50]),
-            new FixtureRow("Vlad", [age: 30, skill: "java"])
+                new Row("Homer", [age: 50]),
+                new Row("Vlad", [age: 30, skill: "java"])
         ])
 
         then:
         merged.rows.asList() == [
-            new FixtureRow("Vlad", [age: 30, skill: "java"]),
-            new FixtureRow("Mr Burns", [age: 100]),
-            new FixtureRow("Homer", [age: 50])
+                new Row("Vlad", [age: 30, skill: "java"]),
+                new Row("Mr Burns", [age: 100]),
+                new Row("Homer", [age: 50])
         ]
     }
 
     def "#mergeRows returns original rows if rows to merge is an empty list"() {
         given:
         def fixture = new Fixture("users",
-            [new FixtureRow("Vlad", [age: 30]), new FixtureRow("Mr Burns", [age: 100])]
+            [new Row("Vlad", [age: 30]), new Row("Mr Burns", [age: 100])]
         )
 
         when:
@@ -100,21 +100,21 @@ class FixtureTest extends Specification {
 
         then:
         merged.rows.asList() == [
-            new FixtureRow("Vlad", [age: 30]),
-            new FixtureRow("Mr Burns", [age: 100])
+                new Row("Vlad", [age: 30]),
+                new Row("Mr Burns", [age: 100])
         ]
     }
 
     def "#mergeRows returns fixture with original name"() {
         given:
         def fixture = new Fixture("users",
-            [new FixtureRow("Vlad", [age: 29]), new FixtureRow("Mr Burns", [age: 100])]
+            [new Row("Vlad", [age: 29]), new Row("Mr Burns", [age: 100])]
         )
 
         when:
         def merged = fixture.mergeRows([
-            new FixtureRow("Homer", [age: 50]),
-            new FixtureRow("Vlad", [age: 30, skill: "java"])
+                new Row("Homer", [age: 50]),
+                new Row("Vlad", [age: 30, skill: "java"])
         ])
 
         then:
@@ -124,12 +124,12 @@ class FixtureTest extends Specification {
     def "#mergeFixtures puts fixtures for different tables in sequence"() {
         given:
         def users = new Fixture("users", [
-            new FixtureRow("Vlad",  [name: "Vlad", age: 30]),
-            new FixtureRow("Burns", [name: "Mr Burns", age: 130])
+                new Row("Vlad",  [name: "Vlad", age: 30]),
+                new Row("Burns", [name: "Mr Burns", age: 130])
         ])
         def roles = new Fixture("roles", [
-            new FixtureRow("user",  [type: "user", readAccess: true, writeAccess: false]),
-            new FixtureRow("admin", [type: "admin", readAccess: true, writeAccess: true])
+                new Row("user",  [type: "user", readAccess: true, writeAccess: false]),
+                new Row("admin", [type: "admin", readAccess: true, writeAccess: true])
         ])
 
         when:
@@ -146,12 +146,12 @@ class FixtureTest extends Specification {
     def "#mergeFixtures concatenates different rows of the same table"() {
         given:
         def users1 = new Fixture("users", [
-            new FixtureRow("Vlad",  [name: "Vlad", age: 30]),
-            new FixtureRow("Burns", [name: "Mr Burns", age: 130])
+                new Row("Vlad",  [name: "Vlad", age: 30]),
+                new Row("Burns", [name: "Mr Burns", age: 130])
         ])
         def users2 = new Fixture("users", [
-            new FixtureRow("Homer", [name: "Homer", age: 40]),
-            new FixtureRow("Bart", [name: "Bart", age: 12])
+                new Row("Homer", [name: "Homer", age: 40]),
+                new Row("Bart", [name: "Bart", age: 12])
         ])
 
         when:
@@ -170,11 +170,11 @@ class FixtureTest extends Specification {
     def "#mergeFixtures replaces old rows with new ones in scope of the same table"() {
         given:
         def users1 = new Fixture("users", [
-            new FixtureRow("Vlad",  [name: "Vlad", age: 29]),
-            new FixtureRow("Burns", [name: "Mr Burns", age: 130])
+                new Row("Vlad",  [name: "Vlad", age: 29]),
+                new Row("Burns", [name: "Mr Burns", age: 130])
         ])
         def users2 = new Fixture("users", [
-            new FixtureRow("Vlad", [name: "Vladimir", age: 30])
+            new Row("Vlad", [name: "Vladimir", age: 30])
         ])
 
         when:
@@ -187,7 +187,7 @@ class FixtureTest extends Specification {
         with(merged[0]) {
             assert name == "users"
             assert rows.toList() == [
-                new FixtureRow("Vlad", [name: "Vladimir", age: 30]), new FixtureRow("Burns", [name: "Mr Burns", age: 130])
+                    new Row("Vlad", [name: "Vladimir", age: 30]), new Row("Burns", [name: "Mr Burns", age: 130])
             ]
         }
 

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class MapRowsLoader {
     private final Map<String, Object> rows;
 
-    public Collection<FixtureRow> load() {
+    public Collection<Row> load() {
         return rows
             .entrySet()
             .stream()
@@ -18,9 +18,9 @@ public class MapRowsLoader {
             .collect(Collectors.toList());
     }
 
-    private FixtureRow fixtureRow(Map.Entry<String, ?> sourceRow) {
+    private Row fixtureRow(Map.Entry<String, ?> sourceRow) {
         Map row = Optional.ofNullable((Map)sourceRow.getValue()).orElse(Collections.emptyMap());
-        return new FixtureRow(sourceRow.getKey(), loadColumns(row));
+        return new Row(sourceRow.getKey(), loadColumns(row));
     }
 
     private Map<String, Value> loadColumns(Object row) {

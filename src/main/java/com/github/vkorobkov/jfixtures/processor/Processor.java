@@ -7,7 +7,7 @@ import com.github.vkorobkov.jfixtures.instructions.CustomSql;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
 import com.github.vkorobkov.jfixtures.loader.Fixture;
-import com.github.vkorobkov.jfixtures.loader.FixtureRow;
+import com.github.vkorobkov.jfixtures.loader.Row;
 import com.github.vkorobkov.jfixtures.loader.Value;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -75,13 +75,13 @@ public class Processor {
             .collect(Collectors.toList());
     }
 
-    private Instruction processRow(String tableName, FixtureRow row) {
+    private Instruction processRow(String tableName, Row row) {
         Instruction result =  new InsertRow(tableName, row.getName(), extractRowValues(tableName, row));
         result.accept(context.getRowsIndex());
         return result;
     }
 
-    private Map<String, Value> extractRowValues(String tableName, FixtureRow row) {
+    private Map<String, Value> extractRowValues(String tableName, Row row) {
         Map<String, Value> result = new LinkedHashMap<>(row.getColumns().size() + 1);
         val table = context.getConfig().table(tableName);
         if (table.shouldAutoGeneratePk()) {
