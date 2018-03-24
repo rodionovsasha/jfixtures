@@ -3,16 +3,16 @@ package com.github.vkorobkov.jfixtures.loader
 import nl.jqno.equalsverifier.EqualsVerifier
 import spock.lang.Specification
 
-class FixtureValueTest extends Specification {
+class ValueTest extends Specification {
 
     def "equals"() {
         expect:
-        EqualsVerifier.forClass(FixtureValue).verify()
+        EqualsVerifier.forClass(Value).verify()
     }
 
     def "detects text type without text: prefix"() {
         when:
-        def fixture = new FixtureValue("Vlad")
+        def fixture = new Value("Vlad")
 
         then:
         fixture.type == ValueType.TEXT
@@ -21,7 +21,7 @@ class FixtureValueTest extends Specification {
 
     def "detects text type with text: prefix"() {
         when:
-        def fixture = new FixtureValue("text:Vlad")
+        def fixture = new Value("text:Vlad")
 
         then:
         fixture.type == ValueType.TEXT
@@ -30,12 +30,12 @@ class FixtureValueTest extends Specification {
 
     def "does not trim leading spaces for text with prefix"() {
         expect:
-        new FixtureValue("text: Vlad").value == " Vlad"
+        new Value("text: Vlad").value == " Vlad"
     }
 
     def "detects sql type with sql: prefix"() {
         when:
-        def fixture = new FixtureValue("sql:DEFAULT")
+        def fixture = new Value("sql:DEFAULT")
 
         then:
         fixture.type == ValueType.SQL
@@ -44,12 +44,12 @@ class FixtureValueTest extends Specification {
 
     def "does not trim leading spaces for sql with prefix"() {
         expect:
-        new FixtureValue("sql: DEFAULT").value == " DEFAULT"
+        new Value("sql: DEFAULT").value == " DEFAULT"
     }
 
     def "detects non string types as auto types"() {
         when:
-        def fixture = new FixtureValue(value)
+        def fixture = new Value(value)
 
         then:
         fixture.type == ValueType.AUTO
@@ -64,7 +64,7 @@ class FixtureValueTest extends Specification {
 
     def "#getSqlRepresentation returns upper cased null"() {
         expect:
-        with(new FixtureValue(null)) {
+        with(new Value(null)) {
             sqlRepresentation == "NULL"
             type == ValueType.AUTO
         }
@@ -72,7 +72,7 @@ class FixtureValueTest extends Specification {
 
     def "#getXmlRepresentation returns lower cased null"() {
         expect:
-        with(new FixtureValue(null)) {
+        with(new Value(null)) {
             xmlRepresentation == "null"
             type == ValueType.AUTO
         }
@@ -80,7 +80,7 @@ class FixtureValueTest extends Specification {
 
     def "#getSqlRepresentation returns upper cased boolean"() {
         expect:
-        with(new FixtureValue(true)) {
+        with(new Value(true)) {
             sqlRepresentation == "TRUE"
             type == ValueType.AUTO
         }
@@ -88,7 +88,7 @@ class FixtureValueTest extends Specification {
 
     def "#constructor consumes allowed types"() {
         expect:
-        new FixtureValue(value)
+        new Value(value)
 
         where:
         _ | value
@@ -104,7 +104,7 @@ class FixtureValueTest extends Specification {
 
     def "#constructor rejects now allowed type"() {
         when:
-        new FixtureValue([1, 2, 3])
+        new Value([1, 2, 3])
 
         then:
         def exception = thrown(LoaderException)

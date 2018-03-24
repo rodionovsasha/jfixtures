@@ -8,7 +8,7 @@ import com.github.vkorobkov.jfixtures.instructions.CustomSql
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
 import com.github.vkorobkov.jfixtures.instructions.Instruction
 import com.github.vkorobkov.jfixtures.loader.DirectoryLoader
-import com.github.vkorobkov.jfixtures.loader.FixtureValue
+import com.github.vkorobkov.jfixtures.loader.Value
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 
@@ -86,7 +86,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         and:
         def vlad = instructions[1] as InsertRow
-        vlad.values.id == new FixtureValue(100500)
+        vlad.values.id == new Value(100500)
     }
 
     def "resolves basic dependencies"() {
@@ -116,17 +116,17 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         and:
         users_to_roles[0].values == [
-            id: new FixtureValue(IntId.one("kirill_is_guest")),
+            id: new Value(IntId.one("kirill_is_guest")),
             user_id: users.find { it.rowName == "kirill" }.values.id,
             role_id: roles.find { it.rowName == "guest" }.values.id,
         ]
         users_to_roles[1].values == [
-            id: new FixtureValue(IntId.one("vlad_is_owner")),
+            id: new Value(IntId.one("vlad_is_owner")),
             user_id: users.find { it.rowName == "vlad" }.values.id,
             role_id: roles.find { it.rowName == "owner" }.values.id,
         ]
         users_to_roles[2].values == [
-            id: new FixtureValue(IntId.one("diman_is_commitee")),
+            id: new Value(IntId.one("diman_is_commitee")),
             user_id: users.find { it.rowName == "diman" }.values.id,
             role_id: roles.find { it.rowName == "commitee" }.values.id,
         ]
@@ -242,15 +242,15 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         and:
         def vlad = insertions.find { it.rowName == "vlad" }
-        vlad.values.id == new FixtureValue(IntId.one("vlad"))
-        vlad.values.login == new FixtureValue("vlad")
-        vlad.values.profile_id == new FixtureValue(IntId.one("public"))
+        vlad.values.id == new Value(IntId.one("vlad"))
+        vlad.values.login == new Value("vlad")
+        vlad.values.profile_id == new Value(IntId.one("public"))
 
         and:
         def profile = insertions.find { it.rowName == "public" }
-        profile.values.custom_id == new FixtureValue(IntId.one("public"))
-        profile.values.name == new FixtureValue("Vladimir")
-        profile.values.age == new FixtureValue(29)
+        profile.values.custom_id == new Value(IntId.one("public"))
+        profile.values.name == new Value("Vladimir")
+        profile.values.age == new Value(29)
 
         and:
         vlad.values.profile_id == profile.values.custom_id
@@ -370,7 +370,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
     }
 
     boolean assertInsertInstructions(Map instructions, Map expected) {
-        expected = expected.collectEntries { [it.key, new FixtureValue(it.value)] }
+        expected = expected.collectEntries { [it.key, new Value(it.value)] }
         assert new LinkedHashMap(instructions) == expected
         true
     }

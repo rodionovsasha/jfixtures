@@ -8,7 +8,7 @@ import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
 import com.github.vkorobkov.jfixtures.loader.Fixture;
 import com.github.vkorobkov.jfixtures.loader.FixtureRow;
-import com.github.vkorobkov.jfixtures.loader.FixtureValue;
+import com.github.vkorobkov.jfixtures.loader.Value;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -81,11 +81,11 @@ public class Processor {
         return result;
     }
 
-    private Map<String, FixtureValue> extractRowValues(String tableName, FixtureRow row) {
-        Map<String, FixtureValue> result = new LinkedHashMap<>(row.getColumns().size() + 1);
+    private Map<String, Value> extractRowValues(String tableName, FixtureRow row) {
+        Map<String, Value> result = new LinkedHashMap<>(row.getColumns().size() + 1);
         val table = context.getConfig().table(tableName);
         if (table.shouldAutoGeneratePk()) {
-            val id = new FixtureValue(IntId.one(row.getName()));
+            val id = new Value(IntId.one(row.getName()));
             result.put(table.getPkColumnName(), id);
         }
         row.getColumns().forEach((name, value) -> {

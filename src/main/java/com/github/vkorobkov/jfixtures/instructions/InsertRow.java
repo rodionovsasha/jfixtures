@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.instructions;
 
-import com.github.vkorobkov.jfixtures.loader.FixtureValue;
+import com.github.vkorobkov.jfixtures.loader.Value;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,9 +19,9 @@ public class InsertRow implements Instruction {
     @XmlAttribute
     private String rowName;
     @XmlElement
-    private Map<String, FixtureValue> values;
+    private Map<String, Value> values;
 
-    public InsertRow(String table, String rowName, Map<String, FixtureValue> values) {
+    public InsertRow(String table, String rowName, Map<String, Value> values) {
         this.table = table;
         this.rowName = rowName;
         this.values = Collections.unmodifiableMap(values);

@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlValue;
 @EqualsAndHashCode
 @ToString
 @Getter
-public final class FixtureValue {
+public final class Value {
     public static final String PREFIX_SQL = "sql:";
     public static final String PREFIX_TEXT = "text:";
 
@@ -20,7 +20,7 @@ public final class FixtureValue {
     @XmlAttribute
     private final ValueType type;
 
-    public FixtureValue(Object value) {
+    public Value(Object value) {
         checkSupported(value);
         if (value instanceof String) {
             String str = (String) value;

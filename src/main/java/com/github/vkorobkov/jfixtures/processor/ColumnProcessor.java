@@ -3,7 +3,7 @@ package com.github.vkorobkov.jfixtures.processor;
 import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.loader.Fixture;
-import com.github.vkorobkov.jfixtures.loader.FixtureValue;
+import com.github.vkorobkov.jfixtures.loader.Value;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -14,7 +14,7 @@ class ColumnProcessor {
     private final Context context;
     private final Consumer<Fixture> dependencyResolver;
 
-    FixtureValue column(String table, String rowName, String column, FixtureValue value) {
+    Value column(String table, String rowName, String column, Value value) {
         try {
             return getConfig().referredTable(table, column)
                     .map(referredTable -> referredColumn(table, referredTable, value))
@@ -26,7 +26,7 @@ class ColumnProcessor {
         }
     }
 
-    private FixtureValue referredColumn(String table, String referredTable, FixtureValue value) {
+    private Value referredColumn(String table, String referredTable, Value value) {
         if (!table.equals(referredTable)) {
             processDependentFixture(referredTable);
         }
@@ -43,7 +43,7 @@ class ColumnProcessor {
         return referredRowValues.get(referredPk);
     }
 
-    private InsertRow referredRow(String table, FixtureValue value) {
+    private InsertRow referredRow(String table, Value value) {
         String rowName = String.valueOf(value.getValue());
         return context.getRowsIndex()
                 .read(table, rowName)

@@ -4,7 +4,7 @@ import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.CustomSql;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
-import com.github.vkorobkov.jfixtures.loader.FixtureValue;
+import com.github.vkorobkov.jfixtures.loader.Value;
 import com.github.vkorobkov.jfixtures.loader.ValueType;
 import com.github.vkorobkov.jfixtures.util.SqlUtil;
 import lombok.SneakyThrows;
@@ -56,7 +56,7 @@ public interface SqlBase extends Sql {
             .collect(Collectors.joining("."));
     }
 
-    default String escapeValue(FixtureValue value) {
+    default String escapeValue(Value value) {
         String str = value.getSqlRepresentation();
         return value.getType() == ValueType.TEXT ? SqlUtil.escapeString(str) : str;
     }

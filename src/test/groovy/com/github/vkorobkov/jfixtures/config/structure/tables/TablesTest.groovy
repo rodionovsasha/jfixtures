@@ -1,7 +1,7 @@
 package com.github.vkorobkov.jfixtures.config.structure.tables
 
 import com.github.vkorobkov.jfixtures.config.yaml.Node
-import com.github.vkorobkov.jfixtures.loader.FixtureValue
+import com.github.vkorobkov.jfixtures.loader.Value
 import spock.lang.Specification
 
 class TablesTest extends Specification {
@@ -301,7 +301,7 @@ class TablesTest extends Specification {
         def result = getTablesConfig(config, "users").defaultColumns
 
         then:
-        result == [version: new FixtureValue(1)]
+        result == [version: new Value(1)]
     }
 
     def "#getDefaultColumns merges accross the matching rules"() {
@@ -322,7 +322,7 @@ class TablesTest extends Specification {
         def result = getTablesConfig(config, "users").defaultColumns
 
         then:
-        result == [version: new FixtureValue(2), date: new FixtureValue("NOW()")]
+        result == [version: new Value(2), date: new Value("NOW()")]
     }
 
     private static def shouldAutoGeneratePk(content, String name) {

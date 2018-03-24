@@ -23,7 +23,7 @@ public class MapRowsLoader {
         return new FixtureRow(sourceRow.getKey(), loadColumns(row));
     }
 
-    private Map<String, FixtureValue> loadColumns(Object row) {
+    private Map<String, Value> loadColumns(Object row) {
         @SuppressWarnings("unchecked")
         Map<String, Object> data = (Map<String, Object>)row;
         return data.entrySet().stream().collect(
@@ -31,7 +31,7 @@ public class MapRowsLoader {
         );
     }
 
-    private FixtureValue columnValue(Map.Entry<String, Object> entry) {
-        return new FixtureValue(entry.getValue());
+    private Value columnValue(Map.Entry<String, Object> entry) {
+        return new Value(entry.getValue());
     }
 }
