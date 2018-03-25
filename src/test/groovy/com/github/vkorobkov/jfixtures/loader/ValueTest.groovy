@@ -113,4 +113,23 @@ class ValueTest extends Specification {
         exception.message == "Type [class java.util.ArrayList] is not supported by JFixtures at the moment\n" +
             "Read more on https://github.com/vkorobkov/jfixtures/wiki/Type-conversions"
     }
+
+    def "#of instantiates a new value object"() {
+        expect:
+        with(Value.of(true)) {
+            sqlRepresentation == "TRUE"
+            type == ValueType.AUTO
+        }
+    }
+
+    def "#of broadcasts Value as it is"() {
+        given:
+        Value source = Value.of(true)
+
+        when:
+        Value wrapped = Value.of(source)
+
+        then:
+        wrapped.is(source)
+    }
 }
