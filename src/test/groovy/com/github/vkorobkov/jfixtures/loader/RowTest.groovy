@@ -24,6 +24,25 @@ class RowTest extends Specification {
         row.columns == columns
     }
 
+    def "#constuctor may accept either Value or Object as column values"() {
+        given:
+        def columns = [
+            id: Value.of(1),
+            name: "Vlad",
+            age: 30
+        ]
+
+        when:
+        def row = new Row("vlad", columns)
+
+        then:
+        row.columns == [
+            id: Value.of(1),
+            name: Value.of("Vlad"),
+            age: Value.of(30)
+        ]
+    }
+
     def "columns is a read only collection"() {
         given:
         def row = new Row("vlad", columns)
