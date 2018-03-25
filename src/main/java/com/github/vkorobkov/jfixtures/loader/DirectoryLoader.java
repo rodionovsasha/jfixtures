@@ -1,5 +1,6 @@
 package com.github.vkorobkov.jfixtures.loader;
 
+import com.github.vkorobkov.jfixtures.domain.Table;
 import com.github.vkorobkov.jfixtures.util.YmlUtil;
 import lombok.AllArgsConstructor;
 

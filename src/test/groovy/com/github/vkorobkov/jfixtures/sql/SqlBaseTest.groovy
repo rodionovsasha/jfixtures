@@ -1,10 +1,10 @@
 package com.github.vkorobkov.jfixtures.sql
 
 import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
+import com.github.vkorobkov.jfixtures.domain.Value
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
 import com.github.vkorobkov.jfixtures.instructions.CustomSql
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
-import com.github.vkorobkov.jfixtures.loader.Value
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
 import com.github.vkorobkov.jfixtures.testutil.SqBaseTestImpl
 import spock.lang.Specification

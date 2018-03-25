@@ -1,5 +1,7 @@
 package com.github.vkorobkov.jfixtures.loader
 
+import com.github.vkorobkov.jfixtures.domain.Value
+import com.github.vkorobkov.jfixtures.domain.ValueType
 import nl.jqno.equalsverifier.EqualsVerifier
 import spock.lang.Specification
 
@@ -107,7 +109,7 @@ class ValueTest extends Specification {
         new Value([1, 2, 3])
 
         then:
-        def exception = thrown(LoaderException)
+        def exception = thrown(IllegalArgumentException)
         exception.message == "Type [class java.util.ArrayList] is not supported by JFixtures at the moment\n" +
             "Read more on https://github.com/vkorobkov/jfixtures/wiki/Type-conversions"
     }

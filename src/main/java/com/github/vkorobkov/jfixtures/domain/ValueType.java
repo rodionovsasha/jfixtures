@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.loader;
+package com.github.vkorobkov.jfixtures.domain;
 
 public enum ValueType {
     AUTO,

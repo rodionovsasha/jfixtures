@@ -1,7 +1,7 @@
 package com.github.vkorobkov.jfixtures.config.structure.tables
 
 import com.github.vkorobkov.jfixtures.config.yaml.Node
-import com.github.vkorobkov.jfixtures.loader.Value
+import com.github.vkorobkov.jfixtures.domain.Value
 import spock.lang.Specification
 
 class TablesTest extends Specification {

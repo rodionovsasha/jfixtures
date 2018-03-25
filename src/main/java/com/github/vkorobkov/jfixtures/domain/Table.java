@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.loader;
+package com.github.vkorobkov.jfixtures.domain;
 
 import lombok.Getter;
 import lombok.val;

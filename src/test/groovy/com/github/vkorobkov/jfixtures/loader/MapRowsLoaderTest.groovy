@@ -1,5 +1,6 @@
 package com.github.vkorobkov.jfixtures.loader
 
+import com.github.vkorobkov.jfixtures.domain.Value
 import spock.lang.Specification
 
 class MapRowsLoaderTest extends Specification {
