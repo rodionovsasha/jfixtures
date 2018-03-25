@@ -1,8 +1,8 @@
 package com.github.vkorobkov.jfixtures.processor;
 
 import com.github.vkorobkov.jfixtures.config.structure.Root;
+import com.github.vkorobkov.jfixtures.domain.Table;
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
-import com.github.vkorobkov.jfixtures.loader.Table;
 import lombok.Getter;
 
 import java.util.*;

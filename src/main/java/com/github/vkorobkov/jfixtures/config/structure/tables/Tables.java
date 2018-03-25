@@ -3,7 +3,7 @@ package com.github.vkorobkov.jfixtures.config.structure.tables;
 import com.github.vkorobkov.jfixtures.config.structure.Section;
 import com.github.vkorobkov.jfixtures.config.structure.util.TableMatcher;
 import com.github.vkorobkov.jfixtures.config.yaml.Node;
-import com.github.vkorobkov.jfixtures.loader.Value;
+import com.github.vkorobkov.jfixtures.domain.Value;
 import com.github.vkorobkov.jfixtures.util.CollectionUtil;
 import com.github.vkorobkov.jfixtures.util.MapMerger;
 

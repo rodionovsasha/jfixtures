@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.loader;
+package com.github.vkorobkov.jfixtures.domain;
 
 import com.github.vkorobkov.jfixtures.util.CollectionUtil;
 import lombok.EqualsAndHashCode;

@@ -2,13 +2,13 @@ package com.github.vkorobkov.jfixtures.processor;
 
 import com.github.vkorobkov.jfixtures.IntId;
 import com.github.vkorobkov.jfixtures.config.structure.Root;
+import com.github.vkorobkov.jfixtures.domain.Row;
+import com.github.vkorobkov.jfixtures.domain.Table;
+import com.github.vkorobkov.jfixtures.domain.Value;
 import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.CustomSql;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
-import com.github.vkorobkov.jfixtures.loader.Row;
-import com.github.vkorobkov.jfixtures.loader.Table;
-import com.github.vkorobkov.jfixtures.loader.Value;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 

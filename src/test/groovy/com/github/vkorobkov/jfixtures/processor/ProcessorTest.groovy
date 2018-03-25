@@ -3,12 +3,12 @@ package com.github.vkorobkov.jfixtures.processor
 import com.github.vkorobkov.jfixtures.IntId
 import com.github.vkorobkov.jfixtures.config.ConfigLoader
 import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
+import com.github.vkorobkov.jfixtures.domain.Value
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
 import com.github.vkorobkov.jfixtures.instructions.CustomSql
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
 import com.github.vkorobkov.jfixtures.instructions.Instruction
 import com.github.vkorobkov.jfixtures.loader.DirectoryLoader
-import com.github.vkorobkov.jfixtures.loader.Value
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 

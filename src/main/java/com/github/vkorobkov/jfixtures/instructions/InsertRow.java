@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.instructions;
 
-import com.github.vkorobkov.jfixtures.loader.Value;
+import com.github.vkorobkov.jfixtures.domain.Value;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

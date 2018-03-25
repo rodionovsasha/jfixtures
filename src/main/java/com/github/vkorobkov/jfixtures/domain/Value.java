@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.loader;
+package com.github.vkorobkov.jfixtures.domain;
 
 import com.github.vkorobkov.jfixtures.Constants;
 import com.github.vkorobkov.jfixtures.util.StringUtil;
@@ -49,7 +49,7 @@ public final class Value {
         if (!isSupported(value)) {
             String message = "Type [" + value.getClass() + "] is not supported by JFixtures at the moment\n"
                     + "Read more on " + Constants.WIKI_TYPE_CONVERSIONS;
-            throw new LoaderException(message);
+            throw new IllegalArgumentException(message);
         }
     }
 

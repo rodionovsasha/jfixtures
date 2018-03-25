@@ -1,5 +1,7 @@
 package com.github.vkorobkov.jfixtures.loader
 
+import com.github.vkorobkov.jfixtures.domain.Table
+import com.github.vkorobkov.jfixtures.domain.Value
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 

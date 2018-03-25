@@ -1,9 +1,9 @@
 package com.github.vkorobkov.jfixtures.processor;
 
 import com.github.vkorobkov.jfixtures.config.structure.Root;
+import com.github.vkorobkov.jfixtures.domain.Table;
+import com.github.vkorobkov.jfixtures.domain.Value;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
-import com.github.vkorobkov.jfixtures.loader.Table;
-import com.github.vkorobkov.jfixtures.loader.Value;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
