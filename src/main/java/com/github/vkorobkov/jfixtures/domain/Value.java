@@ -20,6 +20,14 @@ public final class Value {
     @XmlAttribute
     private final ValueType type;
 
+    public static Value of(Object value) {
+        if (value instanceof Value) {
+            return (Value)value;
+        } else {
+            return new Value(value);
+        }
+    }
+
     public Value(Object value) {
         checkSupported(value);
         if (value instanceof String) {
