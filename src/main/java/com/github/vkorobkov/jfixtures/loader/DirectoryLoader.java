@@ -20,7 +20,7 @@ import static com.github.vkorobkov.jfixtures.util.YmlUtil.YML_EXT;
 public class DirectoryLoader {
     private final String path;
 
-    public Map<String, Fixture> load() {
+    public Map<String, Table> load() {
         try {
             return Files
                     .walk(Paths.get(path))
@@ -28,7 +28,7 @@ public class DirectoryLoader {
                     .filter(this::isYml)
                     .filter(this::isNotConfig)
                     .peek(this::checkTwin)
-                    .map(this::loadFixture)
+                    .map(this::loadTable)
                     .collect(Collectors.toMap(fixture -> fixture.name, fixture -> fixture));
         } catch (IOException cause) {
             String message = "Can not load fixtures from directory: " + path;
@@ -50,13 +50,13 @@ public class DirectoryLoader {
         return !getFileName(path).startsWith(".");
     }
 
-    private Fixture loadFixture(Path file) {
-        String name = getFixtureName(file);
+    private Table loadTable(Path file) {
+        String name = getTableName(file);
         Map<String, Object> yamlContent = YmlUtil.load(file);
-        return new Fixture(name, new MapRowsLoader(yamlContent).load());
+        return new Table(name, new MapRowsLoader(yamlContent).load());
     }
 
-    private String getFixtureName(Path file) {
+    private String getTableName(Path file) {
         String separator = file.getFileSystem().getSeparator();
         Path relativePath = Paths.get(path).relativize(file);
         checkDotsInFolder(Optional.ofNullable(relativePath.getParent()));
@@ -72,7 +72,7 @@ public class DirectoryLoader {
 
     private void checkTwin(Path path) {
         if (YmlUtil.hasTwin(path)) {
-            throw new LoaderException("Fixture exists with both extensions(yaml/yml).");
+            throw new LoaderException("File " + path + " exists with both extensions(yaml/yml).");
         }
     }
 

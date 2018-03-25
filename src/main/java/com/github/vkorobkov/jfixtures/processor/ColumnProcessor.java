@@ -2,7 +2,7 @@ package com.github.vkorobkov.jfixtures.processor;
 
 import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
-import com.github.vkorobkov.jfixtures.loader.Fixture;
+import com.github.vkorobkov.jfixtures.loader.Table;
 import com.github.vkorobkov.jfixtures.loader.Value;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 @AllArgsConstructor
 class ColumnProcessor {
     private final Context context;
-    private final Consumer<Fixture> dependencyResolver;
+    private final Consumer<Table> dependencyResolver;
 
     Value column(String table, String rowName, String column, Value value) {
         try {
@@ -55,7 +55,7 @@ class ColumnProcessor {
     }
 
     private void processDependentFixture(String referredTable) {
-        val referredFixture = context.getFixtures().get(referredTable);
+        val referredFixture = context.getTables().get(referredTable);
         if (referredFixture == null) {
             String message = "Referred table [" + referredTable + "] is not found";
             throw new ProcessorException(message);

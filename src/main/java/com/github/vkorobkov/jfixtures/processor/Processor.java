@@ -6,8 +6,8 @@ import com.github.vkorobkov.jfixtures.instructions.CleanTable;
 import com.github.vkorobkov.jfixtures.instructions.CustomSql;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
-import com.github.vkorobkov.jfixtures.loader.Fixture;
 import com.github.vkorobkov.jfixtures.loader.Row;
+import com.github.vkorobkov.jfixtures.loader.Table;
 import com.github.vkorobkov.jfixtures.loader.Value;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -23,55 +23,55 @@ public class Processor {
     private final ColumnProcessor columnProcessor;
     private final Context context;
 
-    public Processor(Map<String, Fixture> fixtures, Root config) {
-        this.context = new Context(fixtures, config);
-        this.columnProcessor = new ColumnProcessor(context, this::processFixture);
+    public Processor(Map<String, Table> tables, Root config) {
+        this.context = new Context(tables, config);
+        this.columnProcessor = new ColumnProcessor(context, this::processTable);
     }
 
     public List<Instruction> process() {
-        context.getFixtures().values().forEach(this::processFixture);
+        context.getTables().values().forEach(this::processTable);
         return context.getInstructions();
     }
 
-    private void processFixture(Fixture fixture) {
-        context.getCircularPreventer().doInStack(fixture.name,  () -> {
-            if (context.getCompletedFixtures().add(fixture.name)) {
-                handleFixtureInstructions(fixture);
+    private void processTable(Table table) {
+        context.getCircularPreventer().doInStack(table.name,  () -> {
+            if (context.getCompletedTables().add(table.name)) {
+                handleTableInstructions(table);
             }
         });
     }
 
-    private void handleFixtureInstructions(Fixture fixture) {
-        val tableName = fixture.name;
-        val table = context.getConfig().table(tableName);
+    private void handleTableInstructions(Table table) {
+        val tableName = table.name;
+        val config = context.getConfig().table(tableName);
 
         log.info("Processing table '" + tableName + "'");
-        List<Instruction> fixtureInstructions = new ArrayList<>();
+        List<Instruction> instructions = new ArrayList<>();
 
-        fixtureInstructions.addAll(table.getBeforeCleanup().stream()
+        instructions.addAll(config.getBeforeCleanup().stream()
                 .map(s -> customSql(tableName, s)).collect(Collectors.toList()));
 
-        fixtureInstructions.add(new CleanTable(tableName, table.getCleanMethod()));
+        instructions.add(new CleanTable(tableName, config.getCleanMethod()));
 
-        fixtureInstructions.addAll(table.getBeforeInserts().stream()
+        instructions.addAll(config.getBeforeInserts().stream()
                 .map(s -> customSql(tableName, s)).collect(Collectors.toList()));
 
-        fixtureInstructions.addAll(processRows(fixture));
+        instructions.addAll(processRows(table));
 
-        fixtureInstructions.addAll(table.getAfterInserts().stream()
+        instructions.addAll(config.getAfterInserts().stream()
                 .map(s -> customSql(tableName, s)).collect(Collectors.toList()));
-        context.getInstructions().addAll(fixtureInstructions);
+        context.getInstructions().addAll(instructions);
     }
 
     private Instruction customSql(String table, String instruction) {
         return new CustomSql(table, instruction);
     }
 
-    private List<Instruction> processRows(Fixture fixture) {
-        val baseColumns = context.getConfig().table(fixture.name).getDefaultColumns();
-        return fixture.getRows().stream()
+    private List<Instruction> processRows(Table table) {
+        val baseColumns = context.getConfig().table(table.name).getDefaultColumns();
+        return table.getRows().stream()
             .map(row -> row.withBaseColumns(baseColumns))
-            .map(row -> processRow(fixture.name, row))
+            .map(row -> processRow(table.name, row))
             .collect(Collectors.toList());
     }
 
