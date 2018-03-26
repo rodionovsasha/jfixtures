@@ -132,4 +132,28 @@ class ValueTest extends Specification {
         then:
         wrapped.is(source)
     }
+
+    def "#ofSql instantiates a new value object from Sql string"() {
+        expect:
+        with(Value.ofSql("select 1")) {
+            sqlRepresentation == "select 1"
+            type == ValueType.SQL
+        }
+    }
+
+    def "#ofText instantiates a new value object from text"() {
+        expect:
+        with(Value.ofText("select 1")) {
+            sqlRepresentation == "select 1"
+            type == ValueType.TEXT
+        }
+    }
+
+    def "#ofNull instantiates a new value object from null"() {
+        expect:
+        with(Value.ofNull()) {
+            sqlRepresentation == "NULL"
+            type == ValueType.AUTO
+        }
+    }
 }
