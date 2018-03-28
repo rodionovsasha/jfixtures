@@ -3,7 +3,6 @@ package com.github.vkorobkov.jfixtures.config.structure.tables;
 import com.github.vkorobkov.jfixtures.config.structure.Section;
 import com.github.vkorobkov.jfixtures.config.structure.util.TableMatcher;
 import com.github.vkorobkov.jfixtures.config.yaml.Node;
-import com.github.vkorobkov.jfixtures.domain.Value;
 import com.github.vkorobkov.jfixtures.util.CollectionUtil;
 import com.github.vkorobkov.jfixtures.util.MapMerger;
 
@@ -46,10 +45,8 @@ public class Tables extends Section {
         return readArray("after_inserts");
     }
 
-    public Map<String, Value> getDefaultColumns() {
-        Map<String, Object> columns =
-            readProperty(MapMerger::merge, "default_columns").orElse(Collections.emptyMap());
-        return CollectionUtil.mapValues(columns, Value::of);
+    public Map<String, Object> getDefaultColumns() {
+        return readProperty(MapMerger::merge, "default_columns").orElse(Collections.emptyMap());
     }
 
     private List readArray(String... sections) {

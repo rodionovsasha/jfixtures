@@ -59,7 +59,7 @@ class RowTest extends Specification {
         def row = new Row("vlad", columns)
 
         when:
-        def extendedRow = row.withBaseColumns(age: Value.of(30))
+        def extendedRow = row.withBaseColumns(age: 30)
 
         then:
         extendedRow.columns == columns + [age: Value.of(30)]
@@ -73,7 +73,7 @@ class RowTest extends Specification {
         def row = new Row("vlad", columns)
 
         when:
-        def extendedRow = row.withBaseColumns(age: Value.of(30))
+        def extendedRow = row.withBaseColumns(age: 30)
 
         then:
         extendedRow.name == "vlad"
@@ -84,7 +84,7 @@ class RowTest extends Specification {
         def row = new Row("vlad", columns)
 
         when:
-        def extendedRow = row.withBaseColumns(id: Value.of(100))
+        def extendedRow = row.withBaseColumns(id: 100)
 
         then:
         extendedRow.columns == columns
