@@ -21,11 +21,19 @@ public final class Value {
     private final ValueType type;
 
     public static Value of(Object value) {
-        if (value instanceof Value) {
-            return (Value)value;
-        } else {
-            return new Value(value);
-        }
+        return (value instanceof Value) ? (Value)value : new Value(value);
+    }
+
+    public static Value ofSql(String sql) {
+        return Value.of(PREFIX_SQL + sql);
+    }
+
+    public static Value ofText(String sql) {
+        return Value.of(PREFIX_TEXT + sql);
+    }
+
+    public static Value ofNull() {
+        return Value.of(null);
     }
 
     public Value(Object value) {
