@@ -53,6 +53,17 @@ class CollectionUtilTest extends Specification {
         CollectionUtil.mapValues([:], { it * 2}).isEmpty()
     }
 
+    def "#mapValues preserves elements order"() {
+        given:
+        def source = [vlad: 30, homer: 40, bart: 10, marge: 40, lisa: 12]
+
+        when:
+        def keys = CollectionUtil.mapValues(source, { it }).keySet().toList()
+
+        then:
+        keys == ["vlad", "homer", "bart", "marge", "lisa"]
+    }
+
     def "#merge adds or overwrites the source map with values of another map"() {
         given:
         def into = [name: "Vlad", age: 29]
