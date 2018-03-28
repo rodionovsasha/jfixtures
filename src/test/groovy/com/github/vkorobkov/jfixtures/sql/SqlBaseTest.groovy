@@ -68,9 +68,9 @@ class SqlBaseTest extends Specification {
     def "insert row test"() {
         given:
         def insertRow = new InsertRow("admin.users", "vlad", [
-                id  : new Value(1),
-                name: new Value("Vlad"),
-                age : new Value(29)
+                id  : Value.of(1),
+                name: Value.of("Vlad"),
+                age : Value.of(29)
         ])
 
         when:
@@ -106,17 +106,17 @@ class SqlBaseTest extends Specification {
 
     def "escapes string values with single quote"() {
         expect:
-        sql.escapeValue(new Value("Vlad")) == "'Vlad'"
+        sql.escapeValue(Value.of("Vlad")) == "'Vlad'"
     }
 
     def "escaped single quite in string value"() {
         expect:
-        sql.escapeValue(new Value("Vlad' bug")) == "'Vlad'' bug'"
+        sql.escapeValue(Value.of("Vlad' bug")) == "'Vlad'' bug'"
     }
 
     def "does not escape non string values"(unescaped, escaped) {
         expect:
-        sql.escapeValue(new Value(unescaped)) == escaped
+        sql.escapeValue(Value.of(unescaped)) == escaped
 
         where:
         unescaped | escaped
@@ -127,7 +127,7 @@ class SqlBaseTest extends Specification {
 
     def "does not escape SQL value"() {
         expect:
-        sql.escapeValue(new Value("sql:SELECT 1")) == "SELECT 1"
+        sql.escapeValue(Value.ofSql("SELECT 1")) == "SELECT 1"
     }
 
     def "add Custom Sql test"() {

@@ -10,8 +10,8 @@ class RowTest extends Specification {
 
     void setup() {
         columns = [
-            id: new Value(1),
-            name: new Value("Vladimir"),
+            id: Value.of(1),
+            name: Value.of("Vladimir"),
         ]
     }
 
@@ -59,10 +59,10 @@ class RowTest extends Specification {
         def row = new Row("vlad", columns)
 
         when:
-        def extendedRow = row.withBaseColumns(age: new Value(30))
+        def extendedRow = row.withBaseColumns(age: Value.of(30))
 
         then:
-        extendedRow.columns == columns + [age: new Value(30)]
+        extendedRow.columns == columns + [age: Value.of(30)]
 
         and:
         !extendedRow.is(row)
@@ -73,7 +73,7 @@ class RowTest extends Specification {
         def row = new Row("vlad", columns)
 
         when:
-        def extendedRow = row.withBaseColumns(age: new Value(30))
+        def extendedRow = row.withBaseColumns(age: Value.of(30))
 
         then:
         extendedRow.name == "vlad"
@@ -84,7 +84,7 @@ class RowTest extends Specification {
         def row = new Row("vlad", columns)
 
         when:
-        def extendedRow = row.withBaseColumns(id: new Value(100))
+        def extendedRow = row.withBaseColumns(id: Value.of(100))
 
         then:
         extendedRow.columns == columns

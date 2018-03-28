@@ -12,8 +12,8 @@ class InsertRowTest extends Specification {
     def "constructor test"() {
         given:
         def values = [
-            "id": new Value(5),
-            "name": new Value("Vlad")
+            "id": Value.of(5),
+            "name": Value.of("Vlad")
         ]
 
         when:
@@ -31,8 +31,8 @@ class InsertRowTest extends Specification {
     def "values collection is immutable"() {
         given:
         def values = [
-            "id": new Value(5),
-            "name": new Value("Vlad")
+            "id": Value.of(5),
+            "name": Value.of("Vlad")
         ]
 
         when:
@@ -45,7 +45,7 @@ class InsertRowTest extends Specification {
 
     def "value toString() dummy test"() {
         expect:
-        new Value("5").toString() == new Value("5").toString()
+        Value.of("5").toString() == Value.of("5").toString()
     }
 
     def "visitor accepts instruction"() {

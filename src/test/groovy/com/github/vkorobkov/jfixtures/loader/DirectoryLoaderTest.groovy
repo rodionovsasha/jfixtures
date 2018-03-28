@@ -70,16 +70,16 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
         and:
         def vlad = users[0]
         vlad.name == "vlad"
-        vlad.columns.first_name == new Value("Vladimir")
-        vlad.columns.age == new Value(29)
-        vlad.columns.sex == new Value("man")
+        vlad.columns.first_name == Value.of("Vladimir")
+        vlad.columns.age == Value.of(29)
+        vlad.columns.sex == Value.of("man")
 
         and:
         def dima = users[1]
         dima.name == "diman"
-        dima.columns.first_name == new Value("Dmitry")
-        dima.columns.age == new Value(28)
-        dima.columns.sex == new Value("man")
+        dima.columns.first_name == Value.of("Dmitry")
+        dima.columns.age == Value.of(28)
+        dima.columns.sex == Value.of("man")
     }
 
     def "short syntax for row content is loaded well"() {
@@ -93,9 +93,9 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
         with(users[0]) {
             name == "vlad"
             with(columns) {
-                first_name == new Value("Vladimir")
-                age == new Value(29)
-                sex == new Value("man")
+                first_name == Value.of("Vladimir")
+                age == Value.of(29)
+                sex == Value.of("man")
             }
         }
 
@@ -103,9 +103,9 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
         with(users[1]) {
             name == "diman"
             with(columns) {
-                first_name == new Value("Dmitry")
-                age == new Value(28)
-                sex == new Value("man")
+                first_name == Value.of("Dmitry")
+                age == Value.of(28)
+                sex == Value.of("man")
             }
         }
     }
@@ -120,14 +120,14 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
         and:
         def vlad = users[0]
         vlad.name == "vlad"
-        vlad.columns.first_name == new Value("Vladimir")
-        vlad.columns.age == new Value(29)
+        vlad.columns.first_name == Value.of("Vladimir")
+        vlad.columns.age == Value.of(29)
 
         and:
         def dima = users[1]
         dima.name == "diman"
-        dima.columns.first_name == new Value("Dmitry")
-        dima.columns.age == new Value(28)
+        dima.columns.first_name == Value.of("Dmitry")
+        dima.columns.age == Value.of(28)
     }
 
     def "#load throws when a yaml fixture has a twin"() {

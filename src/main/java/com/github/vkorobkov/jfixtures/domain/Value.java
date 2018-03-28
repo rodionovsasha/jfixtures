@@ -36,7 +36,7 @@ public final class Value {
         return Value.of(null);
     }
 
-    public Value(Object value) {
+    private Value(Object value) {
         checkSupported(value);
         if (value instanceof String) {
             String str = (String) value;

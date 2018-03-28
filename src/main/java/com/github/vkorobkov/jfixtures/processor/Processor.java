@@ -85,7 +85,7 @@ public class Processor {
         Map<String, Value> result = new LinkedHashMap<>(row.getColumns().size() + 1);
         val table = context.getConfig().table(tableName);
         if (table.shouldAutoGeneratePk()) {
-            val id = new Value(IntId.one(row.getName()));
+            val id = Value.of(IntId.one(row.getName()));
             result.put(table.getPkColumnName(), id);
         }
         row.getColumns().forEach((name, value) -> {
