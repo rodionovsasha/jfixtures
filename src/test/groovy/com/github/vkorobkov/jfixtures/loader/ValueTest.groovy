@@ -14,7 +14,7 @@ class ValueTest extends Specification {
 
     def "detects text type without text: prefix"() {
         when:
-        def fixture = new Value("Vlad")
+        def fixture = Value.of("Vlad")
 
         then:
         fixture.type == ValueType.TEXT
@@ -23,7 +23,7 @@ class ValueTest extends Specification {
 
     def "detects text type with text: prefix"() {
         when:
-        def fixture = new Value("text:Vlad")
+        def fixture = Value.ofText("Vlad")
 
         then:
         fixture.type == ValueType.TEXT
@@ -32,12 +32,12 @@ class ValueTest extends Specification {
 
     def "does not trim leading spaces for text with prefix"() {
         expect:
-        new Value("text: Vlad").value == " Vlad"
+        Value.ofText(" Vlad").value == " Vlad"
     }
 
     def "detects sql type with sql: prefix"() {
         when:
-        def fixture = new Value("sql:DEFAULT")
+        def fixture = Value.ofSql("DEFAULT")
 
         then:
         fixture.type == ValueType.SQL
@@ -46,12 +46,12 @@ class ValueTest extends Specification {
 
     def "does not trim leading spaces for sql with prefix"() {
         expect:
-        new Value("sql: DEFAULT").value == " DEFAULT"
+        Value.ofSql(" DEFAULT").value == " DEFAULT"
     }
 
     def "detects non string types as auto types"() {
         when:
-        def fixture = new Value(value)
+        def fixture = Value.of(value)
 
         then:
         fixture.type == ValueType.AUTO
@@ -66,7 +66,7 @@ class ValueTest extends Specification {
 
     def "#getSqlRepresentation returns upper cased null"() {
         expect:
-        with(new Value(null)) {
+        with(Value.ofNull()) {
             sqlRepresentation == "NULL"
             type == ValueType.AUTO
         }
@@ -74,7 +74,7 @@ class ValueTest extends Specification {
 
     def "#getXmlRepresentation returns lower cased null"() {
         expect:
-        with(new Value(null)) {
+        with(Value.ofNull()) {
             xmlRepresentation == "null"
             type == ValueType.AUTO
         }
@@ -82,7 +82,7 @@ class ValueTest extends Specification {
 
     def "#getSqlRepresentation returns upper cased boolean"() {
         expect:
-        with(new Value(true)) {
+        with(Value.of(true)) {
             sqlRepresentation == "TRUE"
             type == ValueType.AUTO
         }
@@ -90,7 +90,7 @@ class ValueTest extends Specification {
 
     def "#constructor consumes allowed types"() {
         expect:
-        new Value(value)
+        Value.of(value)
 
         where:
         _ | value
@@ -106,7 +106,7 @@ class ValueTest extends Specification {
 
     def "#constructor rejects now allowed type"() {
         when:
-        new Value([1, 2, 3])
+        Value.of([1, 2, 3])
 
         then:
         def exception = thrown(IllegalArgumentException)
@@ -114,7 +114,7 @@ class ValueTest extends Specification {
             "Read more on https://github.com/vkorobkov/jfixtures/wiki/Type-conversions"
     }
 
-    def "#of instantiates a new value object"() {
+    def "#of instantiates a Value.of object"() {
         expect:
         with(Value.of(true)) {
             sqlRepresentation == "TRUE"
@@ -133,7 +133,7 @@ class ValueTest extends Specification {
         wrapped.is(source)
     }
 
-    def "#ofSql instantiates a new value object from Sql string"() {
+    def "#ofSql instantiates a Value.of object from Sql string"() {
         expect:
         with(Value.ofSql("select 1")) {
             sqlRepresentation == "select 1"
@@ -141,7 +141,7 @@ class ValueTest extends Specification {
         }
     }
 
-    def "#ofText instantiates a new value object from text"() {
+    def "#ofText instantiates a Value.of object from text"() {
         expect:
         with(Value.ofText("select 1")) {
             sqlRepresentation == "select 1"
@@ -149,7 +149,7 @@ class ValueTest extends Specification {
         }
     }
 
-    def "#ofNull instantiates a new value object from null"() {
+    def "#ofNull instantiates a Value.of object from null"() {
         expect:
         with(Value.ofNull()) {
             sqlRepresentation == "NULL"

@@ -48,9 +48,9 @@ class MySqlTest extends Specification {
     def "insert row test"() {
         given:
         def insertRow = new InsertRow("admin.users", "vlad", [
-                id  : new Value(1),
-                name: new Value("Vlad"),
-                age : new Value(29)
+                id  : Value.of(1),
+                name: Value.of("Vlad"),
+                age : Value.of(29)
         ])
 
         when:

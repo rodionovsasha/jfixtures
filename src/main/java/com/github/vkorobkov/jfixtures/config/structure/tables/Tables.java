@@ -49,7 +49,7 @@ public class Tables extends Section {
     public Map<String, Value> getDefaultColumns() {
         Map<String, Object> columns =
             readProperty(MapMerger::merge, "default_columns").orElse(Collections.emptyMap());
-        return CollectionUtil.mapValues(columns, Value::new);
+        return CollectionUtil.mapValues(columns, Value::of);
     }
 
     private List readArray(String... sections) {
