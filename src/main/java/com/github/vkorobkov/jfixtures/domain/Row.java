@@ -21,11 +21,13 @@ public final class Row {
         );
     }
 
-    public Row withBaseColumns(Map<String, Value> base) {
+    public Row withBaseColumns(Map<String, Object> base) {
         if (base.isEmpty()) {
             return this;
         }
-        val mergedColumns = CollectionUtil.merge(base, columns);
+
+        Map<String, Object> mappedColumns = CollectionUtil.mapValues(columns, Value::of);
+        val mergedColumns = CollectionUtil.merge(base, mappedColumns);
         return new Row(name, mergedColumns);
     }
 }

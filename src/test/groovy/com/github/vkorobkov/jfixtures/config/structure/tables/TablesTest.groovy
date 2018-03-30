@@ -301,7 +301,7 @@ class TablesTest extends Specification {
         def result = getTablesConfig(config, "users").defaultColumns
 
         then:
-        result == [version: Value.of(1)]
+        result == [version: 1]
     }
 
     def "#getDefaultColumns merges accross the matching rules"() {
@@ -322,7 +322,7 @@ class TablesTest extends Specification {
         def result = getTablesConfig(config, "users").defaultColumns
 
         then:
-        result == [version: Value.of(2), date: Value.of("NOW()")]
+        result == [version: 2, date: "NOW()"]
     }
 
     private static def shouldAutoGeneratePk(content, String name) {
