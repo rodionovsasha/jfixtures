@@ -70,7 +70,7 @@ public class Processor {
     private List<Instruction> processRows(Table table) {
         val baseColumns = context.getConfig().table(table.name).getDefaultColumns();
         return table.getRows().stream()
-            .map(row -> row.withBaseColumns(baseColumns))
+            .map(row -> new Row(row.getName(), baseColumns).columns(row.getColumns()))
             .map(row -> processRow(table.name, row))
             .collect(Collectors.toList());
     }
