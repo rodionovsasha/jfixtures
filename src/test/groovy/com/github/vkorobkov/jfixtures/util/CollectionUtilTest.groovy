@@ -97,6 +97,18 @@ class CollectionUtilTest extends Specification {
         with == [age: 30, born: 1988]
     }
 
+    def "#merge preserves elements order"() {
+        given:
+        def part1 = [name: "Vlad", age: 30]
+        def part2 = [bobby: "java", duration: 10]
+
+        when:
+        def result = CollectionUtil.merge(part1, part2)
+
+        then:
+        result == [name: "Vlad", age: 30, bobby: "java", duration: 10]
+    }
+
     def flattenRecursively(input) {
         def result = []
         CollectionUtil.flattenRecursively(input, { result << it })

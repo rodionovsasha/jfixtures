@@ -1,7 +1,6 @@
 package com.github.vkorobkov.jfixtures.util;
 
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -35,7 +34,7 @@ public final class CollectionUtil {
     }
 
     public static <K, V> Map<K, V> merge(Map<K, V> into, Map<K, V> with) {
-        Map<K, V> result = new HashMap<>(into.size() + with.size());
+        Map<K, V> result = new LinkedHashMap<>(into.size() + with.size());
         result.putAll(into);
         result.putAll(with);
         return result;

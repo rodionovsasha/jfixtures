@@ -54,12 +54,12 @@ class RowTest extends Specification {
         thrown(UnsupportedOperationException)
     }
 
-    def "#withBaseColumns adds base columns"() {
+    def "#columns adds base columns"() {
         given:
         def row = new Row("vlad", columns)
 
         when:
-        def extendedRow = row.withBaseColumns(age: 30)
+        def extendedRow = row.columns(age: 30)
 
         then:
         extendedRow.columns == columns + [age: Value.of(30)]
@@ -68,37 +68,26 @@ class RowTest extends Specification {
         !extendedRow.is(row)
     }
 
-    def "#withBaseColumns keeps the original row name"() {
+    def "#columns keeps the original row name"() {
         given:
         def row = new Row("vlad", columns)
 
         when:
-        def extendedRow = row.withBaseColumns(age: 30)
+        def extendedRow = row.columns(age: 30)
 
         then:
         extendedRow.name == "vlad"
     }
 
-    def "#withBaseColumns does not overwrite the existing columns"() {
+    def "#columns overwrites the existing columns"() {
         given:
         def row = new Row("vlad", columns)
 
         when:
-        def extendedRow = row.withBaseColumns(id: 100)
+        def extendedRow = row.columns(id: 100)
 
         then:
-        extendedRow.columns == columns
-    }
-
-    def "#withBaseColumns return the same object(this) base columns is an empty map"() {
-        given:
-        def row = new Row("vlad", columns)
-
-        when:
-        def extendedRow = row.withBaseColumns([:])
-
-        then:
-        extendedRow.is(row)
+        extendedRow.columns == [id: Value.of(100), name: Value.of("Vladimir")]
     }
 
     def "equals"() {
