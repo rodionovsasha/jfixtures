@@ -43,7 +43,7 @@ class RowTest extends Specification {
         ]
     }
 
-    def "#columns is a read only collection"() {
+    def "columns is a read only collection"() {
         given:
         def row = new Row("vlad", columns)
 
@@ -93,44 +93,5 @@ class RowTest extends Specification {
     def "equals"() {
         expect:
         EqualsVerifier.forClass(Row).verify()
-    }
-
-    def "#columns returns row from key/value pairs"() {
-        given:
-        def row = new Row("vlad", columns)
-
-        when:
-        def result = row.columns(
-                "name", "Vlad",
-                "age", 30,
-                "hobby", "sleep"
-        )
-
-        then:
-        result.columns == [id: Value.of(1), name: Value.of("Vlad"), age: Value.of(30), hobby: Value.of("sleep")]
-    }
-
-    def "#columns throws IllegalArgumentException when odd number of key/value pairs"() {
-        given:
-        def row = new Row("vlad", columns)
-
-        when:
-        row.columns("name", "Vlad", "age")
-
-        then:
-        def exception = thrown(IllegalArgumentException)
-        exception.message == "Odd number of key/value pairs"
-    }
-
-    def "#columns throws IllegalArgumentException when odd object not a string"() {
-        given:
-        def row = new Row("vlad", columns)
-
-        when:
-        row.columns(1, "Vlad", "age", 30)
-
-        then:
-        def exception = thrown(IllegalArgumentException)
-        exception.message == "Key must be a string"
     }
 }

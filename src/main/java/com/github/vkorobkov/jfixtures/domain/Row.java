@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.val;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @EqualsAndHashCode
@@ -28,25 +27,5 @@ public final class Row {
             CollectionUtil.mapValues(toMerge, Value::of)
         );
         return new Row(name, merged);
-    }
-
-    public Row columns(Object... keyValuePairs) {
-        int pairsLength = keyValuePairs.length;
-
-        if (pairsLength % 2 != 0) {
-            throw new IllegalArgumentException("Odd number of key/value pairs");
-        }
-
-        Map<String, Object> keyValueMap = new LinkedHashMap<>();
-
-        for (int i = 0; i < pairsLength; i += 2) {
-            if (!(keyValuePairs[i] instanceof String)) {
-                throw new IllegalArgumentException("Key must be a string");
-            }
-
-            keyValueMap.put((String) keyValuePairs[i], keyValuePairs[i + 1]);
-        }
-
-        return columns(keyValueMap);
     }
 }
