@@ -95,7 +95,7 @@ class RowTest extends Specification {
         EqualsVerifier.forClass(Row).verify()
     }
 
-    def "#columns returns row from key/value pairs"() {
+    def "#columns returns row with preserved order from key/value pairs"() {
         given:
         def row = new Row("vlad", columns)
 
@@ -107,7 +107,10 @@ class RowTest extends Specification {
         )
 
         then:
-        result.columns == [id: Value.of(1), name: Value.of("Vlad"), age: Value.of(30), hobby: Value.of("sleep")]
+        with(result.columns) {
+            size() == 4
+            toMapString() == "[id:Value(value=1, type=AUTO), name:Value(value=Vlad, type=TEXT), age:Value(value=30, type=AUTO), hobby:Value(value=sleep, type=TEXT)]"
+        }
     }
 
     def "#columns throws IllegalArgumentException when odd number of key/value pairs"() {
