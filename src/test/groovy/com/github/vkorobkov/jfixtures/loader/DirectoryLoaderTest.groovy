@@ -15,7 +15,7 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
 
         then:
         fixtures.size() == 11
-        def names = fixtures.keySet()
+        def names = fixtures*.name
 
         and:
         names.containsAll(["usage_log", "sessions"])
@@ -65,7 +65,7 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
 
         then:
         fixtures.size() == 11
-        def users = fixtures.get("admin.users").rows
+        def users = fixtures.find { it.name == "admin.users"}.rows
 
         and:
         def vlad = users[0]
@@ -87,7 +87,7 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
         def fixtures = load("fixture_with_short_syntax.yml")
 
         then:
-        def users = fixtures.get("users").rows
+        def users = fixtures.find { it.name == "users"}.rows
 
         and:
         with(users[0]) {
@@ -115,7 +115,7 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
         def fixtures = load("yaml_config.yaml")
 
         then:
-        def users = fixtures.get("users").rows
+        def users = fixtures.find { it.name == "users"}.rows
 
         and:
         def vlad = users[0]
@@ -157,7 +157,7 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
         exception.message.startsWith("Do not use dots in folder names. Wrong fixture folder: ancestor.folder.with.dots/parentFolder")
     }
 
-    Map<String, Table> load(String ymlFile) {
+    Collection<Table> load(String ymlFile) {
         def path = unpackYamlToTempFolder(ymlFile) as String
         new DirectoryLoader(path).load()
     }
