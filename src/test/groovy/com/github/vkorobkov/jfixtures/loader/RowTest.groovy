@@ -109,7 +109,7 @@ class RowTest extends Specification {
         then:
         with(result.columns){
             size() == 4
-            toMapString() == "[id:Value(value=1, type=AUTO), name:Value(value=Vlad, type=TEXT), age:Value(value=30, type=AUTO), hobby:Value(value=sleep, type=TEXT)]"
+            toMapString() == [id: Value.of(1), name: Value.of("Vlad"), age: Value.of(30), hobby: Value.of("sleep")].toMapString()
         }
     }
 
