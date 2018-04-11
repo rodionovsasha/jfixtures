@@ -188,10 +188,7 @@ class RowTest extends Specification {
         def result = row.nullColumn("age")
 
         then:
-        with(result.columns){
-            size() == 3
-            result.columns.toMapString() == [id: Value.of(1), name: Value.of("Vladimir"), age: Value.ofNull()].toMapString()
-        }
+        result.columns.toMapString() == [id: Value.of(1), name: Value.of("Vladimir"), age: Value.ofNull()].toMapString()
     }
 
     def "#sqlColumn adds a new column to the row"() {
