@@ -28,8 +28,8 @@ public final class Value {
         return Value.of(PREFIX_SQL + sql);
     }
 
-    public static Value ofText(String sql) {
-        return Value.of(PREFIX_TEXT + sql);
+    public static Value ofText(String text) {
+        return Value.of(PREFIX_TEXT + text);
     }
 
     public static Value ofNull() {

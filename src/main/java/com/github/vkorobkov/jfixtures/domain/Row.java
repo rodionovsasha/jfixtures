@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static java.util.Collections.singletonMap;
+
 @EqualsAndHashCode
 @Getter
 public final class Row {
@@ -46,6 +48,22 @@ public final class Row {
         }
 
         return columns(keyValueMap);
+    }
+
+    public Row column(String name, Object value) {
+        return columns(singletonMap(name, value));
+    }
+
+    public Row nullColumn(String name) {
+        return columns(singletonMap(name, Value.ofNull()));
+    }
+
+    public Row sqlColumn(String name, String sql) {
+        return columns(singletonMap(name, Value.ofSql(sql)));
+    }
+
+    public Row textColumn(String name, String text) {
+        return columns(singletonMap(name, Value.ofText(text)));
     }
 
     private String castColumnName(Object name) {

@@ -174,4 +174,60 @@ class RowTest extends Specification {
         def exception = thrown(IllegalArgumentException)
         exception.message == "Parameter <keyValuePairs> is expected to have odd length since it represents key/value pairs"
     }
+
+    def "#column returns a row"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        def result = row.column("age", 30)
+
+        then:
+        with(result.columns){
+            size() == 3
+            toMapString() == [id: Value.of(1), name: Value.of("Vladimir"), age: Value.of(30)].toMapString()
+        }
+    }
+
+    def "#nullColumn returns a row"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        def result = row.nullColumn("age")
+
+        then:
+        with(result.columns){
+            size() == 3
+            toMapString() == [id: Value.of(1), name: Value.of("Vladimir"), age: Value.ofNull()].toMapString()
+        }
+    }
+
+    def "#sqlColumn returns a row"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        def result = row.sqlColumn("age", "SELECT 1")
+
+        then:
+        with(result.columns){
+            size() == 3
+            toMapString() == [id: Value.of(1), name: Value.of("Vladimir"), age: Value.ofSql("SELECT 1")].toMapString()
+        }
+    }
+
+    def "#textColumn returns a row"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        def result = row.textColumn("age", "SELECT 1")
+
+        then:
+        with(result.columns){
+            size() == 3
+            toMapString() == [id: Value.of(1), name: Value.of("Vladimir"), age: Value.ofText("SELECT 1")].toMapString()
+        }
+    }
 }
