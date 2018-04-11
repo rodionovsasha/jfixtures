@@ -107,10 +107,7 @@ class RowTest extends Specification {
         )
 
         then:
-        with(result.columns){
-            size() == 4
-            toMapString() == [id: Value.of(1), name: Value.of("Vlad"), age: Value.of(30), hobby: Value.of("sleep")].toMapString()
-        }
+        result.columns.toMapString() == [id: Value.of(1), name: Value.of("Vlad"), age: Value.of(30), hobby: Value.of("sleep")].toMapString()
     }
 
     def "#columns(Object...) throws IllegalArgumentException when odd number of key/value pairs"() {
@@ -145,10 +142,7 @@ class RowTest extends Specification {
         def result = row.columns([] as Object[])
 
         then:
-        with(result.columns){
-            size() == 2
-            toMapString() == [id: Value.of(1), name: Value.of("Vladimir")].toMapString()
-        }
+        result.columns.toMapString() == [id: Value.of(1), name: Value.of("Vladimir")].toMapString()
     }
 
     def "#columns(Object...) throws IllegalArgumentException when name is null"() {
@@ -173,5 +167,49 @@ class RowTest extends Specification {
         then:
         def exception = thrown(IllegalArgumentException)
         exception.message == "Parameter <keyValuePairs> is expected to have odd length since it represents key/value pairs"
+    }
+
+    def "#column adds a new column to the row"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        def result = row.column("age", 30)
+
+        then:
+        result.columns.toMapString() == [id: Value.of(1), name: Value.of("Vladimir"), age: Value.of(30)].toMapString()
+    }
+
+    def "#nullColumn adds a new column to the row"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        def result = row.nullColumn("age")
+
+        then:
+        result.columns.toMapString() == [id: Value.of(1), name: Value.of("Vladimir"), age: Value.ofNull()].toMapString()
+    }
+
+    def "#sqlColumn adds a new column to the row"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        def result = row.sqlColumn("age", "SELECT 1")
+
+        then:
+        result.columns.toMapString() == [id: Value.of(1), name: Value.of("Vladimir"), age: Value.ofSql("SELECT 1")].toMapString()
+    }
+
+    def "#textColumn adds a new column to the row"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        def result = row.textColumn("age", "SELECT 1")
+
+        then:
+        result.columns.toMapString() == [id: Value.of(1), name: Value.of("Vladimir"), age: Value.ofText("SELECT 1")].toMapString()
     }
 }
