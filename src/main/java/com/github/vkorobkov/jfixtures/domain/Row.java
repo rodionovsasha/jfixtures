@@ -33,10 +33,6 @@ public final class Row {
     public Row columns(Object... keyValuePairs) {
         int pairsLength = keyValuePairs.length;
 
-        if (pairsLength == 0) {
-            return columns(Collections.emptyMap());
-        }
-
         if (pairsLength % 2 != 0) {
             throw new IllegalArgumentException(
                     "Parameter <keyValuePairs> is expected to have odd length since it represents key/value pairs"
