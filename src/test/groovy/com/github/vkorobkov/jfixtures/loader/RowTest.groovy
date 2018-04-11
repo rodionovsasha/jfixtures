@@ -43,7 +43,7 @@ class RowTest extends Specification {
         ]
     }
 
-    def "columns is a read only collection"() {
+    def "#columns is a read only collection"() {
         given:
         def row = new Row("vlad", columns)
 
@@ -93,5 +93,85 @@ class RowTest extends Specification {
     def "equals"() {
         expect:
         EqualsVerifier.forClass(Row).verify()
+    }
+
+    def "#columns(Object...) returns row from key/value pairs"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        def result = row.columns(
+                "name", "Vlad",
+                "age", 30,
+                "hobby", "sleep"
+        )
+
+        then:
+        with(result.columns){
+            size() == 4
+            toMapString() == [id: Value.of(1), name: Value.of("Vlad"), age: Value.of(30), hobby: Value.of("sleep")].toMapString()
+        }
+    }
+
+    def "#columns(Object...) throws IllegalArgumentException when odd number of key/value pairs"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        row.columns("name", "Vlad", "age")
+
+        then:
+        def exception = thrown(IllegalArgumentException)
+        exception.message == "Parameter <keyValuePairs> is expected to have odd length since it represents key/value pairs"
+    }
+
+    def "#columns(Object...) throws IllegalArgumentException when odd object is not a string"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        row.columns(1, "Vlad", "age", 30)
+
+        then:
+        def exception = thrown(IllegalArgumentException)
+        exception.message == "Column name is expected to be a string, but was passed class = [class java.lang.Integer], value = [1]"
+    }
+
+    def "#columns(Object...) returns original row when an empty array passed"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        def result = row.columns([] as Object[])
+
+        then:
+        with(result.columns){
+            size() == 2
+            toMapString() == [id: Value.of(1), name: Value.of("Vladimir")].toMapString()
+        }
+    }
+
+    def "#columns(Object...) throws IllegalArgumentException when name is null"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        row.columns(null, "Vlad")
+
+        then:
+        def exception = thrown(IllegalArgumentException)
+        exception.message == "Column name is expected to be a string, but was passed null"
+    }
+
+    def "#columns(Object...) throws IllegalArgumentException when single string passed"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        row.columns("Vlad")
+
+        then:
+        def exception = thrown(IllegalArgumentException)
+        exception.message == "Parameter <keyValuePairs> is expected to have odd length since it represents key/value pairs"
     }
 }
