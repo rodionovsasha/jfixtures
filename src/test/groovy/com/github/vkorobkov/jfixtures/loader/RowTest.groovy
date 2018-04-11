@@ -142,7 +142,7 @@ class RowTest extends Specification {
         def row = new Row("vlad", columns)
 
         when:
-        def result = row.columns([])
+        def result = row.columns([] as Object[])
 
         then:
         with(result.columns){
@@ -161,5 +161,17 @@ class RowTest extends Specification {
         then:
         def exception = thrown(IllegalArgumentException)
         exception.message == "Column name is expected to be a string, but was passed null"
+    }
+
+    def "#columns(Object...) throws IllegalArgumentException when single string passed"() {
+        given:
+        def row = new Row("vlad", columns)
+
+        when:
+        row.columns("Vlad")
+
+        then:
+        def exception = thrown(IllegalArgumentException)
+        exception.message == "Parameter <keyValuePairs> is expected to have odd length since it represents key/value pairs"
     }
 }

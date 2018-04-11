@@ -33,7 +33,7 @@ public final class Row {
     public Row columns(Object... keyValuePairs) {
         int pairsLength = keyValuePairs.length;
 
-        if (pairsLength == 1) {
+        if (pairsLength == 0) {
             return columns(Collections.emptyMap());
         }
 
