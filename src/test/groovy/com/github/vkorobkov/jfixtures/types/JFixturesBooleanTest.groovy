@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.types
 
-import com.github.vkorobkov.jfixtures.JFixtures
+import com.github.vkorobkov.jfixtures.JFixturesOld
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 
@@ -72,11 +72,11 @@ class JFixturesBooleanTest extends Specification implements YamlVirtualFolder {
 
     def "should get uppercased null values in SQL for nulls"() {
         expect:
-        JFixtures.sql99(folderPath as String).asString() == EXPECTED_SQL
+        JFixturesOld.sql99(folderPath as String).asString() == EXPECTED_SQL
     }
 
     def "should not get uppercased boolean values in XML"() {
         expect:
-        JFixtures.xml(folderPath as String).asString() == EXPECTED_XML
+        JFixturesOld.xml(folderPath as String).asString() == EXPECTED_XML
     }
 }

@@ -8,8 +8,14 @@ import com.github.vkorobkov.jfixtures.sql.dialects.MicrosoftSql;
 import com.github.vkorobkov.jfixtures.sql.dialects.MySql;
 import com.github.vkorobkov.jfixtures.sql.dialects.Sql99;
 
-public final class JFixtures {
-    private JFixtures() {
+/**
+ * This class will be removed in release 1.0.35
+ *
+ * @deprecated use {@link com.github.vkorobkov.jfixtures.JFixtures} instead.
+ */
+@Deprecated
+public final class JFixturesOld {
+    private JFixturesOld() {
     }
 
     public static JFixturesResult mysql(String fixturesFolder) {
