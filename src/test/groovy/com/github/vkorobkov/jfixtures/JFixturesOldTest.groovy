@@ -6,7 +6,7 @@ import spock.lang.Specification
 
 import java.nio.file.Path
 
-class JFixturesTest extends Specification implements YamlVirtualFolder {
+class JFixturesOldTest extends Specification implements YamlVirtualFolder {
     Path tmpFolderPath
     String outputPath
     String outputXmlPath
@@ -54,17 +54,17 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
 
     def "dummy constructor"() {
         expect:
-        new JFixtures()
+        new JFixturesOld()
     }
 
     def "mysql fixture to string"() {
         expect:
-        JFixtures.mysql(tmpFolderPath as String).asString() == MYSQL_EXPECTED_SQL
+        JFixturesOld.mysql(tmpFolderPath as String).asString() == MYSQL_EXPECTED_SQL
     }
 
     def "mysql fixture to file"() {
         when:
-        JFixtures.mysql(tmpFolderPath as String).toFile(outputPath)
+        JFixturesOld.mysql(tmpFolderPath as String).toFile(outputPath)
 
         then:
         new File(outputPath).text == MYSQL_EXPECTED_SQL
@@ -72,12 +72,12 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
 
     def "by dialect fixture to a string"() {
         expect:
-        JFixtures.byDialect(tmpFolderPath as String, SqlType.SQL99).asString() == DEFAULT_EXPECTED_SQL
+        JFixturesOld.byDialect(tmpFolderPath as String, SqlType.SQL99).asString() == DEFAULT_EXPECTED_SQL
     }
 
     def "by dialect fixture to a file"() {
         when:
-        JFixtures.byDialect(tmpFolderPath as String, SqlType.SQL99).toFile(outputPath)
+        JFixturesOld.byDialect(tmpFolderPath as String, SqlType.SQL99).toFile(outputPath)
 
         then:
         new File(outputPath).text == DEFAULT_EXPECTED_SQL
@@ -85,12 +85,12 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
 
     def "Microsoft SQL fixture to a string"() {
         expect:
-        JFixtures.microsoftSql(tmpFolderPath as String).asString() == MICROSOFT_SQL_EXPECTED_SQL
+        JFixturesOld.microsoftSql(tmpFolderPath as String).asString() == MICROSOFT_SQL_EXPECTED_SQL
     }
 
     def "Microsoft SQL fixture to a file"() {
         when:
-        JFixtures.microsoftSql(tmpFolderPath as String).toFile(outputPath)
+        JFixturesOld.microsoftSql(tmpFolderPath as String).toFile(outputPath)
 
         then:
         new File(outputPath).text == MICROSOFT_SQL_EXPECTED_SQL
@@ -98,12 +98,12 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
 
     def "SQL99 fixture to a string"() {
         expect:
-        JFixtures.sql99(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
+        JFixturesOld.sql99(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
     }
 
     def "SQL99 fixture to a file"() {
         when:
-        JFixtures.sql99(tmpFolderPath as String).toFile(outputPath)
+        JFixturesOld.sql99(tmpFolderPath as String).toFile(outputPath)
 
         then:
         new File(outputPath).text == DEFAULT_EXPECTED_SQL
@@ -111,12 +111,12 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
 
     def "Fixture to an XML string"() {
         expect:
-        JFixtures.xml(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_XML
+        JFixturesOld.xml(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_XML
     }
 
     def "Fixture to an XML file"() {
         when:
-        JFixtures.xml(tmpFolderPath as String).toFile(outputXmlPath)
+        JFixturesOld.xml(tmpFolderPath as String).toFile(outputXmlPath)
 
         then:
         new File(outputXmlPath).text == DEFAULT_EXPECTED_XML

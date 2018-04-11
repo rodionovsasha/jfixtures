@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.types
 
-import com.github.vkorobkov.jfixtures.JFixtures
+import com.github.vkorobkov.jfixtures.JFixturesOld
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 
@@ -88,21 +88,21 @@ class JFixturesNullTest extends Specification implements YamlVirtualFolder {
 
     def "should get uppercased null values in SQL for nulls"() {
         expect:
-        JFixtures.sql99(nullFolderPath as String).asString() == NULL_EXPECTED_SQL
+        JFixturesOld.sql99(nullFolderPath as String).asString() == NULL_EXPECTED_SQL
     }
 
     def "should not get uppercased values in SQL for strings"() {
         expect:
-        JFixtures.sql99(stringFolderPath as String).asString() == STRING_EXPECTED_SQL
+        JFixturesOld.sql99(stringFolderPath as String).asString() == STRING_EXPECTED_SQL
     }
 
     def "should not get uppercased values in XML for nulls"() {
         expect:
-        JFixtures.xml(nullFolderPath as String).asString() == NULL_EXPECTED_XML
+        JFixturesOld.xml(nullFolderPath as String).asString() == NULL_EXPECTED_XML
     }
 
     def "should not get uppercased values in XML for strings"() {
         expect:
-        JFixtures.xml(stringFolderPath as String).asString() == STRING_EXPECTED_XML
+        JFixturesOld.xml(stringFolderPath as String).asString() == STRING_EXPECTED_XML
     }
 }
