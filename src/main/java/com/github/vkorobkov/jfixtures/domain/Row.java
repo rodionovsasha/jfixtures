@@ -55,15 +55,15 @@ public final class Row {
     }
 
     public Row nullColumn(String name) {
-        return columns(singletonMap(name, Value.ofNull()));
+        return column(name, Value.ofNull());
     }
 
     public Row sqlColumn(String name, String sql) {
-        return columns(singletonMap(name, Value.ofSql(sql)));
+        return column(name, Value.ofSql(sql));
     }
 
     public Row textColumn(String name, String text) {
-        return columns(singletonMap(name, Value.ofText(text)));
+        return column(name, Value.ofText(text));
     }
 
     private String castColumnName(Object name) {
