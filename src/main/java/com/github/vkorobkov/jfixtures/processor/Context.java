@@ -6,6 +6,7 @@ import com.github.vkorobkov.jfixtures.instructions.Instruction;
 import lombok.Getter;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 class Context {
@@ -16,8 +17,8 @@ class Context {
     private final Map<String, Table> tables;
     private final Root config;
 
-    Context(Map<String, Table> tables, Root config) {
-        this.tables = Collections.unmodifiableMap(tables);
+    Context(Collection<Table> tables, Root config) {
+        this.tables = tables.stream().collect(Collectors.toMap(fixture -> fixture.name, fixture -> fixture));
         this.config = config;
     }
 }

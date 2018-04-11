@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ import static com.github.vkorobkov.jfixtures.util.YmlUtil.YML_EXT;
 public class DirectoryLoader {
     private final String path;
 
-    public Map<String, Table> load() {
+    public Collection<Table> load() {
         try {
             return Files
                     .walk(Paths.get(path))
@@ -30,7 +31,7 @@ public class DirectoryLoader {
                     .filter(this::isNotConfig)
                     .peek(this::checkTwin)
                     .map(this::loadTable)
-                    .collect(Collectors.toMap(fixture -> fixture.name, fixture -> fixture));
+                    .collect(Collectors.toList());
         } catch (IOException cause) {
             String message = "Can not load fixtures from directory: " + path;
             throw new LoaderException(message, cause);

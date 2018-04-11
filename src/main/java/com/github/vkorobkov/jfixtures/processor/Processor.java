@@ -12,10 +12,7 @@ import com.github.vkorobkov.jfixtures.instructions.Instruction;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -23,7 +20,7 @@ public class Processor {
     private final ColumnProcessor columnProcessor;
     private final Context context;
 
-    public Processor(Map<String, Table> tables, Root config) {
+    public Processor(Collection<Table> tables, Root config) {
         this.context = new Context(tables, config);
         this.columnProcessor = new ColumnProcessor(context, this::processTable);
     }
