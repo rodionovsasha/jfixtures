@@ -107,10 +107,7 @@ class RowTest extends Specification {
         )
 
         then:
-        with(result.columns){
-            size() == 4
-            toMapString() == [id: Value.of(1), name: Value.of("Vlad"), age: Value.of(30), hobby: Value.of("sleep")].toMapString()
-        }
+        result.columns.toMapString() == [id: Value.of(1), name: Value.of("Vlad"), age: Value.of(30), hobby: Value.of("sleep")].toMapString()
     }
 
     def "#columns(Object...) throws IllegalArgumentException when odd number of key/value pairs"() {
@@ -145,10 +142,7 @@ class RowTest extends Specification {
         def result = row.columns([] as Object[])
 
         then:
-        with(result.columns){
-            size() == 2
-            toMapString() == [id: Value.of(1), name: Value.of("Vladimir")].toMapString()
-        }
+        result.columns.toMapString() == [id: Value.of(1), name: Value.of("Vladimir")].toMapString()
     }
 
     def "#columns(Object...) throws IllegalArgumentException when name is null"() {
