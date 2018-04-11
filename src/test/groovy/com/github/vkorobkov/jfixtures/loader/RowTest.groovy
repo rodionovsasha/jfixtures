@@ -137,16 +137,18 @@ class RowTest extends Specification {
         exception.message == "Column name is expected to be a string, but was passed class = [class java.lang.Integer], value = [1]"
     }
 
-    def "#columns(Object...) throws IllegalArgumentException when an empty array passed"() {
+    def "#columns(Object...) returns original row when an empty array passed"() {
         given:
         def row = new Row("vlad", columns)
 
         when:
-        row.columns([])
+        def result = row.columns([])
 
         then:
-        def exception = thrown(IllegalArgumentException)
-        exception.message == "Parameter <keyValuePairs> is expected to have odd length since it represents key/value pairs"
+        with(result.columns){
+            size() == 2
+            toMapString() == [id: Value.of(1), name: Value.of("Vladimir")].toMapString()
+        }
     }
 
     def "#columns(Object...) throws IllegalArgumentException when name is null"() {
