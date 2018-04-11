@@ -33,7 +33,11 @@ public final class Row {
     public Row columns(Object... keyValuePairs) {
         int pairsLength = keyValuePairs.length;
 
-        if (pairsLength > 1 && pairsLength % 2 != 0) {
+        if (pairsLength == 1) {
+            return columns(Collections.emptyMap());
+        }
+
+        if (pairsLength % 2 != 0) {
             throw new IllegalArgumentException(
                     "Parameter <keyValuePairs> is expected to have odd length since it represents key/value pairs"
             );
@@ -41,10 +45,8 @@ public final class Row {
 
         Map<String, Object> keyValueMap = new LinkedHashMap<>(pairsLength / 2);
 
-        if (pairsLength > 1) {
-            for (int i = 0; i < pairsLength; i += 2) {
-                keyValueMap.put(castColumnName(keyValuePairs[i]), keyValuePairs[i + 1]);
-            }
+        for (int i = 0; i < pairsLength; i += 2) {
+            keyValueMap.put(castColumnName(keyValuePairs[i]), keyValuePairs[i + 1]);
         }
 
         return columns(keyValueMap);
