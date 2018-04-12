@@ -1,0 +1,9 @@
+"users.yml":
+  vlad:
+    id: 1
+    name: Vlad
+    age: 30
+  homer:
+    id: 2
+    name: Homer
+    age: 40
