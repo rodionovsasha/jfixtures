@@ -1,8 +1,7 @@
 package com.github.vkorobkov.jfixtures.util;
 
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -38,5 +37,12 @@ public final class CollectionUtil {
         result.putAll(into);
         result.putAll(with);
         return result;
+    }
+
+    public static <T> Collection<T> concat(Collection<T> a, Collection<T> b) {
+        Collection<T> result = new ArrayList<>(a.size() + b.size());
+        result.addAll(a);
+        result.addAll(b);
+        return Collections.unmodifiableCollection(result);
     }
 }

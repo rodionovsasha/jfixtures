@@ -1,15 +1,27 @@
 package com.github.vkorobkov.jfixtures;
 
-import lombok.AccessLevel;
+import com.github.vkorobkov.jfixtures.domain.Table;
+import com.github.vkorobkov.jfixtures.util.CollectionUtil;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class JFixtures {
+public final class JFixtures {
     private final Optional<String> config;
+    private final Collection<Table> tables;
+
+    private JFixtures(Optional<String> config) {
+        this(config, Collections.emptyList());
+    }
+
+    private JFixtures(Optional<String> config, Collection<Table> tables) {
+        this.config = config;
+        this.tables = Collections.unmodifiableCollection(tables);
+    }
 
     public static JFixtures ofConfig(String config) {
         return new JFixtures(Optional.of(config));
@@ -17,5 +29,16 @@ public class JFixtures {
 
     public static JFixtures noConfig() {
         return new JFixtures(Optional.empty());
+    }
+
+    public JFixtures addTables(Table... tables) {
+        return addTables(Arrays.asList(tables));
+    }
+
+    public JFixtures addTables(Collection<Table> newTables) {
+        return new JFixtures(
+            this.config,
+            CollectionUtil.concat(this.tables, newTables)
+        );
     }
 }

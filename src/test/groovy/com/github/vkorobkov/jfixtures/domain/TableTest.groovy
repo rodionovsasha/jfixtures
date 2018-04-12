@@ -1,7 +1,5 @@
-package com.github.vkorobkov.jfixtures.loader
+package com.github.vkorobkov.jfixtures.domain
 
-import com.github.vkorobkov.jfixtures.domain.Row
-import com.github.vkorobkov.jfixtures.domain.Table
 import spock.lang.Specification
 
 class TableTest extends Specification {

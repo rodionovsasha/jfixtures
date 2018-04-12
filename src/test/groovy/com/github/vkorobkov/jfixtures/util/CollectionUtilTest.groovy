@@ -109,6 +109,22 @@ class CollectionUtilTest extends Specification {
         result == [name: "Vlad", age: 30, bobby: "java", duration: 10]
     }
 
+    def "#concat concatenates two collections preserving eleemnts order"() {
+        expect:
+        CollectionUtil.concat([1, 2, 3], [4, 5, 6]).toListString() == [1, 2, 3, 4, 5, 6].toListString()
+    }
+
+    def "#concat returns unmodifiable collection"() {
+        given:
+        def result = CollectionUtil.concat([1, 2, 3], [4, 5, 6])
+
+        when:
+        result.add(7)
+
+        then:
+        thrown(UnsupportedOperationException)
+    }
+
     def flattenRecursively(input) {
         def result = []
         CollectionUtil.flattenRecursively(input, { result << it })

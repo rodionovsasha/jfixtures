@@ -1,7 +1,5 @@
-package com.github.vkorobkov.jfixtures.loader
+package com.github.vkorobkov.jfixtures.domain
 
-import com.github.vkorobkov.jfixtures.domain.Value
-import com.github.vkorobkov.jfixtures.domain.ValueType
 import nl.jqno.equalsverifier.EqualsVerifier
 import spock.lang.Specification
 

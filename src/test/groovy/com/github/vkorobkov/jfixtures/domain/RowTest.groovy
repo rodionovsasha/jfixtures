@@ -1,7 +1,5 @@
-package com.github.vkorobkov.jfixtures.loader
+package com.github.vkorobkov.jfixtures.domain
 
-import com.github.vkorobkov.jfixtures.domain.Row
-import com.github.vkorobkov.jfixtures.domain.Value
 import nl.jqno.equalsverifier.EqualsVerifier
 import spock.lang.Specification
 
