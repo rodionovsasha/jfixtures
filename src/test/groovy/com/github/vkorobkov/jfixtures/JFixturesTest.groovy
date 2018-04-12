@@ -1,9 +1,11 @@
 package com.github.vkorobkov.jfixtures
 
+import com.github.vkorobkov.jfixtures.domain.Row
 import com.github.vkorobkov.jfixtures.domain.Table
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 
-class JFixturesTest extends Specification {
+class JFixturesTest extends Specification implements YamlVirtualFolder {
     def "#ofConfig instantiates object with config path stored"() {
         expect:
         JFixtures.ofConfig("path/.conf").config == Optional.of("path/.conf")
@@ -99,5 +101,27 @@ class JFixturesTest extends Specification {
     def "#addTables(Table...) allows empty list"() {
         expect:
         JFixtures.noConfig().addTables([] as Table[]).tables.size() == 0
+    }
+
+    def "#load adds fixtures stored in the directory"() {
+        setup:
+        def path = unpackYamlToTempFolder("default.yml")
+
+        when:
+        def tables = JFixtures.noConfig().loadDirectory(path.toString()).tables
+
+        then:
+        tables.size() == 1
+
+        and:
+        def table = tables.first()
+        table.name == "users"
+        table.rows.toList() == [
+            new Row("vlad", [id: 1, name: "Vlad", age: 30]),
+            new Row("homer", [id: 2, name: "Homer", age: 40])
+        ]
+
+        cleanup:
+        path.toFile().deleteDir()
     }
 }

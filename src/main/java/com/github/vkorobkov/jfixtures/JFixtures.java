@@ -1,6 +1,7 @@
 package com.github.vkorobkov.jfixtures;
 
 import com.github.vkorobkov.jfixtures.domain.Table;
+import com.github.vkorobkov.jfixtures.loader.DirectoryLoader;
 import com.github.vkorobkov.jfixtures.util.CollectionUtil;
 import lombok.Getter;
 
@@ -29,6 +30,12 @@ public final class JFixtures {
 
     public static JFixtures noConfig() {
         return new JFixtures(Optional.empty());
+    }
+
+    public JFixtures loadDirectory(String path) {
+        return addTables(
+            new DirectoryLoader(path).load()
+        );
     }
 
     public JFixtures addTables(Table... tables) {
