@@ -5,13 +5,13 @@ import com.github.vkorobkov.jfixtures.sql.Appender
 import com.github.vkorobkov.jfixtures.sql.SqlBase
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
 import com.github.vkorobkov.jfixtures.testutil.SqBaseTestImpl
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 import java.nio.file.Path
 
-class SqlJFixturesResultImplTest extends Specification implements YamlVirtualFolder {
-    Path tmlFolderPath
+class SqlJFixturesResultImplTest extends Specification implements YamlVirtualDirectory {
+    Path tmlDirectoryPath
     String outputPath
     SqlBase sql
     Appender appender
@@ -25,14 +25,14 @@ class SqlJFixturesResultImplTest extends Specification implements YamlVirtualFol
         sql = Spy(SqBaseTestImpl)
         appender = new StringAppender()
 
-        tmlFolderPath = unpackYamlToTempFolder("default.yml")
-        outputPath = tmlFolderPath.resolve("out.sql") as String
+        tmlDirectoryPath = unpackYamlToTempDirectory("default.yml")
+        outputPath = tmlDirectoryPath.resolve("out.sql") as String
 
-        fixturesResult = new SqlJFixturesResultImpl(tmlFolderPath as String, sql)
+        fixturesResult = new SqlJFixturesResultImpl(tmlDirectoryPath as String, sql)
     }
 
     void cleanup() {
-        tmlFolderPath.toFile().deleteDir()
+        tmlDirectoryPath.toFile().deleteDir()
     }
 
     def "processes fixtures to string"() {

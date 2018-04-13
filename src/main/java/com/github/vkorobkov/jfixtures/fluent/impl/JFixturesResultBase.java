@@ -14,11 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 abstract class JFixturesResultBase implements JFixturesResult {
-    private String fixturesFolder;
+    private String fixturesDirectory;
 
     List<Instruction> getInstructions() {
-        val fixtures = new DirectoryLoader(fixturesFolder).load();
-        val config = ConfigLoaderOld.load(fixturesFolder);
+        val fixtures = new DirectoryLoader(fixturesDirectory).load();
+        val config = ConfigLoaderOld.load(fixturesDirectory);
         return new Processor(fixtures, config).process();
     }
 }

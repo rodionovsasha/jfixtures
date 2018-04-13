@@ -2,10 +2,10 @@ package com.github.vkorobkov.jfixtures
 
 import com.github.vkorobkov.jfixtures.domain.Row
 import com.github.vkorobkov.jfixtures.domain.Table
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
-class JFixturesTest extends Specification implements YamlVirtualFolder {
+class JFixturesTest extends Specification implements YamlVirtualDirectory {
     def "#ofConfig instantiates object with config path stored"() {
         expect:
         JFixtures.ofConfig("path/.conf").config == Optional.of("path/.conf")
@@ -105,7 +105,7 @@ class JFixturesTest extends Specification implements YamlVirtualFolder {
 
     def "#load adds fixtures stored in the directory"() {
         setup:
-        def path = unpackYamlToTempFolder("default.yml")
+        def path = unpackYamlToTempDirectory("default.yml")
 
         when:
         def tables = JFixtures.noConfig().loadDirectory(path.toString()).tables

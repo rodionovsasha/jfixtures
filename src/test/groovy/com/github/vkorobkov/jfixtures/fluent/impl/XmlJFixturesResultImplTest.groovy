@@ -3,14 +3,14 @@ package com.github.vkorobkov.jfixtures.fluent.impl
 import com.github.vkorobkov.jfixtures.fluent.JFixturesResult
 import com.github.vkorobkov.jfixtures.sql.Appender
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 import javax.xml.bind.JAXBException
 import java.nio.file.Path
 
-class XmlJFixturesResultImplTest extends Specification implements YamlVirtualFolder {
-    Path tmlFolderPath
+class XmlJFixturesResultImplTest extends Specification implements YamlVirtualDirectory {
+    Path tmlDirectoryPath
     String outputPath
     Appender appender
     JFixturesResult fixturesResult
@@ -42,14 +42,14 @@ class XmlJFixturesResultImplTest extends Specification implements YamlVirtualFol
     void setup() {
         appender = new StringAppender()
 
-        tmlFolderPath = unpackYamlToTempFolder("default.yml")
-        outputPath = tmlFolderPath.resolve("out.xml") as String
+        tmlDirectoryPath = unpackYamlToTempDirectory("default.yml")
+        outputPath = tmlDirectoryPath.resolve("out.xml") as String
 
-        fixturesResult = new XmlJFixturesResultImpl(tmlFolderPath as String)
+        fixturesResult = new XmlJFixturesResultImpl(tmlDirectoryPath as String)
     }
 
     void cleanup() {
-        tmlFolderPath.toFile().deleteDir()
+        tmlDirectoryPath.toFile().deleteDir()
     }
 
     def "default constructor"() {

@@ -61,7 +61,7 @@ public class DirectoryLoader {
     private String getTableName(Path file) {
         String separator = file.getFileSystem().getSeparator();
         Path relativePath = Paths.get(path).relativize(file);
-        checkDotsInFolder(Optional.ofNullable(relativePath.getParent()));
+        checkDotsInDirectory(Optional.ofNullable(relativePath.getParent()));
         String justFile = cutOffExtension(relativePath).toString();
         checkDotsInFile(file, justFile);
 
@@ -80,14 +80,14 @@ public class DirectoryLoader {
 
     private void checkDotsInFile(Path file, String relativePath) {
         if (relativePath.contains(".")) {
-            String message = "Do not use dots in file names. Use nested folders instead. Wrong fixture: " + file;
+            String message = "Do not use dots in file names. Use nested directorys instead. Wrong fixture: " + file;
             throw new LoaderException(message);
         }
     }
 
-    private void checkDotsInFolder(Optional<Path> folder) {
-        if (folder.isPresent() && folder.toString().contains(".")) {
-            String message = "Do not use dots in folder names. Wrong fixture folder: " + folder.get();
+    private void checkDotsInDirectory(Optional<Path> directory) {
+        if (directory.isPresent() && directory.toString().contains(".")) {
+            String message = "Do not use dots in directory names. Wrong fixture directory: " + directory.get();
             throw new LoaderException(message);
         }
     }

@@ -7,19 +7,19 @@ import spock.lang.Specification
 import java.nio.file.Path
 
 class H2IntegrationTest extends Specification implements H2Test {
-    Path tmpFolderPath = unpackYamlToTempFolder("default.yml")
+    Path tmpDirectoryPath = unpackYamlToTempDirectory("default.yml")
 
     void setupSpec() {
         recreateTable("users", "ID INT, NAME VARCHAR(50) DEFAULT NULL, AGE INT DEFAULT NULL")
     }
 
     void cleanup() {
-        tmpFolderPath.toFile().deleteDir()
+        tmpDirectoryPath.toFile().deleteDir()
     }
 
     def "h2 insert test"() {
         when:
-        executeFixtures(tmpFolderPath)
+        executeFixtures(tmpDirectoryPath)
 
         then:
         def result = sql.rows("SELECT * FROM users")

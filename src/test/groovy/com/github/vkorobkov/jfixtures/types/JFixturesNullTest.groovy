@@ -1,14 +1,14 @@
 package com.github.vkorobkov.jfixtures.types
 
 import com.github.vkorobkov.jfixtures.JFixturesOld
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 import java.nio.file.Path
 
-class JFixturesNullTest extends Specification implements YamlVirtualFolder {
-    Path nullFolderPath
-    Path stringFolderPath
+class JFixturesNullTest extends Specification implements YamlVirtualDirectory {
+    Path nullDirectoryPath
+    Path stringDirectoryPath
 
     def NULL_EXPECTED_SQL = """DELETE FROM "users";
             |INSERT INTO "users" ("id", "name", "age", "role", "hobby") VALUES (1, NULL, NULL, NULL, NULL);
@@ -77,32 +77,32 @@ class JFixturesNullTest extends Specification implements YamlVirtualFolder {
             |""".stripMargin()
 
     void setup() {
-        nullFolderPath = unpackYamlToTempFolder("null.yml")
-        stringFolderPath = unpackYamlToTempFolder("string.yml")
+        nullDirectoryPath = unpackYamlToTempDirectory("null.yml")
+        stringDirectoryPath = unpackYamlToTempDirectory("string.yml")
     }
 
     void cleanup() {
-        nullFolderPath.toFile().deleteDir()
-        stringFolderPath.toFile().deleteDir()
+        nullDirectoryPath.toFile().deleteDir()
+        stringDirectoryPath.toFile().deleteDir()
     }
 
     def "should get uppercased null values in SQL for nulls"() {
         expect:
-        JFixturesOld.sql99(nullFolderPath as String).asString() == NULL_EXPECTED_SQL
+        JFixturesOld.sql99(nullDirectoryPath as String).asString() == NULL_EXPECTED_SQL
     }
 
     def "should not get uppercased values in SQL for strings"() {
         expect:
-        JFixturesOld.sql99(stringFolderPath as String).asString() == STRING_EXPECTED_SQL
+        JFixturesOld.sql99(stringDirectoryPath as String).asString() == STRING_EXPECTED_SQL
     }
 
     def "should not get uppercased values in XML for nulls"() {
         expect:
-        JFixturesOld.xml(nullFolderPath as String).asString() == NULL_EXPECTED_XML
+        JFixturesOld.xml(nullDirectoryPath as String).asString() == NULL_EXPECTED_XML
     }
 
     def "should not get uppercased values in XML for strings"() {
         expect:
-        JFixturesOld.xml(stringFolderPath as String).asString() == STRING_EXPECTED_XML
+        JFixturesOld.xml(stringDirectoryPath as String).asString() == STRING_EXPECTED_XML
     }
 }

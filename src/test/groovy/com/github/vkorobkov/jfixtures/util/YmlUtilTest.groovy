@@ -1,21 +1,21 @@
 package com.github.vkorobkov.jfixtures.util
 
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 import java.nio.file.NoSuchFileException
 import java.nio.file.Path
 
-class YmlUtilTest extends Specification implements YamlVirtualFolder {
+class YmlUtilTest extends Specification implements YamlVirtualDirectory {
 
-    Path testFolderPath
+    Path testDirectoryPath
 
     void setup() {
-        testFolderPath = unpackYamlToTempFolder("default.yml")
+        testDirectoryPath = unpackYamlToTempDirectory("default.yml")
     }
 
     void cleanup() {
-        testFolderPath.toFile().deleteDir()
+        testDirectoryPath.toFile().deleteDir()
     }
 
     def "dummy constructor test"() {
@@ -42,90 +42,90 @@ class YmlUtilTest extends Specification implements YamlVirtualFolder {
 
     def "#hasYamlTwin does not have twin for .yml file"() {
         expect:
-        !YmlUtil.hasTwin(testFolderPath.resolve("simple.yml"))
+        !YmlUtil.hasTwin(testDirectoryPath.resolve("simple.yml"))
     }
 
     def "#hasYamlTwin does not have twin for .yaml file"() {
         expect:
-        !YmlUtil.hasTwin(testFolderPath.resolve("yaml_config.yaml"))
+        !YmlUtil.hasTwin(testDirectoryPath.resolve("yaml_config.yaml"))
     }
 
     def "#hasYamlTwin has twin for .yml file"() {
         setup:
-        def folder = unpackYamlToTempFolder("twins.yml")
+        def directory = unpackYamlToTempDirectory("twins.yml")
 
         expect:
-        YmlUtil.hasTwin(folder.resolve("user.yml"))
+        YmlUtil.hasTwin(directory.resolve("user.yml"))
 
         cleanup:
-        folder.toFile().deleteDir()
+        directory.toFile().deleteDir()
     }
 
     def "#hasYamlTwin has twin for .yaml file"() {
         setup:
-        def folder = unpackYamlToTempFolder("twins.yml")
+        def directory = unpackYamlToTempDirectory("twins.yml")
 
         expect:
-        YmlUtil.hasTwin(folder.resolve("admin.yaml"))
+        YmlUtil.hasTwin(directory.resolve("admin.yaml"))
 
         cleanup:
-        folder.toFile().deleteDir()
+        directory.toFile().deleteDir()
     }
 
     def "#hasYamlTwin throws when neither yaml nor yml extension"() {
         setup:
-        def folder = unpackYamlToTempFolder("txt.yml")
+        def directory = unpackYamlToTempDirectory("txt.yml")
 
         when:
-        YmlUtil.hasTwin(folder.resolve("simple.txt"))
+        YmlUtil.hasTwin(directory.resolve("simple.txt"))
 
         then:
         def e = thrown(IllegalArgumentException)
         e.message.contains("it's yaml/yml twin does exist")
 
         cleanup:
-        folder.toFile().deleteDir()
+        directory.toFile().deleteDir()
     }
 
     def "#hasYamlTwin throws when file without extension"() {
         setup:
-        def folder = unpackYamlToTempFolder("txt.yml")
+        def directory = unpackYamlToTempDirectory("txt.yml")
 
         when:
-        YmlUtil.hasTwin(folder.resolve("config_without_extension"))
+        YmlUtil.hasTwin(directory.resolve("config_without_extension"))
 
         then:
         def e = thrown(IllegalArgumentException)
         e.message.contains("it's yaml/yml twin does exist")
 
         cleanup:
-        folder.toFile().deleteDir()
+        directory.toFile().deleteDir()
     }
 
     def "#hasYamlTwin throws for directory"() {
         setup:
-        def folder = unpackYamlToTempFolder("config_with_directory.yml")
+        def directory = unpackYamlToTempDirectory("config_with_directory.yml")
 
         when:
-        YmlUtil.hasTwin(folder.resolve("admin"))
+        YmlUtil.hasTwin(directory.resolve("admin"))
 
         then:
         def e = thrown(IllegalArgumentException)
         e.message.contains("admin nor it's yaml/yml twin does exist")
 
         cleanup:
-        folder.toFile().deleteDir()
+        directory.toFile().deleteDir()
     }
 
     def "#hasYamlTwin does not have twin for directory"() {
         when:
-        def folder = unpackYamlToTempFolder("config_with_directory.yml")
+        def directory = unpackYamlToTempDirectory("config_with_directory.yml")
 
         then:
-        !YmlUtil.hasTwin(folder.resolve("config.yaml"))
+        !YmlUtil.hasTwin(directory.resolve("config.yaml"))
 
         cleanup:
-        folder.toFile().deleteDir()
+        directory.toFile().deleteDir()
     }
 
     def "#load throws an exception if file does not exist"() {
@@ -137,6 +137,6 @@ class YmlUtilTest extends Specification implements YamlVirtualFolder {
     }
 
     private load(String ymlFile) {
-        YmlUtil.load(testFolderPath.resolve(ymlFile))
+        YmlUtil.load(testDirectoryPath.resolve(ymlFile))
     }
 }

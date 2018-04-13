@@ -9,7 +9,7 @@
   "users.yml":
   "permissions.yml":
   "registrations.yml":
-  "/empty_folder":
+  "/empty_directory":
 
 "/content":
   "tickets.yml":
@@ -18,7 +18,7 @@
   "readme.md":
   ".tickets.conf.yml":
 
-"/new_folder_2":
+"/new_directory_2":
 
 "/search":
   "comments.yml":

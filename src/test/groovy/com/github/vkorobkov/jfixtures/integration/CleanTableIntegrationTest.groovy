@@ -6,7 +6,7 @@ import spock.lang.Specification
 import java.nio.file.Path
 
 class CleanTableIntegrationTest extends Specification implements H2Test {
-    Path tmpCleanFolder = unpackYamlToTempFolder("clean_table.yml")
+    Path tmpCleanDirectory = unpackYamlToTempDirectory("clean_table.yml")
 
     void setup() {
         recreateTable("friends", "ID INT, NAME VARCHAR(50), AGE INT")
@@ -16,7 +16,7 @@ class CleanTableIntegrationTest extends Specification implements H2Test {
     }
 
     def cleanup() {
-        tmpCleanFolder.toFile().deleteDir()
+        tmpCleanDirectory.toFile().deleteDir()
     }
 
     def "should delete from table by default"() {
@@ -24,7 +24,7 @@ class CleanTableIntegrationTest extends Specification implements H2Test {
         sql.execute("INSERT INTO mates (\"id\", \"name\", \"age\") VALUES (10000, 'Igor', 31);")
 
         when:
-        executeFixtures(tmpCleanFolder)
+        executeFixtures(tmpCleanDirectory)
 
         then:
         def results = sql.rows("SELECT * FROM mates")
@@ -36,7 +36,7 @@ class CleanTableIntegrationTest extends Specification implements H2Test {
         sql.execute("INSERT INTO friends (\"id\", \"name\", \"age\") VALUES (10000, 'Semen', 30);")
 
         when:
-        executeFixtures(tmpCleanFolder)
+        executeFixtures(tmpCleanDirectory)
 
         then:
         def results = sql.rows("SELECT * FROM friends")
@@ -48,7 +48,7 @@ class CleanTableIntegrationTest extends Specification implements H2Test {
         sql.execute("INSERT INTO dudes (\"id\", \"name\", \"age\") VALUES (10000, 'Homer', 39);")
 
         when:
-        executeFixtures(tmpCleanFolder)
+        executeFixtures(tmpCleanDirectory)
 
         then:
         def results = sql.rows("SELECT * FROM dudes")
@@ -60,7 +60,7 @@ class CleanTableIntegrationTest extends Specification implements H2Test {
         sql.execute("INSERT INTO users (\"id\", \"name\", \"age\") VALUES (10000, 'Vladimir', 29);")
 
         when:
-        executeFixtures(tmpCleanFolder)
+        executeFixtures(tmpCleanDirectory)
 
         then:
         def results = sql.rows("SELECT * FROM users")
