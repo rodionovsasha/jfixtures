@@ -1,9 +1,9 @@
 package com.github.vkorobkov.jfixtures.config
 
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
-class ConfigLoaderOldTest extends Specification implements YamlVirtualFolder {
+class ConfigLoaderOldTest extends Specification implements YamlVirtualDirectory {
     def "dummy constructor test"() {
         expect:
         new ConfigLoaderOld()
@@ -11,8 +11,8 @@ class ConfigLoaderOldTest extends Specification implements YamlVirtualFolder {
 
     def "loads config normally"() {
         setup:
-        def tmlFolderPath = unpackYamlToTempFolder("default.yml")
-        def path = "$tmlFolderPath/default"
+        def tmlDirectoryPath = unpackYamlToTempDirectory("default.yml")
+        def path = "$tmlDirectoryPath/default"
         def config =  ConfigLoaderOld.load(path)
 
         expect:
@@ -20,7 +20,7 @@ class ConfigLoaderOldTest extends Specification implements YamlVirtualFolder {
         config.referredTable("content.comment", "ticket_id") == Optional.of("tickets")
 
         cleanup:
-        tmlFolderPath.toFile().deleteDir()
+        tmlDirectoryPath.toFile().deleteDir()
     }
 
     def "loads empty config if file not found"() {
@@ -33,8 +33,8 @@ class ConfigLoaderOldTest extends Specification implements YamlVirtualFolder {
 
     def "#load throws when found twins"() {
         setup:
-        def tmlFolderPath = unpackYamlToTempFolder("twins.yml")
-        def path = "$tmlFolderPath/default"
+        def tmlDirectoryPath = unpackYamlToTempDirectory("twins.yml")
+        def path = "$tmlDirectoryPath/default"
 
         when:
         ConfigLoaderOld.load(path)
@@ -44,6 +44,6 @@ class ConfigLoaderOldTest extends Specification implements YamlVirtualFolder {
         e.message.contains("Fixture's config exists with both extensions(yaml/yml)")
 
         cleanup:
-        tmlFolderPath.toFile().deleteDir()
+        tmlDirectoryPath.toFile().deleteDir()
     }
 }

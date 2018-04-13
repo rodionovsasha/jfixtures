@@ -9,10 +9,10 @@ import com.github.vkorobkov.jfixtures.instructions.CustomSql
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
 import com.github.vkorobkov.jfixtures.instructions.Instruction
 import com.github.vkorobkov.jfixtures.loader.DirectoryLoader
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
-class ProcessorTest extends Specification implements YamlVirtualFolder {
+class ProcessorTest extends Specification implements YamlVirtualDirectory {
 
     def "basic row creation instructions test"() {
         when:
@@ -376,7 +376,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
     }
 
     List<Instruction> load(String ymlFile) {
-        def path = unpackYamlToTempFolder(ymlFile) as String
+        def path = unpackYamlToTempDirectory(ymlFile) as String
         def config = ConfigLoaderOld.load(path)
         def fixtures = new DirectoryLoader(path).load()
         new Processor(fixtures, config).process()

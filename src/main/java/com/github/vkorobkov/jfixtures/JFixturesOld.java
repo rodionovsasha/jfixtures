@@ -18,23 +18,23 @@ public final class JFixturesOld {
     private JFixturesOld() {
     }
 
-    public static JFixturesResult mysql(String fixturesFolder) {
-        return new SqlJFixturesResultImpl(fixturesFolder, new MySql());
+    public static JFixturesResult mysql(String fixturesDirectory) {
+        return new SqlJFixturesResultImpl(fixturesDirectory, new MySql());
     }
 
-    public static JFixturesResult microsoftSql(String fixturesFolder) {
-        return new SqlJFixturesResultImpl(fixturesFolder, new MicrosoftSql());
+    public static JFixturesResult microsoftSql(String fixturesDirectory) {
+        return new SqlJFixturesResultImpl(fixturesDirectory, new MicrosoftSql());
     }
 
-    public static JFixturesResult sql99(String fixturesFolder) {
-        return new SqlJFixturesResultImpl(fixturesFolder, new Sql99());
+    public static JFixturesResult sql99(String fixturesDirectory) {
+        return new SqlJFixturesResultImpl(fixturesDirectory, new Sql99());
     }
 
-    public static JFixturesResult byDialect(String fixturesFolder, SqlType sqlType) {
-        return new SqlJFixturesResultImpl(fixturesFolder, sqlType.getSqlDialect());
+    public static JFixturesResult byDialect(String fixturesDirectory, SqlType sqlType) {
+        return new SqlJFixturesResultImpl(fixturesDirectory, sqlType.getSqlDialect());
     }
 
-    public static JFixturesResult xml(String fixturesFolder) {
-        return new XmlJFixturesResultImpl(fixturesFolder);
+    public static JFixturesResult xml(String fixturesDirectory) {
+        return new XmlJFixturesResultImpl(fixturesDirectory);
     }
 }

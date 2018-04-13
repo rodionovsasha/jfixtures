@@ -10,8 +10,8 @@ import com.github.vkorobkov.jfixtures.util.WithResource;
 public class SqlJFixturesResultImpl extends JFixturesResultBase {
     private final Sql sql;
 
-    public SqlJFixturesResultImpl(String fixturesFolder, Sql sql) {
-        super(fixturesFolder);
+    public SqlJFixturesResultImpl(String fixturesDirectory, Sql sql) {
+        super(fixturesDirectory);
         this.sql = sql;
     }
 

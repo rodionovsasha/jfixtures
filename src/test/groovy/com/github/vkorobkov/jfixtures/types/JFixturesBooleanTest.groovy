@@ -1,13 +1,13 @@
 package com.github.vkorobkov.jfixtures.types
 
 import com.github.vkorobkov.jfixtures.JFixturesOld
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 import java.nio.file.Path
 
-class JFixturesBooleanTest extends Specification implements YamlVirtualFolder {
-    Path folderPath
+class JFixturesBooleanTest extends Specification implements YamlVirtualDirectory {
+    Path directoryPath
 
     def EXPECTED_SQL = """DELETE FROM "users";
             |INSERT INTO "users" ("id", "name", "active1", "active2", "answer1", "answer2", "logical1", "logical2", "option1", "option2") VALUES (1, 'homer', TRUE, FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, FALSE);
@@ -63,20 +63,20 @@ class JFixturesBooleanTest extends Specification implements YamlVirtualFolder {
             |""".stripMargin()
 
     void setup() {
-        folderPath = unpackYamlToTempFolder("boolean.yml")
+        directoryPath = unpackYamlToTempDirectory("boolean.yml")
     }
 
     void cleanup() {
-        folderPath.toFile().deleteDir()
+        directoryPath.toFile().deleteDir()
     }
 
     def "should get uppercased null values in SQL for nulls"() {
         expect:
-        JFixturesOld.sql99(folderPath as String).asString() == EXPECTED_SQL
+        JFixturesOld.sql99(directoryPath as String).asString() == EXPECTED_SQL
     }
 
     def "should not get uppercased boolean values in XML"() {
         expect:
-        JFixturesOld.xml(folderPath as String).asString() == EXPECTED_XML
+        JFixturesOld.xml(directoryPath as String).asString() == EXPECTED_XML
     }
 }

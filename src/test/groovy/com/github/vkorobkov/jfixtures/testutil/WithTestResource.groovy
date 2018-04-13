@@ -18,18 +18,18 @@ trait WithTestResource {
 
     Path testResourcePath(fileName) {
         def className = deCapitilize(getClass().simpleName)
-        def fullPath = resourcesFolder() + "/" + className + "/" + fileName
+        def fullPath = resourcesDirectory() + "/" + className + "/" + fileName
         def uri = getClass().getResource(fullPath).toURI()
         Paths.get(uri)
     }
 
-    private resourcesFolder() {
+    private resourcesDirectory() {
         def pathSplitted =  relativeClassName().split("\\.")
         if (pathSplitted.size() == 1) {
             return ""
         }
-        def folder = pathSplitted[0..-2].join("/")
-        "/$folder"
+        def directory = pathSplitted[0..-2].join("/")
+        "/$directory"
     }
 
     private relativeClassName() {

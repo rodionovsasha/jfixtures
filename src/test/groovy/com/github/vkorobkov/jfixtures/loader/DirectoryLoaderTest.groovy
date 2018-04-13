@@ -2,12 +2,12 @@ package com.github.vkorobkov.jfixtures.loader
 
 import com.github.vkorobkov.jfixtures.domain.Table
 import com.github.vkorobkov.jfixtures.domain.Value
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 import java.nio.file.NoSuchFileException
 
-class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
+class DirectoryLoaderTest extends Specification implements YamlVirtualDirectory {
 
     def "loads big fixtures tree"() {
         when:
@@ -36,10 +36,10 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
 
         then:
         LoaderException exception = thrown()
-        exception.message.startsWith("Do not use dots in file names. Use nested folders instead. Wrong fixture:")
+        exception.message.startsWith("Do not use dots in file names. Use nested directorys instead. Wrong fixture:")
     }
 
-    def "fails with IOException if folder with fixtures does not exist"() {
+    def "fails with IOException if directory with fixtures does not exist"() {
         given:
         def path = notExistingPath() as String
 
@@ -51,9 +51,9 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
         exception.cause instanceof NoSuchFileException
     }
 
-    def "returns no fixtures if source folder is empty"() {
+    def "returns no fixtures if source directory is empty"() {
         when:
-        def fixtures = load("empty_folder.yml")
+        def fixtures = load("empty_directory.yml")
 
         then:
         fixtures.isEmpty()
@@ -139,26 +139,26 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualFolder {
         e.message =~ /File (.*) exists with both extensions\(yaml\/yml\)/
     }
 
-    def "#load throws when a fixture's parent folder name contains dots"() {
+    def "#load throws when a fixture's parent directory name contains dots"() {
         when:
-        load("fixture_parent_folder_with_dots.yml")
+        load("fixture_parent_directory_with_dots.yml")
 
         then:
         LoaderException exception = thrown()
-        exception.message.startsWith("Do not use dots in folder names. Wrong fixture folder: parent.folder.with.dots")
+        exception.message.startsWith("Do not use dots in directory names. Wrong fixture directory: parent.directory.with.dots")
     }
 
-    def "#load throws when a fixture's ancestor folder name contains dots"() {
+    def "#load throws when a fixture's ancestor directory name contains dots"() {
         when:
-        load("fixture_ancestor_folder_with_dots.yml")
+        load("fixture_ancestor_directory_with_dots.yml")
 
         then:
         LoaderException exception = thrown()
-        exception.message.startsWith("Do not use dots in folder names. Wrong fixture folder: ancestor.folder.with.dots/parentFolder")
+        exception.message.startsWith("Do not use dots in directory names. Wrong fixture directory: ancestor.directory.with.dots/parentDirectory")
     }
 
     Collection<Table> load(String ymlFile) {
-        def path = unpackYamlToTempFolder(ymlFile) as String
+        def path = unpackYamlToTempDirectory(ymlFile) as String
         new DirectoryLoader(path).load()
     }
 }

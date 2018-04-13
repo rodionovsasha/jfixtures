@@ -5,10 +5,10 @@ import org.yaml.snakeyaml.Yaml
 import java.nio.file.Files
 import java.nio.file.Path
 
-trait YamlVirtualFolder implements WithTempFile, WithTestResource {
-    Path unpackYamlToTempFolder(String fileName) {
+trait YamlVirtualDirectory implements WithTempFile, WithTestResource {
+    Path unpackYamlToTempDirectory(String fileName) {
         def yamlPath = testResourcePath(fileName)
-        def folderPath = newTempSubFolder(fileName)
+        def directoryPath = newTempSubDirectory(fileName)
         def yaml = new Yaml()
 
         def writeContent = { Path path, content ->
@@ -42,9 +42,9 @@ trait YamlVirtualFolder implements WithTempFile, WithTestResource {
         }
 
         yaml.load(yamlPath.newReader()).each { String name, content ->
-            nodeHandler(name, content, folderPath)
+            nodeHandler(name, content, directoryPath)
         }
 
-        folderPath
+        directoryPath
     }
 }

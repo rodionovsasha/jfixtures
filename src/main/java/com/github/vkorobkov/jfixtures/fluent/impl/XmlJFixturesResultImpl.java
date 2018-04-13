@@ -20,8 +20,8 @@ import java.util.List;
 @NoArgsConstructor
 @XmlRootElement(name = "instructions")
 public class XmlJFixturesResultImpl extends JFixturesResultBase {
-    public XmlJFixturesResultImpl(final String fixturesFolder) {
-        super(fixturesFolder);
+    public XmlJFixturesResultImpl(final String fixturesDirectory) {
+        super(fixturesDirectory);
     }
 
     @XmlElements({
