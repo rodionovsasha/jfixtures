@@ -24,6 +24,18 @@ public final class Row {
         );
     }
 
+    public static Row ofName(String name) {
+        return new Row(name, Collections.emptyMap());
+    }
+
+    public static Row of(String name, Map<String, Object> columns) {
+        return new Row(name, columns);
+    }
+
+    public static Row of(String name, Object... keyValuePairs) {
+        return new Row(name, Collections.emptyMap()).columns(keyValuePairs);
+    }
+
     public Row columns(Map<String, ?> toMerge) {
         val merged = CollectionUtil.merge(
                 columns,

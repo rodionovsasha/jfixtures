@@ -23,6 +23,6 @@ public class MapRowsLoader {
 
     private Row fixtureRow(Map.Entry<String, ?> sourceRow) {
         Map row = Optional.ofNullable((Map)sourceRow.getValue()).orElse(Collections.emptyMap());
-        return new Row(sourceRow.getKey(), row);
+        return Row.of(sourceRow.getKey(), row);
     }
 }
