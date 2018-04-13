@@ -12,12 +12,18 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * This class will be removed in release 1.0.35
+ *
+ * @deprecated use {@link com.github.vkorobkov.jfixtures.config.ConfigLoader} instead.
+ */
+@Deprecated
 @Slf4j
-public final class ConfigLoader {
+public final class ConfigLoaderOld {
     private static final String CONF_YML = ".conf.yml";
     private static final String CONF_YAML = ".conf.yaml";
 
-    private ConfigLoader() {
+    private ConfigLoaderOld() {
     }
 
     public static Root load(String fixturesRoot) {
@@ -38,7 +44,7 @@ public final class ConfigLoader {
                 .of(CONF_YAML, CONF_YML)
                 .map(Paths.get(fixturesRoot)::resolve)
                 .filter(Files::exists)
-                .peek(ConfigLoader::checkTwin)
+                .peek(ConfigLoaderOld::checkTwin)
                 .findFirst();
     }
 

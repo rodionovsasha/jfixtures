@@ -1,7 +1,7 @@
 package com.github.vkorobkov.jfixtures.processor
 
 import com.github.vkorobkov.jfixtures.IntId
-import com.github.vkorobkov.jfixtures.config.ConfigLoader
+import com.github.vkorobkov.jfixtures.config.ConfigLoaderOld
 import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
 import com.github.vkorobkov.jfixtures.domain.Value
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
@@ -377,7 +377,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
     List<Instruction> load(String ymlFile) {
         def path = unpackYamlToTempFolder(ymlFile) as String
-        def config = ConfigLoader.load(path)
+        def config = ConfigLoaderOld.load(path)
         def fixtures = new DirectoryLoader(path).load()
         new Processor(fixtures, config).process()
     }
