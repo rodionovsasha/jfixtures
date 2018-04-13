@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.fluent.impl;
 
-import com.github.vkorobkov.jfixtures.config.ConfigLoader;
+import com.github.vkorobkov.jfixtures.config.ConfigLoaderOld;
 import com.github.vkorobkov.jfixtures.fluent.JFixturesResult;
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
 import com.github.vkorobkov.jfixtures.loader.DirectoryLoader;
@@ -18,7 +18,7 @@ abstract class JFixturesResultBase implements JFixturesResult {
 
     List<Instruction> getInstructions() {
         val fixtures = new DirectoryLoader(fixturesFolder).load();
-        val config = ConfigLoader.load(fixturesFolder);
+        val config = ConfigLoaderOld.load(fixturesFolder);
         return new Processor(fixtures, config).process();
     }
 }

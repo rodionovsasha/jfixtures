@@ -3,17 +3,17 @@ package com.github.vkorobkov.jfixtures.config
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
 import spock.lang.Specification
 
-class ConfigLoaderTest extends Specification implements YamlVirtualFolder {
+class ConfigLoaderOldTest extends Specification implements YamlVirtualFolder {
     def "dummy constructor test"() {
         expect:
-        new ConfigLoader()
+        new ConfigLoaderOld()
     }
 
     def "loads config normally"() {
         setup:
         def tmlFolderPath = unpackYamlToTempFolder("default.yml")
         def path = "$tmlFolderPath/default"
-        def config =  ConfigLoader.load(path)
+        def config =  ConfigLoaderOld.load(path)
 
         expect:
         config.referredTable("users", "avatar_id") == Optional.of("images")
@@ -25,7 +25,7 @@ class ConfigLoaderTest extends Specification implements YamlVirtualFolder {
 
     def "loads empty config if file not found"() {
         setup:
-        def config = ConfigLoader.load(notExistingPath() as String)
+        def config = ConfigLoaderOld.load(notExistingPath() as String)
 
         expect:
         config.referredTable("users", "avatar_id") == Optional.empty()
@@ -37,7 +37,7 @@ class ConfigLoaderTest extends Specification implements YamlVirtualFolder {
         def path = "$tmlFolderPath/default"
 
         when:
-        ConfigLoader.load(path)
+        ConfigLoaderOld.load(path)
 
         then:
         def e = thrown(ConfigLoaderException)
