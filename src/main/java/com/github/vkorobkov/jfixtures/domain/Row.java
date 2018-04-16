@@ -1,15 +1,15 @@
 package com.github.vkorobkov.jfixtures.domain;
 
-import com.github.vkorobkov.jfixtures.util.CollectionUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
 
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static java.util.Collections.singletonMap;
+import static com.github.vkorobkov.jfixtures.util.CollectionUtil.mapValues;
+import static com.github.vkorobkov.jfixtures.util.CollectionUtil.merge;
+import static java.util.Collections.*;
 
 @EqualsAndHashCode
 @Getter
@@ -19,13 +19,11 @@ public final class Row {
 
     private Row(String name, Map<String, ?> columns) {
         this.name = name;
-        this.columns = Collections.unmodifiableMap(
-                CollectionUtil.mapValues(columns, Value::of)
-        );
+        this.columns = unmodifiableMap(mapValues(columns, Value::of));
     }
 
     public static Row ofName(String name) {
-        return new Row(name, Collections.emptyMap());
+        return new Row(name, emptyMap());
     }
 
     public static Row of(String name, Map<String, Object> columns) {
@@ -33,14 +31,11 @@ public final class Row {
     }
 
     public static Row of(String name, Object... keyValuePairs) {
-        return new Row(name, Collections.emptyMap()).columns(keyValuePairs);
+        return new Row(name, emptyMap()).columns(keyValuePairs);
     }
 
     public Row columns(Map<String, ?> toMerge) {
-        val merged = CollectionUtil.merge(
-                columns,
-                CollectionUtil.mapValues(toMerge, Value::of)
-        );
+        val merged = merge(columns, mapValues(toMerge, Value::of));
         return new Row(name, merged);
     }
 
