@@ -17,7 +17,7 @@ public final class Row {
     private final String name;
     private final Map<String, Value> columns;
 
-    public Row(String name, Map<String, ?> columns) {
+    private Row(String name, Map<String, ?> columns) {
         this.name = name;
         this.columns = Collections.unmodifiableMap(
                 CollectionUtil.mapValues(columns, Value::of)
