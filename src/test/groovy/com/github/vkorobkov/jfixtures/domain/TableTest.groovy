@@ -7,9 +7,9 @@ class TableTest extends Specification {
 
     void setup() {
         rows = [
-                new Row("Vlad", [:]),
-                new Row("Bob", [:]),
-                new Row("Ned", [:]),
+                Row.ofName("Vlad"),
+                Row.ofName("Bob"),
+                Row.ofName("Ned"),
         ]
     }
 
@@ -51,48 +51,48 @@ class TableTest extends Specification {
     def "#mergeRows adds new rows to the end"() {
         given:
         def fixture = new Table("users",
-            [new Row("Vlad", [age: 30]), new Row("Mr Burns", [age: 100])]
+            [Row.of("Vlad", [age: 30]), Row.of("Mr Burns", [age: 100])]
         )
 
         when:
         def merged = fixture.mergeRows([
-                new Row("Homer", [age: 50]),
-                new Row("Bart", [age: 12])
+                Row.of("Homer", [age: 50]),
+                Row.of("Bart", [age: 12])
         ])
 
         then:
         merged.rows.asList() == [
-                new Row("Vlad", [age: 30]),
-                new Row("Mr Burns", [age: 100]),
-                new Row("Homer", [age: 50]),
-                new Row("Bart", [age: 12])
+                Row.of("Vlad", [age: 30]),
+                Row.of("Mr Burns", [age: 100]),
+                Row.of("Homer", [age: 50]),
+                Row.of("Bart", [age: 12])
         ]
     }
 
     def "#mergeRows replaces rows with the same name"() {
         given:
         def fixture = new Table("users",
-            [new Row("Vlad", [age: 29]), new Row("Mr Burns", [age: 100])]
+            [Row.of("Vlad", [age: 29]), Row.of("Mr Burns", [age: 100])]
         )
 
         when:
         def merged = fixture.mergeRows([
-                new Row("Homer", [age: 50]),
-                new Row("Vlad", [age: 30, skill: "java"])
+                Row.of("Homer", [age: 50]),
+                Row.of("Vlad", [age: 30, skill: "java"])
         ])
 
         then:
         merged.rows.asList() == [
-                new Row("Vlad", [age: 30, skill: "java"]),
-                new Row("Mr Burns", [age: 100]),
-                new Row("Homer", [age: 50])
+                Row.of("Vlad", [age: 30, skill: "java"]),
+                Row.of("Mr Burns", [age: 100]),
+                Row.of("Homer", [age: 50])
         ]
     }
 
     def "#mergeRows returns original rows if rows to merge is an empty list"() {
         given:
         def fixture = new Table("users",
-            [new Row("Vlad", [age: 30]), new Row("Mr Burns", [age: 100])]
+            [Row.of("Vlad", [age: 30]), Row.of("Mr Burns", [age: 100])]
         )
 
         when:
@@ -100,21 +100,21 @@ class TableTest extends Specification {
 
         then:
         merged.rows.asList() == [
-                new Row("Vlad", [age: 30]),
-                new Row("Mr Burns", [age: 100])
+                Row.of("Vlad", [age: 30]),
+                Row.of("Mr Burns", [age: 100])
         ]
     }
 
     def "#mergeRows returns fixture with original name"() {
         given:
         def fixture = new Table("users",
-            [new Row("Vlad", [age: 29]), new Row("Mr Burns", [age: 100])]
+            [Row.of("Vlad", [age: 29]), Row.of("Mr Burns", [age: 100])]
         )
 
         when:
         def merged = fixture.mergeRows([
-                new Row("Homer", [age: 50]),
-                new Row("Vlad", [age: 30, skill: "java"])
+                Row.of("Homer", [age: 50]),
+                Row.of("Vlad", [age: 30, skill: "java"])
         ])
 
         then:
@@ -124,12 +124,12 @@ class TableTest extends Specification {
     def "#mergeTables puts fixtures for different tables in sequence"() {
         given:
         def users = new Table("users", [
-                new Row("Vlad",  [name: "Vlad", age: 30]),
-                new Row("Burns", [name: "Mr Burns", age: 130])
+                Row.of("Vlad",  [name: "Vlad", age: 30]),
+                Row.of("Burns", [name: "Mr Burns", age: 130])
         ])
         def roles = new Table("roles", [
-                new Row("user",  [type: "user", readAccess: true, writeAccess: false]),
-                new Row("admin", [type: "admin", readAccess: true, writeAccess: true])
+                Row.of("user",  [type: "user", readAccess: true, writeAccess: false]),
+                Row.of("admin", [type: "admin", readAccess: true, writeAccess: true])
         ])
 
         when:
@@ -146,12 +146,12 @@ class TableTest extends Specification {
     def "#mergeTables concatenates different rows of the same table"() {
         given:
         def users1 = new Table("users", [
-                new Row("Vlad",  [name: "Vlad", age: 30]),
-                new Row("Burns", [name: "Mr Burns", age: 130])
+                Row.of("Vlad",  [name: "Vlad", age: 30]),
+                Row.of("Burns", [name: "Mr Burns", age: 130])
         ])
         def users2 = new Table("users", [
-                new Row("Homer", [name: "Homer", age: 40]),
-                new Row("Bart", [name: "Bart", age: 12])
+                Row.of("Homer", [name: "Homer", age: 40]),
+                Row.of("Bart", [name: "Bart", age: 12])
         ])
 
         when:
@@ -170,11 +170,11 @@ class TableTest extends Specification {
     def "#mergeTables replaces old rows with new ones in scope of the same table"() {
         given:
         def users1 = new Table("users", [
-                new Row("Vlad",  [name: "Vlad", age: 29]),
-                new Row("Burns", [name: "Mr Burns", age: 130])
+                Row.of("Vlad",  [name: "Vlad", age: 29]),
+                Row.of("Burns", [name: "Mr Burns", age: 130])
         ])
         def users2 = new Table("users", [
-            new Row("Vlad", [name: "Vladimir", age: 30])
+                Row.of("Vlad", [name: "Vladimir", age: 30])
         ])
 
         when:
@@ -187,7 +187,7 @@ class TableTest extends Specification {
         with(merged[0]) {
             assert name == "users"
             assert rows.toList() == [
-                    new Row("Vlad", [name: "Vladimir", age: 30]), new Row("Burns", [name: "Mr Burns", age: 130])
+                    Row.of("Vlad", [name: "Vladimir", age: 30]), Row.of("Burns", [name: "Mr Burns", age: 130])
             ]
         }
 

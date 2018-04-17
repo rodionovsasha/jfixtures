@@ -117,8 +117,8 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory {
         def table = tables.first()
         table.name == "users"
         table.rows.toList() == [
-            new Row("vlad", [id: 1, name: "Vlad", age: 30]),
-            new Row("homer", [id: 2, name: "Homer", age: 40])
+            Row.of("vlad", [id: 1, name: "Vlad", age: 30]),
+            Row.of("homer", [id: 2, name: "Homer", age: 40])
         ]
 
         cleanup:

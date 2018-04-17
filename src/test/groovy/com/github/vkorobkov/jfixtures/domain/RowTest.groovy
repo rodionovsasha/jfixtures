@@ -13,13 +13,31 @@ class RowTest extends Specification {
         ]
     }
 
-    def "constructor test"() {
+    def "#ofName creates a new empty row"() {
         when:
-        def row = new Row("vlad", columns)
+        def row = Row.ofName("vlad")
 
         then:
         row.name == "vlad"
-        row.columns == columns
+        row.columns.isEmpty()
+    }
+
+    def "#of(Map) creates a new row"() {
+        when:
+        def row = Row.of("vlad", columns)
+
+        then:
+        row.name == "vlad"
+        row.columns.toMapString() == [id: Value.of(1), name: Value.of("Vladimir")].toMapString()
+    }
+
+    def "#of(Object...) creates a new row"() {
+        when:
+        def row = Row.of("vlad", "age", 30)
+
+        then:
+        row.name == "vlad"
+        row.columns.toMapString() == [age: Value.of(30)].toMapString()
     }
 
     def "#constuctor may accept either Value or Object as column values"() {
@@ -31,7 +49,7 @@ class RowTest extends Specification {
         ]
 
         when:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         then:
         row.columns == [
@@ -43,7 +61,7 @@ class RowTest extends Specification {
 
     def "#columns is a read only collection"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         row.columns.remove("id")
@@ -54,7 +72,7 @@ class RowTest extends Specification {
 
     def "#columns adds base columns"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         def extendedRow = row.columns(age: 30)
@@ -68,7 +86,7 @@ class RowTest extends Specification {
 
     def "#columns keeps the original row name"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         def extendedRow = row.columns(age: 30)
@@ -79,7 +97,7 @@ class RowTest extends Specification {
 
     def "#columns overwrites the existing columns"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         def extendedRow = row.columns(id: 100)
@@ -95,7 +113,7 @@ class RowTest extends Specification {
 
     def "#columns(Object...) returns row from key/value pairs"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         def result = row.columns(
@@ -110,7 +128,7 @@ class RowTest extends Specification {
 
     def "#columns(Object...) throws IllegalArgumentException when odd number of key/value pairs"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         row.columns("name", "Vlad", "age")
@@ -122,7 +140,7 @@ class RowTest extends Specification {
 
     def "#columns(Object...) throws IllegalArgumentException when odd object is not a string"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         row.columns(1, "Vlad", "age", 30)
@@ -134,7 +152,7 @@ class RowTest extends Specification {
 
     def "#columns(Object...) returns original row when an empty array passed"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         def result = row.columns([] as Object[])
@@ -145,7 +163,7 @@ class RowTest extends Specification {
 
     def "#columns(Object...) throws IllegalArgumentException when name is null"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         row.columns(null, "Vlad")
@@ -157,7 +175,7 @@ class RowTest extends Specification {
 
     def "#columns(Object...) throws IllegalArgumentException when single string passed"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         row.columns("Vlad")
@@ -169,7 +187,7 @@ class RowTest extends Specification {
 
     def "#column adds a new column to the row"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         def result = row.column("age", 30)
@@ -180,7 +198,7 @@ class RowTest extends Specification {
 
     def "#nullColumn adds a new column to the row"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         def result = row.nullColumn("age")
@@ -191,7 +209,7 @@ class RowTest extends Specification {
 
     def "#sqlColumn adds a new column to the row"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         def result = row.sqlColumn("age", "SELECT 1")
@@ -202,7 +220,7 @@ class RowTest extends Specification {
 
     def "#textColumn adds a new column to the row"() {
         given:
-        def row = new Row("vlad", columns)
+        def row = Row.of("vlad", columns)
 
         when:
         def result = row.textColumn("age", "SELECT 1")
