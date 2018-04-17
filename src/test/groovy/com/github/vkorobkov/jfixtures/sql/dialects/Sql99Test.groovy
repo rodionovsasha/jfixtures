@@ -10,6 +10,7 @@ import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
 import spock.lang.Specification
 import spock.lang.Unroll
 
+@Unroll
 class Sql99Test extends Specification {
     Sql sql
     Appender appender
@@ -19,7 +20,6 @@ class Sql99Test extends Specification {
         appender = new StringAppender()
     }
 
-    @Unroll
     def "escapes schema, table and columns with quotes"(unescaped, escaped) {
         expect:
         sql.escapeTableOrColumn(unescaped) == escaped

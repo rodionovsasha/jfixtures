@@ -10,6 +10,7 @@ import com.github.vkorobkov.jfixtures.testutil.SqBaseTestImpl
 import spock.lang.Specification
 import spock.lang.Unroll
 
+@Unroll
 class SqlBaseTest extends Specification {
     SqlBase sql
     Appender appender
@@ -115,7 +116,6 @@ class SqlBaseTest extends Specification {
         sql.escapeValue(Value.of("Vlad' bug")) == "'Vlad'' bug'"
     }
 
-    @Unroll
     def "does not escape non string values"(unescaped, escaped) {
         expect:
         sql.escapeValue(Value.of(unescaped)) == escaped
