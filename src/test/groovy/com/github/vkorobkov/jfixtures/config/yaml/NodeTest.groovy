@@ -1,10 +1,11 @@
 package com.github.vkorobkov.jfixtures.config.yaml
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import java.util.stream.Collectors
 
-
+@Unroll
 class NodeTest extends Specification {
     def "child() returns a node child if exist"() {
         when:

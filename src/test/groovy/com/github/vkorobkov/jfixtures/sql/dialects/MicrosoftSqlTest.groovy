@@ -8,7 +8,9 @@ import com.github.vkorobkov.jfixtures.sql.Appender
 import com.github.vkorobkov.jfixtures.sql.Sql
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
 import spock.lang.Specification
+import spock.lang.Unroll
 
+@Unroll
 class MicrosoftSqlTest extends Specification {
     Sql sql
     Appender appender

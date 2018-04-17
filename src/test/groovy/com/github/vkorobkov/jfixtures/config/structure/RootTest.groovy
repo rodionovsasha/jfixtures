@@ -2,7 +2,9 @@ package com.github.vkorobkov.jfixtures.config.structure
 
 import com.github.vkorobkov.jfixtures.config.yaml.Node
 import spock.lang.Specification
+import spock.lang.Unroll
 
+@Unroll
 class RootTest extends Specification {
     def "referredTable() positive case"() {
         when:

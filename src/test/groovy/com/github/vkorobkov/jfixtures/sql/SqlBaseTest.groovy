@@ -8,7 +8,9 @@ import com.github.vkorobkov.jfixtures.instructions.InsertRow
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
 import com.github.vkorobkov.jfixtures.testutil.SqBaseTestImpl
 import spock.lang.Specification
+import spock.lang.Unroll
 
+@Unroll
 class SqlBaseTest extends Specification {
     SqlBase sql
     Appender appender
