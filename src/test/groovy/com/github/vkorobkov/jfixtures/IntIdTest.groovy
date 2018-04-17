@@ -1,7 +1,9 @@
 package com.github.vkorobkov.jfixtures
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
+@Unroll
 class IntIdTest extends Specification {
 
     def "dummy constructor test"() {

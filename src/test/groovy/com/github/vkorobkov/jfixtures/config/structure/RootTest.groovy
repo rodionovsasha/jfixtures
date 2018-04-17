@@ -2,6 +2,7 @@ package com.github.vkorobkov.jfixtures.config.structure
 
 import com.github.vkorobkov.jfixtures.config.yaml.Node
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class RootTest extends Specification {
     def "referredTable() positive case"() {
@@ -12,6 +13,7 @@ class RootTest extends Specification {
         root.referredTable("users", "role_id").get() == "roles"
     }
 
+    @Unroll
     def "referredTable() returns empty optional when does not match"(table, column) {
         when:
         def root = root(refs: [users: [role_id: "roles"]])

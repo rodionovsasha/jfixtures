@@ -2,7 +2,9 @@ package com.github.vkorobkov.jfixtures.domain
 
 import nl.jqno.equalsverifier.EqualsVerifier
 import spock.lang.Specification
+import spock.lang.Unroll
 
+@Unroll
 class ValueTest extends Specification {
 
     def "equals"() {

@@ -1,8 +1,10 @@
 package com.github.vkorobkov.jfixtures.config.structure.tables
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class CleanMethodTest extends Specification {
+    @Unroll
     def "CleanMethod positive cases"(String value, expected) {
         expect:
         CleanMethod.valueOfIgnoreCase(value) == expected
