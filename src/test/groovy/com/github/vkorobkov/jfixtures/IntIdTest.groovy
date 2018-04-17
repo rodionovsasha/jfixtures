@@ -35,7 +35,7 @@ class IntIdTest extends Specification {
         alias << randomAliases
     }
 
-    def "#many returns the same hashes as #one does, keeping the order"() {
+    def "::many returns the same hashes as ::one does, keeping the order"() {
         expect:
         IntId.many("homer", "marge", "bart") == [
             IntId.one("homer"),

@@ -64,7 +64,7 @@ class ValueTest extends Specification {
         _ | 100500L
     }
 
-    def "#getSqlRepresentation returns upper cased null"() {
+    def "::getSqlRepresentation returns upper cased null"() {
         expect:
         with(Value.ofNull()) {
             sqlRepresentation == "NULL"
@@ -72,7 +72,7 @@ class ValueTest extends Specification {
         }
     }
 
-    def "#getXmlRepresentation returns lower cased null"() {
+    def "::getXmlRepresentation returns lower cased null"() {
         expect:
         with(Value.ofNull()) {
             xmlRepresentation == "null"
@@ -88,7 +88,7 @@ class ValueTest extends Specification {
         }
     }
 
-    def "#constructor consumes allowed types"() {
+    def "::of consumes allowed types #value"() {
         expect:
         Value.of(value)
 
@@ -104,7 +104,7 @@ class ValueTest extends Specification {
         _ | "Hello world"
     }
 
-    def "#constructor rejects now allowed type"() {
+    def "#of rejects now allowed type"() {
         when:
         Value.of([1, 2, 3])
 
