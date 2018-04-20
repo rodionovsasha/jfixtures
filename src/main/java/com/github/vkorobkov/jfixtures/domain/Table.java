@@ -36,11 +36,11 @@ public final class Table {
     }
 
     public static Table ofRow(String name, String row, Map<String, Object> columns) {
-        return new Table(name, singletonList(Row.of(row, columns)));
+        return of(name, Row.of(row, columns));
     }
 
     public static Table ofRow(String name, String row, Object... keyValuePairs) {
-        return new Table(name, singletonList(Row.of(row, keyValuePairs)));
+        return of(name, Row.of(row, keyValuePairs));
     }
 
     public static Collection<Table> mergeTables(Collection<Table> toMerge) {
