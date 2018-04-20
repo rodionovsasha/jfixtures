@@ -13,26 +13,17 @@ class TableTest extends Specification {
         ]
     }
 
-    def "dummy constructor test"() {
+    def "returns rows provided by static method"() {
         when:
-        def fixture = new Table("users", [])
+        def table = Table.of("users", rows)
 
         then:
-        fixture.name == "users"
-        fixture.rows.empty
-    }
-
-    def "returns rows provided by constructor"() {
-        when:
-        def fixture = new Table("users", rows)
-
-        then:
-        fixture.rows.asList() == rows
+        table.rows.asList() == rows
     }
 
     def "rows is a read only collection"() {
         when:
-        def fixture = new Table("users", rows)
+        def fixture = Table.of("users", rows)
         fixture.rows.remove("Vlad")
 
         then:
@@ -41,7 +32,7 @@ class TableTest extends Specification {
 
     def "rows returns the same collection every call"() {
         when:
-        def fixture = new Table("users", rows)
+        def fixture = Table.of("users", rows)
 
         then:
         fixture.name == "users"
@@ -50,8 +41,8 @@ class TableTest extends Specification {
 
     def "#mergeRows adds new rows to the end"() {
         given:
-        def fixture = new Table("users",
-            [Row.of("Vlad", [age: 30]), Row.of("Mr Burns", [age: 100])]
+        def fixture = Table.of("users",
+                [Row.of("Vlad", [age: 30]), Row.of("Mr Burns", [age: 100])]
         )
 
         when:
@@ -71,8 +62,8 @@ class TableTest extends Specification {
 
     def "#mergeRows replaces rows with the same name"() {
         given:
-        def fixture = new Table("users",
-            [Row.of("Vlad", [age: 29]), Row.of("Mr Burns", [age: 100])]
+        def fixture = Table.of("users",
+                [Row.of("Vlad", [age: 29]), Row.of("Mr Burns", [age: 100])]
         )
 
         when:
@@ -91,8 +82,8 @@ class TableTest extends Specification {
 
     def "#mergeRows returns original rows if rows to merge is an empty list"() {
         given:
-        def fixture = new Table("users",
-            [Row.of("Vlad", [age: 30]), Row.of("Mr Burns", [age: 100])]
+        def fixture = Table.of("users",
+                [Row.of("Vlad", [age: 30]), Row.of("Mr Burns", [age: 100])]
         )
 
         when:
@@ -107,8 +98,8 @@ class TableTest extends Specification {
 
     def "#mergeRows returns fixture with original name"() {
         given:
-        def fixture = new Table("users",
-            [Row.of("Vlad", [age: 29]), Row.of("Mr Burns", [age: 100])]
+        def fixture = Table.of("users",
+                [Row.of("Vlad", [age: 29]), Row.of("Mr Burns", [age: 100])]
         )
 
         when:
@@ -123,12 +114,12 @@ class TableTest extends Specification {
 
     def "#mergeTables puts fixtures for different tables in sequence"() {
         given:
-        def users = new Table("users", [
-                Row.of("Vlad",  [name: "Vlad", age: 30]),
+        def users = Table.of("users", [
+                Row.of("Vlad", [name: "Vlad", age: 30]),
                 Row.of("Burns", [name: "Mr Burns", age: 130])
         ])
-        def roles = new Table("roles", [
-                Row.of("user",  [type: "user", readAccess: true, writeAccess: false]),
+        def roles = Table.of("roles", [
+                Row.of("user", [type: "user", readAccess: true, writeAccess: false]),
                 Row.of("admin", [type: "admin", readAccess: true, writeAccess: true])
         ])
 
@@ -145,11 +136,11 @@ class TableTest extends Specification {
 
     def "#mergeTables concatenates different rows of the same table"() {
         given:
-        def users1 = new Table("users", [
-                Row.of("Vlad",  [name: "Vlad", age: 30]),
+        def users1 = Table.of("users", [
+                Row.of("Vlad", [name: "Vlad", age: 30]),
                 Row.of("Burns", [name: "Mr Burns", age: 130])
         ])
-        def users2 = new Table("users", [
+        def users2 = Table.of("users", [
                 Row.of("Homer", [name: "Homer", age: 40]),
                 Row.of("Bart", [name: "Bart", age: 12])
         ])
@@ -169,11 +160,11 @@ class TableTest extends Specification {
 
     def "#mergeTables replaces old rows with new ones in scope of the same table"() {
         given:
-        def users1 = new Table("users", [
-                Row.of("Vlad",  [name: "Vlad", age: 29]),
+        def users1 = Table.of("users", [
+                Row.of("Vlad", [name: "Vlad", age: 29]),
                 Row.of("Burns", [name: "Mr Burns", age: 130])
         ])
-        def users2 = new Table("users", [
+        def users2 = Table.of("users", [
                 Row.of("Vlad", [name: "Vladimir", age: 30])
         ])
 
@@ -190,6 +181,64 @@ class TableTest extends Specification {
                     Row.of("Vlad", [name: "Vladimir", age: 30]), Row.of("Burns", [name: "Mr Burns", age: 130])
             ]
         }
+    }
 
+    def "::ofName creates a new empty table"() {
+        when:
+        def table = Table.ofName("users")
+
+        then:
+        with(table) {
+            assert name == "users"
+            assert rows.size() == 0
+        }
+    }
+
+    def "::of(Row...) creates a new table"() {
+        when:
+        def table = Table.of("users", Row.ofName("Homer"), Row.ofName("Bart"))
+
+        then:
+        with(table) {
+            assert name == "users"
+            assert rows[0].name == "Homer"
+            assert rows[1].name == "Bart"
+        }
+    }
+
+    def "::of(Collection<Row>) creates a new table"() {
+        when:
+        def table = Table.of("users", [Row.ofName("Homer"), Row.ofName("Bart")])
+
+        then:
+        with(table) {
+            assert name == "users"
+            assert rows[0].name == "Homer"
+            assert rows[1].name == "Bart"
+        }
+    }
+
+    def "::ofRow(columns) creates a new table"() {
+        when:
+        def table = Table.ofRow("users", "Homer", [age : 39])
+
+        then:
+        with(table) {
+            assert name == "users"
+            assert rows[0].name == "Homer"
+            assert rows[0].columns.toMapString() == [age: Value.of(39)].toMapString()
+        }
+    }
+
+    def "::ofRow(keyValuePairs) creates a new table"() {
+        when:
+        def table = Table.ofRow("users", "Homer", "age", 39)
+
+        then:
+        with(table) {
+            assert name == "users"
+            assert rows[0].name == "Homer"
+            assert rows[0].columns.toMapString() == [age: Value.of(39)].toMapString()
+        }
     }
 }
