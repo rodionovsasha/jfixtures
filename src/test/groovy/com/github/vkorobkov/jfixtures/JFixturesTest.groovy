@@ -21,7 +21,7 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory {
         def tables = JFixtures.noConfig().tables
 
         when:
-        tables.add(new Table("users", Collections.emptyList()))
+        tables.add(Table.ofName("users"))
 
         then:
         thrown(UnsupportedOperationException)
@@ -30,8 +30,8 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory {
     def "#addTables(Collection<Table>) adds new tables and returns another instance"() {
         given:
         def tablesToAdd = [
-            new Table("users", Collections.emptyList()),
-            new Table("comments", Collections.emptyList())
+                Table.ofName("users"),
+                Table.ofName("comments")
         ]
         def fixtures = JFixtures.noConfig()
 
@@ -48,8 +48,8 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory {
     def "#addTables(Collection<Table>) could be called in chain accumulating tables"() {
         given:
         def tablesToAdd = [
-                new Table("users", Collections.emptyList()),
-                new Table("comments", Collections.emptyList())
+                Table.ofName("users"),
+                Table.ofName("comments")
         ]
         def fixtures = JFixtures.noConfig()
 
@@ -68,8 +68,8 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory {
     def "#addTables(Table...) adds new tables and returns another instance"() {
         given:
         def tablesToAdd = [
-                new Table("users", Collections.emptyList()),
-                new Table("comments", Collections.emptyList())
+                Table.ofName("users"),
+                Table.ofName("comments")
         ] as Table[]
         def fixtures = JFixtures.noConfig()
 
@@ -86,8 +86,8 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory {
     def "#addTables(Table...) could be called in chain accumulating tables"() {
         given:
         def tablesToAdd = [
-                new Table("users", Collections.emptyList()),
-                new Table("comments", Collections.emptyList())
+                Table.ofName("users"),
+                Table.ofName("comments")
         ] as Table[]
         def fixtures = JFixtures.noConfig()
 
@@ -117,8 +117,8 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory {
         def table = tables.first()
         table.name == "users"
         table.rows.toList() == [
-            Row.of("vlad", [id: 1, name: "Vlad", age: 30]),
-            Row.of("homer", [id: 2, name: "Homer", age: 40])
+                Row.of("vlad", [id: 1, name: "Vlad", age: 30]),
+                Row.of("homer", [id: 2, name: "Homer", age: 40])
         ]
 
         cleanup:
