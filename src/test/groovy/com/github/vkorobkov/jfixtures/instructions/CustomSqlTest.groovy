@@ -1,5 +1,7 @@
 package com.github.vkorobkov.jfixtures.instructions
 
+import nl.jqno.equalsverifier.EqualsVerifier
+import nl.jqno.equalsverifier.Warning
 import spock.lang.Specification
 
 class CustomSqlTest extends Specification {
@@ -34,5 +36,13 @@ class CustomSqlTest extends Specification {
 
         then:
         1 * visitor.visit(instruction)
+    }
+
+    def "::equals"() {
+        expect:
+        EqualsVerifier
+            .forClass(CustomSql)
+            .suppress(Warning.STRICT_INHERITANCE, Warning.NONFINAL_FIELDS)
+            .verify()
     }
 }

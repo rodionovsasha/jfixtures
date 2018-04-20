@@ -4,7 +4,7 @@ import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 class ConfigLoaderTest extends Specification implements YamlVirtualDirectory {
-    def "loads config normally"() {
+    def "#load loads config from file"() {
         setup:
         def tmlDirectoryPath = unpackYamlToTempDirectory("default.yml")
         def path = "$tmlDirectoryPath/default/.conf.yml"
@@ -18,9 +18,9 @@ class ConfigLoaderTest extends Specification implements YamlVirtualDirectory {
         tmlDirectoryPath.toFile().deleteDir()
     }
 
-    def "loads empty config if file not found"() {
+    def "#defaultConfig return default empty config"() {
         setup:
-        def config = new ConfigLoader().load(notExistingPath() as String)
+        def config = new ConfigLoader().defaultConfig()
 
         expect:
         config.referredTable("users", "avatar_id") == Optional.empty()
