@@ -153,8 +153,8 @@ class TableTest extends Specification {
 
         and:
         with(merged[0]) {
-            assert name == "users"
-            assert rows.toList() == users1.rows + users2.rows
+            name == "users"
+            rows.toList() == users1.rows + users2.rows
         }
     }
 
@@ -176,8 +176,8 @@ class TableTest extends Specification {
 
         and:
         with(merged[0]) {
-            assert name == "users"
-            assert rows.toList() == [
+            name == "users"
+            rows.toList() == [
                     Row.of("Vlad", [name: "Vladimir", age: 30]), Row.of("Burns", [name: "Mr Burns", age: 130])
             ]
         }
@@ -189,8 +189,8 @@ class TableTest extends Specification {
 
         then:
         with(table) {
-            assert name == "users"
-            assert rows.size() == 0
+            name == "users"
+            rows.size() == 0
         }
     }
 
@@ -200,9 +200,9 @@ class TableTest extends Specification {
 
         then:
         with(table) {
-            assert name == "users"
-            assert rows[0].name == "Homer"
-            assert rows[1].name == "Bart"
+            name == "users"
+            rows[0].name == "Homer"
+            rows[1].name == "Bart"
         }
     }
 
@@ -212,9 +212,9 @@ class TableTest extends Specification {
 
         then:
         with(table) {
-            assert name == "users"
-            assert rows[0].name == "Homer"
-            assert rows[1].name == "Bart"
+            name == "users"
+            rows[0].name == "Homer"
+            rows[1].name == "Bart"
         }
     }
 
@@ -224,9 +224,9 @@ class TableTest extends Specification {
 
         then:
         with(table) {
-            assert name == "users"
-            assert rows[0].name == "Homer"
-            assert rows[0].columns.toMapString() == [age: Value.of(39)].toMapString()
+            name == "users"
+            rows[0].name == "Homer"
+            rows[0].columns.toMapString() == [age: Value.of(39)].toMapString()
         }
     }
 
@@ -236,9 +236,9 @@ class TableTest extends Specification {
 
         then:
         with(table) {
-            assert name == "users"
-            assert rows[0].name == "Homer"
-            assert rows[0].columns.toMapString() == [age: Value.of(39)].toMapString()
+            name == "users"
+            rows[0].name == "Homer"
+            rows[0].columns.toMapString() == [age: Value.of(39)].toMapString()
         }
     }
 }

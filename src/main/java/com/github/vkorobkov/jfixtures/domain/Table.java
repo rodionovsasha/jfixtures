@@ -3,13 +3,13 @@ package com.github.vkorobkov.jfixtures.domain;
 import lombok.Getter;
 import lombok.val;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static java.util.Collections.*;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableCollection;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public final class Table {
@@ -28,7 +28,7 @@ public final class Table {
     }
 
     public static Table of(String name, Row... rows) {
-        return new Table(name, Arrays.stream(rows).collect(toList()));
+        return new Table(name, Arrays.asList(rows));
     }
 
     public static Table of(String name, Collection<Row> rows) {
