@@ -241,4 +241,77 @@ class TableTest extends Specification {
             rows[0].columns.toMapString() == [age: Value.of(39)].toMapString()
         }
     }
+
+    def "::addRows(Row...) adds rows to existing table"() {
+        given:
+        def table = Table.ofName("users")
+
+        when:
+        def tableWithRows = table.addRows(Row.ofName("Bart"), Row.ofName("Lisa"))
+
+        then:
+        with(tableWithRows) {
+            name == "users"
+            rows[0].name == "Bart"
+            rows[1].name == "Lisa"
+        }
+
+        and:
+        !tableWithRows.is(table)
+    }
+
+    def "::addRows(Row...) does not add duplicated rows to existing table"() {
+        given:
+        def table = Table.of("users", Row.ofName("Bart"))
+
+        when:
+        def tableWithRows = table.addRows(Row.ofName("Bart"))
+
+        then:
+        with(tableWithRows) {
+            name == "users"
+            rows[0].name == "Bart"
+            rows.size() == 1
+        }
+
+        and:
+        !tableWithRows.is(table)
+    }
+
+
+    def "::addRows(Collection<Row>) adds rows to existing table"() {
+        given:
+        def table = Table.ofName("users")
+
+        when:
+        def tableWithRows = table.addRows([Row.ofName("Bart"), Row.ofName("Lisa")])
+
+        then:
+        with(tableWithRows) {
+            name == "users"
+            rows[0].name == "Bart"
+            rows[1].name == "Lisa"
+        }
+
+        and:
+        !tableWithRows.is(table)
+    }
+
+    def "::addRows(Collection<Row>) does not add duplicated rows to existing table"() {
+        given:
+        def table = Table.of("users", Row.ofName("Bart"))
+
+        when:
+        def tableWithRows = table.addRows([Row.ofName("Bart")])
+
+        then:
+        with(tableWithRows) {
+            name == "users"
+            rows[0].name == "Bart"
+            rows.size() == 1
+        }
+
+        and:
+        !tableWithRows.is(table)
+    }
 }
