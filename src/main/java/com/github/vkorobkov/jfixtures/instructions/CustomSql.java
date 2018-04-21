@@ -1,11 +1,15 @@
 package com.github.vkorobkov.jfixtures.instructions;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @Getter
 public class CustomSql implements Instruction {

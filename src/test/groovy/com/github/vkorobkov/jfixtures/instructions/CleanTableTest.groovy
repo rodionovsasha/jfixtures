@@ -1,6 +1,8 @@
 package com.github.vkorobkov.jfixtures.instructions
 
 import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
+import nl.jqno.equalsverifier.EqualsVerifier
+import nl.jqno.equalsverifier.Warning
 import spock.lang.Specification
 
 class CleanTableTest extends Specification {
@@ -24,5 +26,13 @@ class CleanTableTest extends Specification {
 
         then:
         1 * visitor.visit(instruction)
+    }
+
+    def "::equals"() {
+        expect:
+        EqualsVerifier
+            .forClass(CleanTable)
+            .suppress(Warning.STRICT_INHERITANCE, Warning.NONFINAL_FIELDS)
+            .verify()
     }
 }
