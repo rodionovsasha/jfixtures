@@ -43,6 +43,14 @@ public final class Table {
         return of(name, Row.of(row, keyValuePairs));
     }
 
+    public Table addRows(Row... rows) {
+        return mergeRows(Arrays.asList(rows));
+    }
+
+    public Table addRows(Collection<Row> rows) {
+        return mergeRows(rows);
+    }
+
     public static Collection<Table> mergeTables(Collection<Table> toMerge) {
         return toMerge.stream().collect(toMap(
                 table -> table.name, // key
