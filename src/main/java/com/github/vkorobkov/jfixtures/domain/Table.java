@@ -3,10 +3,7 @@ package com.github.vkorobkov.jfixtures.domain;
 import lombok.Getter;
 import lombok.val;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.Collections.*;
@@ -49,6 +46,14 @@ public final class Table {
 
     public Table addRows(Collection<Row> rows) {
         return mergeRows(rows);
+    }
+
+    public Table addRow(String row, Map<String, Object> columns) {
+        return mergeRows(singletonList(Row.of(row, columns)));
+    }
+
+    public Table addRow(String row, Object... keyValuePairs) {
+        return mergeRows(singletonList(Row.of(row, keyValuePairs)));
     }
 
     public static Collection<Table> mergeTables(Collection<Table> toMerge) {

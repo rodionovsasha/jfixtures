@@ -314,4 +314,76 @@ class TableTest extends Specification {
         and:
         !tableWithRows.is(table)
     }
+
+    def "::addRow(columns) adds rows to existing table"() {
+        given:
+        def table = Table.ofName("users")
+
+        when:
+        def tableWithRow = table.addRow("Bart", [age: 10])
+
+        then:
+        with(tableWithRow) {
+            name == "users"
+            rows[0].name == "Bart"
+            rows[0].columns.toMapString() == [age: Value.of(10)].toMapString()
+        }
+
+        and:
+        !tableWithRow.is(table)
+    }
+
+    def "::addRow(columns) does not add duplicated row to existing table"() {
+        given:
+        def table = Table.of("users", Row.ofName("Bart"))
+
+        when:
+        def tableWithRow = table.addRow("Bart", [age: 10])
+
+        then:
+        with(tableWithRow) {
+            name == "users"
+            rows[0].name == "Bart"
+            rows.size() == 1
+        }
+
+        and:
+        !tableWithRow.is(table)
+    }
+
+    def "::addRow(keyValuePairs) adds rows to existing table"() {
+        given:
+        def table = Table.ofName("users")
+
+        when:
+        def tableWithRow = table.addRow("Bart", "age", 10)
+
+        then:
+        with(tableWithRow) {
+            name == "users"
+            rows[0].name == "Bart"
+            rows[0].columns.toMapString() == [age: Value.of(10)].toMapString()
+        }
+
+        and:
+        !tableWithRow.is(table)
+    }
+
+    def "::addRow(keyValuePairs) does not add duplicated row to existing table"() {
+        given:
+        def table = Table.of("users", Row.ofName("Bart"))
+
+        when:
+        def tableWithRow = table.addRow("Bart", "age", 10)
+
+        then:
+        with(tableWithRow) {
+            name == "users"
+            rows[0].name == "Bart"
+            rows.size() == 1
+        }
+
+        and:
+        !tableWithRow.is(table)
+    }
 }
