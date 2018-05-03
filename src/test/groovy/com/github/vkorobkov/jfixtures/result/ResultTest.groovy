@@ -3,6 +3,7 @@ package com.github.vkorobkov.jfixtures.result
 import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
+import com.github.vkorobkov.jfixtures.instructions.InstructionVisitor
 import spock.lang.Specification
 
 class ResultTest extends Specification {
@@ -23,5 +24,18 @@ class ResultTest extends Specification {
 
         then:
         thrown(UnsupportedOperationException)
+    }
+
+    def "::visit calls visitor for every instruction"() {
+        given:
+        def visitor = Mock(InstructionVisitor)
+
+        when:
+        new Result(instructions).visit(visitor)
+
+        then:
+        instructions.each {
+            1 * visitor.visit(it)
+        }
     }
 }
