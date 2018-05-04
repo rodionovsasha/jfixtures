@@ -1,5 +1,7 @@
 package com.github.vkorobkov.jfixtures.testutil
 
+import org.junit.Assert
+
 trait Assertions {
 
     def assertCollectionsEqual(Collection left, Collection right) {
@@ -9,6 +11,15 @@ trait Assertions {
             def rightElement = rightIterator.next()
             assert leftElement == rightElement :
                 "Collections have different elements at index $index: left: $leftElement, right: $rightElement"
+        }
+    }
+
+    def assertUnmodifiableCollection(Collection collection) {
+        try {
+            collection.clear()
+            Assert.fail("Collection is modifiable when expected that it is not")
+        } catch(UnsupportedOperationException _){
+            true
         }
     }
 }
