@@ -25,18 +25,18 @@ class SqlResultTest extends Specification implements Assertions {
     ]
 
     @Shared
-    def subject = new SqlResult(instructions, SqlType.SQL99)
+    def subject = new SqlResult(instructions, SqlType.SQL99.sqlDialect)
 
     def EXPECTED_SQL = """DELETE FROM "users";
             |INSERT INTO "users" ("id", "name", "age") VALUES (1, 'Vlad', 30);
             |""".stripMargin()
 
-    def "::constructor saves instructions and sql type"() {
+    def "::constructor saves instructions and sql implementation"() {
         expect:
         assertCollectionsEqual(subject.instructions, instructions)
 
         and:
-        subject.type == SqlType.SQL99
+        subject.sql == SqlType.SQL99.sqlDialect
     }
 
     def "::constructor saves instructions as unmodifiable collection"() {
