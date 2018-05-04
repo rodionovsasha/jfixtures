@@ -2,8 +2,8 @@ package com.github.vkorobkov.jfixtures.result;
 
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
 import com.github.vkorobkov.jfixtures.sql.Appender;
+import com.github.vkorobkov.jfixtures.sql.Sql;
 import com.github.vkorobkov.jfixtures.sql.SqlBridge;
-import com.github.vkorobkov.jfixtures.sql.SqlType;
 import com.github.vkorobkov.jfixtures.sql.appenders.FileAppender;
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender;
 import com.github.vkorobkov.jfixtures.util.WithResource;
@@ -17,11 +17,11 @@ import static java.util.Collections.unmodifiableCollection;
 @Getter
 public class SqlResult implements StringResult {
     private final Collection<Instruction> instructions;
-    private final SqlType type;
+    private final Sql sql;
 
-    public SqlResult(Collection<Instruction> instructions, SqlType type) {
+    public SqlResult(Collection<Instruction> instructions, Sql sql) {
         this.instructions = unmodifiableCollection(instructions);
-        this.type = type;
+        this.sql = sql;
     }
 
     @Override
@@ -40,6 +40,6 @@ public class SqlResult implements StringResult {
     }
 
     private <T extends Appender> SqlBridge createSqlBridge(T appender) {
-        return new SqlBridge(type.getSqlDialect(), appender);
+        return new SqlBridge(sql, appender);
     }
 }
