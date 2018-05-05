@@ -53,6 +53,9 @@ class ResultTest extends Specification implements Assertions {
         def result = new Result(instructions).toSql99()
 
         then:
+        result instanceof SqlResult
+
+        and:
         assertCollectionsEqual(result.instructions, instructions)
         result.sql == SqlType.SQL99.sqlDialect
     }
@@ -62,6 +65,9 @@ class ResultTest extends Specification implements Assertions {
         def result = new Result(instructions).toMySql()
 
         then:
+        result instanceof SqlResult
+
+        and:
         assertCollectionsEqual(result.instructions, instructions)
         result.sql == SqlType.MYSQL.sqlDialect
     }
@@ -71,6 +77,9 @@ class ResultTest extends Specification implements Assertions {
         def result = new Result(instructions).toMicrosoftSql()
 
         then:
+        result instanceof SqlResult
+
+        and:
         assertCollectionsEqual(result.instructions, instructions)
         result.sql == SqlType.MICROSOFT_SQL.sqlDialect
     }
@@ -81,6 +90,9 @@ class ResultTest extends Specification implements Assertions {
         def result = new Result(instructions).toSql(type)
 
         then:
+        result instanceof SqlResult
+
+        and:
         assertCollectionsEqual(result.instructions, instructions)
         result.sql == type.sqlDialect
 
@@ -96,7 +108,21 @@ class ResultTest extends Specification implements Assertions {
         def result = new Result(instructions).toSql(sql)
 
         then:
+        result instanceof SqlResult
+
+        and:
         assertCollectionsEqual(result.instructions, instructions)
         result.sql == sql
+    }
+
+    def "::toXml returns XMLResult with instructions"() {
+        when:
+        def result = new Result(instructions).toXml()
+
+        then:
+        result instanceof XmlResult
+
+        and:
+        assertCollectionsEqual(result.instructions, instructions)
     }
 }
