@@ -184,6 +184,7 @@
                         <exclude>com/github/vkorobkov/jfixtures/fluent/impl/JFixturesResultBase*.class</exclude>
                         <!--test exception for asString method-->
                         <exclude>com/github/vkorobkov/jfixtures/fluent/impl/XmlJFixturesResultImpl*.class</exclude>
+                        <exclude>com/github/vkorobkov/jfixtures/result/XmlResult.class</exclude>
                         <!--Impossible to fully test auto generated <equals> method with the latest lombok-->
                         <exclude>com/github/vkorobkov/jfixtures/instructions/CleanTable.class</exclude>
                         <exclude>com/github/vkorobkov/jfixtures/instructions/CustomSql.class</exclude>
