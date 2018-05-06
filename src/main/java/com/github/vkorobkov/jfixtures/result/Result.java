@@ -40,4 +40,8 @@ public class Result {
     public SqlResult toSql(Sql sql) {
         return new SqlResult(instructions, sql);
     }
+
+    public XmlResult toXml() {
+        return new XmlResult(instructions);
+    }
 }
