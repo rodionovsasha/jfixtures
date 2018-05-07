@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.types
 
-import com.github.vkorobkov.jfixtures.JFixturesOld
+import com.github.vkorobkov.jfixtures.JFixtures
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
@@ -87,22 +87,34 @@ class JFixturesNullTest extends Specification implements YamlVirtualDirectory {
     }
 
     def "should get uppercased null values in SQL for nulls"() {
-        expect:
-        JFixturesOld.sql99(nullDirectoryPath as String).asString() == NULL_EXPECTED_SQL
+        when:
+        def sql = JFixtures.noConfig().loadDirectory(nullDirectoryPath as String).compile().toSql99().toString()
+
+        then:
+        sql == NULL_EXPECTED_SQL
     }
 
     def "should not get uppercased values in SQL for strings"() {
-        expect:
-        JFixturesOld.sql99(stringDirectoryPath as String).asString() == STRING_EXPECTED_SQL
+        when:
+        def sql = JFixtures.noConfig().loadDirectory(stringDirectoryPath as String).compile().toSql99().toString()
+
+        then:
+        sql == STRING_EXPECTED_SQL
     }
 
     def "should not get uppercased values in XML for nulls"() {
-        expect:
-        JFixturesOld.xml(nullDirectoryPath as String).asString() == NULL_EXPECTED_XML
+        when:
+        def xml = JFixtures.noConfig().loadDirectory(nullDirectoryPath as String).compile().toXml().toString()
+
+        then:
+        xml == NULL_EXPECTED_XML
     }
 
     def "should not get uppercased values in XML for strings"() {
-        expect:
-        JFixturesOld.xml(stringDirectoryPath as String).asString() == STRING_EXPECTED_XML
+        when:
+        def xml = JFixtures.noConfig().loadDirectory(stringDirectoryPath as String).compile().toXml().toString()
+
+        then:
+        xml == STRING_EXPECTED_XML
     }
 }

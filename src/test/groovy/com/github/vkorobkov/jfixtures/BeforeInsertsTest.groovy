@@ -17,8 +17,11 @@ class BeforeInsertsTest extends Specification implements YamlVirtualDirectory {
         setup:
         def directory = unpackYamlToTempDirectory("default.yml")
 
-        expect:
-        JFixturesOld.sql99(directory as String).asString() == DEFAULT_EXPECTED_SQL
+        when:
+        def sql = JFixtures.noConfig().loadDirectory(directory as String).compile().toSql99().toString()
+
+        then:
+        sql == DEFAULT_EXPECTED_SQL
 
         cleanup:
         directory.toFile().deleteDir()
@@ -27,9 +30,13 @@ class BeforeInsertsTest extends Specification implements YamlVirtualDirectory {
     def "should insert custom SQL if present"() {
         setup:
         def directory = unpackYamlToTempDirectory("custom.yml")
+        def conf = "${directory}/.conf.yml"
 
-        expect:
-        JFixturesOld.sql99(directory as String).asString() == CUSTOM_EXPECTED_SQL
+        when:
+        def sql = JFixtures.ofConfig(conf).loadDirectory(directory as String).compile().toSql99().toString()
+
+        then:
+        sql == CUSTOM_EXPECTED_SQL
 
         cleanup:
         directory.toFile().deleteDir()
