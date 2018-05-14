@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.testutil
 
-import com.github.vkorobkov.jfixtures.JFixturesOld
+import com.github.vkorobkov.jfixtures.JFixtures
 import com.github.vkorobkov.jfixtures.sql.DataSourceUtil
 import groovy.sql.Sql
 
@@ -8,7 +8,25 @@ trait H2Test extends YamlVirtualDirectory {
     Sql getSql() { DataSourceUtil.sql }
 
     def executeFixtures(directoryPath) {
-        sql.execute(JFixturesOld.sql99(directoryPath as String).asString())
+        def fixtures = JFixtures
+            .noConfig()
+            .loadDirectory(directoryPath as String)
+            .compile()
+            .toSql99()
+            .toString()
+
+        sql.execute(fixtures)
+    }
+
+    def executeFixtures(directoryPath, configPath) {
+        def fixtures = JFixtures
+            .ofConfig(configPath)
+            .loadDirectory(directoryPath as String)
+            .compile()
+            .toSql99()
+            .toString()
+
+        sql.execute(fixtures)
     }
 
     def recreateTable(tableName, tableColumns) {
