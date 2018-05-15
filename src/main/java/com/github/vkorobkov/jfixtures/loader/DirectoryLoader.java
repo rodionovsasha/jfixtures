@@ -55,7 +55,7 @@ public class DirectoryLoader {
     private Table loadTable(Path file) {
         String name = getTableName(file);
         Map<String, Object> yamlContent = YmlUtil.load(file);
-        return Table.of(name, new MapRowsLoader(yamlContent).load());
+        return Table.of(name, MapDataLoader.loadRows(yamlContent));
     }
 
     private String getTableName(Path file) {

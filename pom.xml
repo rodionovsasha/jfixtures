@@ -58,7 +58,7 @@
 
         <!--Plugins-->
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
-        <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.0</jacoco-maven-plugin.version>
         <gmavenplus-plugin.version>1.5</gmavenplus-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
