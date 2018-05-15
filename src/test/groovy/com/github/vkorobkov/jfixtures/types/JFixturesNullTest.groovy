@@ -88,7 +88,7 @@ class JFixturesNullTest extends Specification implements YamlVirtualDirectory {
 
     def "should get uppercased null values in SQL for nulls"() {
         when:
-        def sql = JFixtures.noConfig().loadDirectory(nullDirectoryPath as String).compile().toSql99().toString()
+        def sql = JFixtures.noConfig().loadDirectory(nullDirectoryPath).compile().toSql99().toString()
 
         then:
         sql == NULL_EXPECTED_SQL
@@ -96,7 +96,7 @@ class JFixturesNullTest extends Specification implements YamlVirtualDirectory {
 
     def "should not get uppercased values in SQL for strings"() {
         when:
-        def sql = JFixtures.noConfig().loadDirectory(stringDirectoryPath as String).compile().toSql99().toString()
+        def sql = JFixtures.noConfig().loadDirectory(stringDirectoryPath).compile().toSql99().toString()
 
         then:
         sql == STRING_EXPECTED_SQL
@@ -104,7 +104,7 @@ class JFixturesNullTest extends Specification implements YamlVirtualDirectory {
 
     def "should not get uppercased values in XML for nulls"() {
         when:
-        def xml = JFixtures.noConfig().loadDirectory(nullDirectoryPath as String).compile().toXml().toString()
+        def xml = JFixtures.noConfig().loadDirectory(nullDirectoryPath).compile().toXml().toString()
 
         then:
         xml == NULL_EXPECTED_XML
@@ -112,7 +112,7 @@ class JFixturesNullTest extends Specification implements YamlVirtualDirectory {
 
     def "should not get uppercased values in XML for strings"() {
         when:
-        def xml = JFixtures.noConfig().loadDirectory(stringDirectoryPath as String).compile().toXml().toString()
+        def xml = JFixtures.noConfig().loadDirectory(stringDirectoryPath).compile().toXml().toString()
 
         then:
         xml == STRING_EXPECTED_XML

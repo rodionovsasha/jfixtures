@@ -72,7 +72,7 @@ class JFixturesBooleanTest extends Specification implements YamlVirtualDirectory
 
     def "should get uppercased null values in SQL for nulls"() {
         when:
-        def sql = JFixtures.noConfig().loadDirectory(directoryPath as String).compile().toSql99().toString()
+        def sql = JFixtures.noConfig().loadDirectory(directoryPath).compile().toSql99().toString()
 
         then:
         sql == EXPECTED_SQL
@@ -80,7 +80,7 @@ class JFixturesBooleanTest extends Specification implements YamlVirtualDirectory
 
     def "should not get uppercased boolean values in XML"() {
         when:
-        def xml = JFixtures.noConfig().loadDirectory(directoryPath as String).compile().toXml().toString()
+        def xml = JFixtures.noConfig().loadDirectory(directoryPath).compile().toXml().toString()
 
         then:
         xml == EXPECTED_XML
