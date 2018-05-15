@@ -60,7 +60,7 @@ class CleanTableIntegrationTest extends Specification implements H2Test {
         sql.execute("INSERT INTO users (\"id\", \"name\", \"age\") VALUES (10000, 'Vladimir', 29);")
 
         when:
-        executeFixtures(tmpCleanDirectory)
+        executeFixtures(tmpCleanDirectory, "$tmpCleanDirectory/.conf.yml")
 
         then:
         def results = sql.rows("SELECT * FROM users")

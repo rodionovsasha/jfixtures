@@ -1,6 +1,6 @@
 package com.github.vkorobkov.jfixtures.types
 
-import com.github.vkorobkov.jfixtures.JFixturesOld
+import com.github.vkorobkov.jfixtures.JFixtures
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
@@ -71,12 +71,18 @@ class JFixturesBooleanTest extends Specification implements YamlVirtualDirectory
     }
 
     def "should get uppercased null values in SQL for nulls"() {
-        expect:
-        JFixturesOld.sql99(directoryPath as String).asString() == EXPECTED_SQL
+        when:
+        def sql = JFixtures.noConfig().loadDirectory(directoryPath as String).compile().toSql99().toString()
+
+        then:
+        sql == EXPECTED_SQL
     }
 
     def "should not get uppercased boolean values in XML"() {
-        expect:
-        JFixturesOld.xml(directoryPath as String).asString() == EXPECTED_XML
+        when:
+        def xml = JFixtures.noConfig().loadDirectory(directoryPath as String).compile().toXml().toString()
+
+        then:
+        xml == EXPECTED_XML
     }
 }

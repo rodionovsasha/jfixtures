@@ -1,7 +1,8 @@
 package com.github.vkorobkov.jfixtures.processor
 
 import com.github.vkorobkov.jfixtures.IntId
-import com.github.vkorobkov.jfixtures.config.ConfigLoaderOld
+import com.github.vkorobkov.jfixtures.config.ConfigLoader
+import com.github.vkorobkov.jfixtures.config.structure.Root
 import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
 import com.github.vkorobkov.jfixtures.domain.Value
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
@@ -377,9 +378,17 @@ class ProcessorTest extends Specification implements YamlVirtualDirectory {
 
     List<Instruction> load(String ymlFile) {
         def path = unpackYamlToTempDirectory(ymlFile) as String
-        def config = ConfigLoaderOld.load(path)
+        def config = loadConfig(path)
         def fixtures = new DirectoryLoader(path).load()
         new Processor(fixtures, config).process()
     }
 
+    private Root loadConfig(path) {
+        def loader = new ConfigLoader()
+        path = "${path}/.conf.yml"
+        if (new File(path).exists()) {
+            return loader.load(path)
+        }
+        loader.defaultConfig()
+    }
 }
