@@ -47,7 +47,7 @@ class JFixturesIntegrationTest extends Specification implements YamlVirtualDirec
 
     def mapOfTables = [
             users: [
-                    vlad : [id: 1, name: 'Vlad', age: 29]
+                    vlad: [id: 1, name: 'Vlad', age: 29]
             ]
     ]
 
