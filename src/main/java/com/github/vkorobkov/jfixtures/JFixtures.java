@@ -5,6 +5,7 @@ import com.github.vkorobkov.jfixtures.config.structure.Root;
 import com.github.vkorobkov.jfixtures.domain.Table;
 import com.github.vkorobkov.jfixtures.instructions.Instruction;
 import com.github.vkorobkov.jfixtures.loader.DirectoryLoader;
+import com.github.vkorobkov.jfixtures.loader.MapDataLoader;
 import com.github.vkorobkov.jfixtures.processor.Processor;
 import com.github.vkorobkov.jfixtures.result.Result;
 import com.github.vkorobkov.jfixtures.util.CollectionUtil;
@@ -42,6 +43,10 @@ public final class JFixtures {
 
     public JFixtures addTables(Table... tables) {
         return addTables(Arrays.asList(tables));
+    }
+
+    public JFixtures addTables(Map<String, Map<String, Object>> tables) {
+        return addTables(MapDataLoader.loadTables(tables));
     }
 
     public JFixtures addTables(Collection<Table> newTables) {
