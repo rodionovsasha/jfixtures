@@ -106,7 +106,7 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory, Instr
         JFixtures.noConfig().addTables([] as Table[]).tables.size() == 0
     }
 
-    def "::load adds fixtures stored in the directory"() {
+    def "::loadDirectory(String) adds fixtures stored in the directory"() {
         setup:
         def path = unpackYamlToTempDirectory("default.yml")
 
@@ -114,15 +114,35 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory, Instr
         def tables = JFixtures.noConfig().loadDirectory(path.toString()).tables
 
         then:
-        tables.size() == 1
+        assertLoadedTables(tables)
 
-        and:
-        def table = tables.first()
-        table.name == "users"
-        table.rows.toList() == [
-                Row.of("vlad", [id: 1, name: "Vlad", age: 30]),
-                Row.of("homer", [id: 2, name: "Homer", age: 40])
-        ]
+        cleanup:
+        path.toFile().deleteDir()
+    }
+
+    def "::loadDirectory(Path) adds fixtures stored in the directory"() {
+        setup:
+        def path = unpackYamlToTempDirectory("default.yml")
+
+        when:
+        def tables = JFixtures.noConfig().loadDirectory(path).tables
+
+        then:
+        assertLoadedTables(tables)
+
+        cleanup:
+        path.toFile().deleteDir()
+    }
+
+    def "::loadDirectory(File) adds fixtures stored in the directory"() {
+        setup:
+        def path = unpackYamlToTempDirectory("default.yml")
+
+        when:
+        def tables = JFixtures.noConfig().loadDirectory(path.toFile()).tables
+
+        then:
+        assertLoadedTables(tables)
 
         cleanup:
         path.toFile().deleteDir()
@@ -217,5 +237,17 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory, Instr
 
         cleanup:
         path.toFile().deleteDir()
+    }
+
+    private static assertLoadedTables(tables) {
+        assert tables.size() == 1
+
+        def table = tables.first()
+        assert table.name == "users"
+        assert table.rows.toList() == [
+                Row.of("vlad", [id: 1, name: "Vlad", age: 30]),
+                Row.of("homer", [id: 2, name: "Homer", age: 40])
+        ]
+        true
     }
 }
