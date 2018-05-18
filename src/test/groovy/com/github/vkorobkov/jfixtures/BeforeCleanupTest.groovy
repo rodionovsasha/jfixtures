@@ -39,7 +39,7 @@ class BeforeCleanupTest extends Specification implements YamlVirtualDirectory {
 
         when:
         def sql = JFixtures
-            .ofConfig(conf)
+            .withConfig(conf)
             .loadDirectory(directory)
             .compile()
             .toSql99()
