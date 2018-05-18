@@ -3,6 +3,7 @@ package com.github.vkorobkov.jfixtures
 import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
 import com.github.vkorobkov.jfixtures.domain.Row
 import com.github.vkorobkov.jfixtures.domain.Table
+import com.github.vkorobkov.jfixtures.domain.Value
 import com.github.vkorobkov.jfixtures.testutil.Assertions
 import com.github.vkorobkov.jfixtures.testutil.InstructionsHelper
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
@@ -237,6 +238,46 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory, Instr
 
         cleanup:
         path.toFile().deleteDir()
+    }
+
+    def "::addTables(Map<String, Map<String, Object>>) adds new tables"() {
+        given:
+        def tablesWithRows = [
+                users   : [
+                        vlad : [id: 5, age: 30],
+                        homer: [id: 6, age: 39]
+                ],
+                comments: [:]
+        ]
+        def fixtures = JFixtures.noConfig()
+
+        when:
+        def withTables = fixtures.addTables(tablesWithRows).tables
+
+        then:
+        withTables.size() == 2
+
+        and:
+        def users = withTables[0]
+        users.name == 'users'
+        users.rows.size() == 2
+
+        and:
+        def vlad = users.rows[0]
+        vlad.name == 'vlad'
+        vlad.columns.id == Value.of(5)
+        vlad.columns.age == Value.of(30)
+
+        and:
+        def homer = users.rows[1]
+        homer.name == 'homer'
+        homer.columns.id == Value.of(6)
+        homer.columns.age == Value.of(39)
+
+        and:
+        def comments = withTables[1]
+        comments.name == 'comments'
+        comments.rows.size() == 0
     }
 
     private static assertLoadedTables(tables) {
