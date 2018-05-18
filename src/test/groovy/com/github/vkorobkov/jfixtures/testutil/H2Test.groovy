@@ -20,7 +20,7 @@ trait H2Test extends YamlVirtualDirectory {
 
     def executeFixtures(directoryPath, configPath) {
         def fixtures = JFixtures
-            .ofConfig(configPath)
+            .withConfig(configPath)
             .loadDirectory(directoryPath)
             .compile()
             .toSql99()

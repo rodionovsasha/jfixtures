@@ -33,7 +33,7 @@ class AfterInsertsTest extends Specification implements YamlVirtualDirectory {
         def conf = "${directory}/.conf.yml"
 
         when:
-        def sql = JFixtures.ofConfig(conf).loadDirectory(directory).compile().toSql99().toString()
+        def sql = JFixtures.withConfig(conf).loadDirectory(directory).compile().toSql99().toString()
 
         then:
         sql == CUSTOM_EXPECTED_SQL

@@ -9,10 +9,28 @@ import com.github.vkorobkov.jfixtures.testutil.InstructionsHelper
 import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
+import java.nio.file.Paths
+
 class JFixturesTest extends Specification implements YamlVirtualDirectory, InstructionsHelper, Assertions {
-    def "::ofConfig instantiates object with config path stored"() {
+    def "::withConfig(String) instantiates object with config path stored"() {
         expect:
-        JFixtures.ofConfig("path/.conf").config == Optional.of("path/.conf")
+        JFixtures.withConfig("path/.conf").config == Optional.of("path/.conf")
+    }
+
+    def "::withConfig(File) instantiates object with config path stored"() {
+        when:
+        def file = new File("path/.conf")
+
+        then:
+        JFixtures.withConfig(file).config == Optional.of(file.getAbsolutePath())
+    }
+
+    def "::withConfig(Path) instantiates object with config path stored"() {
+        when:
+        def path = Paths.get("path/.conf")
+
+        then:
+        JFixtures.withConfig(path).config == Optional.of(path.toString())
     }
 
     def "::noConfig instantiates object with empty config"() {
@@ -217,7 +235,7 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory, Instr
         def table = Table.of("users", rows)
 
         when:
-        def result = JFixtures.ofConfig(path.resolve(".conf").toString()).addTables(table).compile()
+        def result = JFixtures.withConfig(path.resolve(".conf").toString()).addTables(table).compile()
 
         then:
         assertCollectionsEqual(result.instructions, [

@@ -29,7 +29,15 @@ public final class JFixtures {
         this.tables = Collections.unmodifiableCollection(tables);
     }
 
-    public static JFixtures ofConfig(String config) {
+    public static JFixtures withConfig(Path config) {
+        return withConfig(config.toString());
+    }
+
+    public static JFixtures withConfig(File config) {
+        return withConfig(config.getAbsolutePath());
+    }
+
+    public static JFixtures withConfig(String config) {
         return new JFixtures(Optional.of(config));
     }
 
