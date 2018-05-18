@@ -11,6 +11,8 @@ import com.github.vkorobkov.jfixtures.result.Result;
 import com.github.vkorobkov.jfixtures.util.CollectionUtil;
 import lombok.Getter;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 
 @Getter
@@ -33,6 +35,14 @@ public final class JFixtures {
 
     public static JFixtures noConfig() {
         return new JFixtures(Optional.empty());
+    }
+
+    public JFixtures loadDirectory(File path) {
+        return loadDirectory(path.getAbsolutePath());
+    }
+
+    public JFixtures loadDirectory(Path path) {
+        return loadDirectory(path.toString());
     }
 
     public JFixtures loadDirectory(String path) {
