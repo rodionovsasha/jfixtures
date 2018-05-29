@@ -9,10 +9,14 @@ import com.github.vkorobkov.jfixtures.loader.MapDataLoader;
 import com.github.vkorobkov.jfixtures.processor.Processor;
 import com.github.vkorobkov.jfixtures.result.Result;
 import com.github.vkorobkov.jfixtures.util.CollectionUtil;
+import com.github.vkorobkov.jfixtures.util.YmlUtil;
 import lombok.Getter;
+import lombok.val;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Getter
@@ -45,25 +49,29 @@ public final class JFixtures {
         return new JFixtures(Optional.empty());
     }
 
-    public JFixtures loadDirectory(File path) {
-        return loadDirectory(path.getAbsolutePath());
+    public JFixtures load(File path) {
+        return load(path.getAbsolutePath());
     }
 
-    public JFixtures loadDirectory(Path path) {
-        return loadDirectory(path.toString());
+    public JFixtures load(Path path) {
+        return load(path.toString());
     }
 
-    public JFixtures loadDirectory(String path) {
-        return addTables(
-            new DirectoryLoader(path).load()
-        );
+    public JFixtures load(String path) {
+        Path dataPath = Paths.get(path);
+        if (Files.isDirectory(dataPath)) {
+            val data = new DirectoryLoader(path).load();
+            return addTables(data);
+        }
+        val data = YmlUtil.load(dataPath);
+        return addTables(data);
     }
 
     public JFixtures addTables(Table... tables) {
         return addTables(Arrays.asList(tables));
     }
 
-    public JFixtures addTables(Map<String, Map<String, Object>> tables) {
+    public JFixtures addTables(Map<String, ?> tables) {
         return addTables(MapDataLoader.loadTables(tables));
     }
 

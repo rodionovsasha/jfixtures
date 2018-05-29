@@ -1,0 +1,20 @@
+# users table
+users:
+  vlad:
+    id: 1
+    name: Vlad
+    age: 30
+  homer:
+    id: 2
+    name: Homer
+    age: 40
+
+# admin.roles table
+# beware the dots in table name should be escaped
+"admin.roles":
+  admin:
+    reads: true
+    writes: true
+  user:
+    reads: true
+    writes: false
