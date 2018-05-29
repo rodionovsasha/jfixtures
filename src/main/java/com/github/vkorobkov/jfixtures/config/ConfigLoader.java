@@ -8,14 +8,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class ConfigLoader {
-    public Root load(String filePath) {
+    public Root load(String filePath, String profile) {
         Path path = Paths.get(filePath);
-        return new Root(
-            Node.root(YmlUtil.load(path))
+        return Root.ofProfile(
+                Node.root(YmlUtil.load(path)),
+                profile
         );
-    }
-
-    public Root defaultConfig() {
-        return new Root(Node.emptyRoot());
     }
 }

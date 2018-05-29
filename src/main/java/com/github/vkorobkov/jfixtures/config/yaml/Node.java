@@ -45,6 +45,10 @@ public final class Node {
         return subNode(this, name, asMap().get(name));
     }
 
+    public boolean exists() {
+        return content.isPresent();
+    }
+
     @SuppressWarnings("unchecked")
     public <T> Optional<T> optional() {
         return (Optional<T>) content;

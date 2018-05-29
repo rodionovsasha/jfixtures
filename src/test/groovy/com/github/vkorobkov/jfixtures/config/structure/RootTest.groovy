@@ -6,7 +6,44 @@ import spock.lang.Unroll
 
 @Unroll
 class RootTest extends Specification {
-    def "referredTable() positive case"() {
+    def "::empty creates a new config instance"() {
+        expect:
+        Root.empty()
+    }
+
+    def "::ofProfile creates config on the top of the root node if requested profile does not exist"() {
+        given:
+        def config = [
+                refs: [users: [role_id: "roles"]],
+                profiles: [unit: [
+                        refs: [users: [role_id: "unit_roles"]],
+                ]]
+        ]
+
+        when:
+        def root = root(config, "integration")
+
+        then:
+        root.referredTable("users", "role_id").get() == "roles"
+    }
+
+    def "::ofProfile creates config with specified profile"() {
+        given:
+        def config = [
+                refs: [users: [role_id: "roles"]],
+                profiles: [unit: [
+                        refs: [users: [role_id: "unit_roles"]],
+                ]]
+        ]
+
+        when:
+        def root = root(config, "unit")
+
+        then:
+        root.referredTable("users", "role_id").get() == "unit_roles"
+    }
+
+    def "::referredTable() positive case"() {
         when:
         def root = root(refs: [users: [role_id: "roles"]])
 
@@ -14,7 +51,7 @@ class RootTest extends Specification {
         root.referredTable("users", "role_id").get() == "roles"
     }
 
-    def "referredTable() returns empty optional when does not match"(table, column) {
+    def "::referredTable() returns empty optional when does not match"(table, column) {
         when:
         def root = root(refs: [users: [role_id: "roles"]])
 
@@ -28,12 +65,12 @@ class RootTest extends Specification {
         "sr"    | "rls"
     }
 
-    def "referredTable() returns empty optional if refs section does not exist"() {
+    def "::referredTable() returns empty optional if refs section does not exist"() {
         expect:
         !root([:]).referredTable("users", "role_id").present
     }
 
-    def root(content) {
-        new Root(Node.root(content))
+    def root(content, profile = "default") {
+        Root.ofProfile(Node.root(content), profile)
     }
 }

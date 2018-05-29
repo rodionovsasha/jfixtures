@@ -17,15 +17,19 @@ import java.util.*;
 
 @Getter
 public final class JFixtures {
+    public static final String DEFAULT_PROFILE = "default";
+
     private final Optional<String> config;
     private final Collection<Table> tables;
+    private final String profile;
 
-    private JFixtures(Optional<String> config) {
-        this(config, Collections.emptyList());
+    private JFixtures(Optional<String> config, String profile) {
+        this(config, profile, Collections.emptyList());
     }
 
-    private JFixtures(Optional<String> config, Collection<Table> tables) {
+    private JFixtures(Optional<String> config, String profile, Collection<Table> tables) {
         this.config = config;
+        this.profile = profile;
         this.tables = Collections.unmodifiableCollection(tables);
     }
 
@@ -38,11 +42,11 @@ public final class JFixtures {
     }
 
     public static JFixtures withConfig(String config) {
-        return new JFixtures(Optional.of(config));
+        return new JFixtures(Optional.of(config), DEFAULT_PROFILE);
     }
 
     public static JFixtures noConfig() {
-        return new JFixtures(Optional.empty());
+        return new JFixtures(Optional.empty(), DEFAULT_PROFILE);
     }
 
     public JFixtures loadDirectory(File path) {
@@ -70,8 +74,13 @@ public final class JFixtures {
     public JFixtures addTables(Collection<Table> newTables) {
         return new JFixtures(
             this.config,
+            this.profile,
             CollectionUtil.concat(this.tables, newTables)
         );
+    }
+
+    public JFixtures withProfile(String profile) {
+        return new JFixtures(this.config, profile, this.tables);
     }
 
     public Result compile() {
@@ -80,7 +89,10 @@ public final class JFixtures {
     }
 
     private Root loadConfig() {
-        ConfigLoader loader = new ConfigLoader();
-        return config.map(loader::load).orElseGet(loader::defaultConfig);
+        return config.map(this::loadConfig).orElseGet(Root::empty);
+    }
+
+    private Root loadConfig(String path) {
+        return new ConfigLoader().load(path, profile);
     }
 }

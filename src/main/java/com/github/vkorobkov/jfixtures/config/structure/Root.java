@@ -5,8 +5,18 @@ import com.github.vkorobkov.jfixtures.config.yaml.Node;
 
 import java.util.Optional;
 
-public class Root extends Section {
-    public Root(Node node) {
+public final class Root extends Section {
+    public static Root ofProfile(Node root, String profile) {
+        Node profileNode = root.dig("profiles", profile);
+        Node node = profileNode.exists() ? profileNode : root;
+        return new Root(node);
+    }
+
+    public static Root empty() {
+        return new Root(Node.emptyRoot());
+    }
+
+    private Root(Node node) {
         super(node);
     }
 

@@ -387,8 +387,8 @@ class ProcessorTest extends Specification implements YamlVirtualDirectory {
         def loader = new ConfigLoader()
         path = "${path}/.conf.yml"
         if (new File(path).exists()) {
-            return loader.load(path)
+            return loader.load(path, "default")
         }
-        loader.defaultConfig()
+        Root.empty()
     }
 }
