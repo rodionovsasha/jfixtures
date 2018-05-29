@@ -65,7 +65,7 @@ class JFixturesIntegrationTest extends Specification implements YamlVirtualDirec
         when:
         def sql = JFixtures
                 .noConfig()
-                .loadDirectory(tmpDirectoryPath)
+                .load(tmpDirectoryPath)
                 .compile()
                 .toMySql()
                 .toString()
@@ -78,7 +78,7 @@ class JFixturesIntegrationTest extends Specification implements YamlVirtualDirec
         when:
         JFixtures
                 .noConfig()
-                .loadDirectory(tmpDirectoryPath)
+                .load(tmpDirectoryPath)
                 .compile()
                 .toMySql()
                 .toFile(outputPath)
@@ -91,7 +91,7 @@ class JFixturesIntegrationTest extends Specification implements YamlVirtualDirec
         when:
         def sql = JFixtures
                 .noConfig()
-                .loadDirectory(tmpDirectoryPath)
+                .load(tmpDirectoryPath)
                 .compile()
                 .toSql(type)
                 .toString()
@@ -108,7 +108,7 @@ class JFixturesIntegrationTest extends Specification implements YamlVirtualDirec
         when:
         JFixtures
                 .noConfig()
-                .loadDirectory(tmpDirectoryPath)
+                .load(tmpDirectoryPath)
                 .compile()
                 .toSql(type)
                 .toFile(outputPath)
@@ -125,7 +125,7 @@ class JFixturesIntegrationTest extends Specification implements YamlVirtualDirec
         when:
         def sql = JFixtures
                 .noConfig()
-                .loadDirectory(tmpDirectoryPath)
+                .load(tmpDirectoryPath)
                 .compile()
                 .toMicrosoftSql()
                 .toString()
@@ -138,7 +138,7 @@ class JFixturesIntegrationTest extends Specification implements YamlVirtualDirec
         when:
         JFixtures
                 .noConfig()
-                .loadDirectory(tmpDirectoryPath)
+                .load(tmpDirectoryPath)
                 .compile()
                 .toMicrosoftSql()
                 .toFile(outputPath)
@@ -151,7 +151,7 @@ class JFixturesIntegrationTest extends Specification implements YamlVirtualDirec
         when:
         def sql = JFixtures
                 .noConfig()
-                .loadDirectory(tmpDirectoryPath)
+                .load(tmpDirectoryPath)
                 .compile()
                 .toSql99()
                 .toString()
@@ -164,7 +164,7 @@ class JFixturesIntegrationTest extends Specification implements YamlVirtualDirec
         when:
         JFixtures
                 .noConfig()
-                .loadDirectory(tmpDirectoryPath)
+                .load(tmpDirectoryPath)
                 .compile()
                 .toSql99()
                 .toFile(outputPath)
@@ -177,7 +177,7 @@ class JFixturesIntegrationTest extends Specification implements YamlVirtualDirec
         when:
         def xml = JFixtures
                 .noConfig()
-                .loadDirectory(tmpDirectoryPath)
+                .load(tmpDirectoryPath)
                 .compile()
                 .toXml()
                 .toString()
@@ -190,7 +190,7 @@ class JFixturesIntegrationTest extends Specification implements YamlVirtualDirec
         when:
         JFixtures
                 .noConfig()
-                .loadDirectory(tmpDirectoryPath)
+                .load(tmpDirectoryPath)
                 .compile()
                 .toXml()
                 .toFile(outputXmlPath)

@@ -13,7 +13,7 @@ public final class MapDataLoader {
     private MapDataLoader() {
     }
 
-    public static Collection<Table> loadTables(Map<String, Map<String, Object>> tables) {
+    public static Collection<Table> loadTables(Map<String, ?> tables) {
         if (tables == null) {
             return Collections.emptyList();
         }

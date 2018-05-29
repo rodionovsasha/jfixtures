@@ -125,12 +125,12 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory, Instr
         JFixtures.noConfig().addTables([] as Table[]).tables.size() == 0
     }
 
-    def "::loadDirectory(String) adds fixtures stored in the directory"() {
+    def "::load(String) adds fixtures stored in the directory"() {
         setup:
         def path = unpackYamlToTempDirectory("default.yml")
 
         when:
-        def tables = JFixtures.noConfig().loadDirectory(path.toString()).tables
+        def tables = JFixtures.noConfig().load(path.toString()).tables
 
         then:
         assertLoadedTables(tables)
@@ -139,12 +139,12 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory, Instr
         path.toFile().deleteDir()
     }
 
-    def "::loadDirectory(Path) adds fixtures stored in the directory"() {
+    def "::load(Path) adds fixtures stored in the directory"() {
         setup:
         def path = unpackYamlToTempDirectory("default.yml")
 
         when:
-        def tables = JFixtures.noConfig().loadDirectory(path).tables
+        def tables = JFixtures.noConfig().load(path).tables
 
         then:
         assertLoadedTables(tables)
@@ -153,18 +153,40 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory, Instr
         path.toFile().deleteDir()
     }
 
-    def "::loadDirectory(File) adds fixtures stored in the directory"() {
+    def "::load(File) adds fixtures stored in the directory"() {
         setup:
         def path = unpackYamlToTempDirectory("default.yml")
 
         when:
-        def tables = JFixtures.noConfig().loadDirectory(path.toFile()).tables
+        def tables = JFixtures.noConfig().load(path.toFile()).tables
 
         then:
         assertLoadedTables(tables)
 
         cleanup:
         path.toFile().deleteDir()
+    }
+
+    def "::load(String) adds fixtures stored in a single yaml file"() {
+        when:
+        def tables = JFixtures.noConfig().load("src/test/resources/j_fixtures_test/mono.yml").tables
+
+        then:
+        tables.size() == 2
+
+        def users = tables[0]
+        users.name == "users"
+        users.rows.toList() == [
+                Row.of("vlad", [id: 1, name: "Vlad", age: 30]),
+                Row.of("homer", [id: 2, name: "Homer", age: 40])
+        ]
+
+        def roles = tables[1]
+        roles.name == "admin.roles"
+        roles.rows.toList() == [
+                Row.of("admin", [reads: true, writes: true]),
+                Row.of("user", [reads: true, writes: false])
+        ]
     }
 
     def "::compile returns instructions without specified config"() {
