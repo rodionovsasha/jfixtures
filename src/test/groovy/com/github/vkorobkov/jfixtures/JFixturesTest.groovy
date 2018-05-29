@@ -1,124 +1,358 @@
 package com.github.vkorobkov.jfixtures
 
-import com.github.vkorobkov.jfixtures.sql.SqlType
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
+import com.github.vkorobkov.jfixtures.domain.Row
+import com.github.vkorobkov.jfixtures.domain.Table
+import com.github.vkorobkov.jfixtures.domain.Value
+import com.github.vkorobkov.jfixtures.testutil.Assertions
+import com.github.vkorobkov.jfixtures.testutil.InstructionsHelper
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
-import java.nio.file.Path
+import java.nio.file.Paths
 
-class JFixturesTest extends Specification implements YamlVirtualFolder {
-    Path tmpFolderPath
-    String outputPath
-    String outputXmlPath
-
-    def DEFAULT_EXPECTED_SQL = """DELETE FROM "users";
-            |INSERT INTO "users" ("id", "name", "age") VALUES (1, 'Vlad', 29);
-            |""".stripMargin()
-    def MYSQL_EXPECTED_SQL = """DELETE FROM `users`;
-            |INSERT INTO `users` (`id`, `name`, `age`) VALUES (1, 'Vlad', 29);
-            |""".stripMargin()
-    def MICROSOFT_SQL_EXPECTED_SQL = """DELETE FROM [users];
-            |INSERT INTO [users] ([id], [name], [age]) VALUES (1, 'Vlad', 29);
-            |""".stripMargin()
-    def DEFAULT_EXPECTED_XML = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-            |<instructions>
-            |    <instruction type="CleanTable" table="users" cleanMethod="DELETE"/>
-            |    <instruction type="InsertRow" table="users" rowName="vlad">
-            |        <values>
-            |            <entry>
-            |                <key>id</key>
-            |                <value type="AUTO">1</value>
-            |            </entry>
-            |            <entry>
-            |                <key>name</key>
-            |                <value type="TEXT">Vlad</value>
-            |            </entry>
-            |            <entry>
-            |                <key>age</key>
-            |                <value type="AUTO">29</value>
-            |            </entry>
-            |        </values>
-            |    </instruction>
-            |</instructions>
-            |""".stripMargin()
-
-    void setup() {
-        tmpFolderPath = unpackYamlToTempFolder("default.yml")
-        outputPath = tmpFolderPath.resolve("out.sql") as String
-        outputXmlPath = tmpFolderPath.resolve("out.xml") as String
-    }
-
-    void cleanup() {
-        tmpFolderPath.toFile().deleteDir()
-    }
-
-    def "dummy constructor"() {
+class JFixturesTest extends Specification implements YamlVirtualDirectory, InstructionsHelper, Assertions {
+    def "::withConfig(String) instantiates object with config path stored"() {
         expect:
-        new JFixtures()
+        JFixtures.withConfig("path/.conf").config == Optional.of("path/.conf")
     }
 
-    def "mysql fixture to string"() {
-        expect:
-        JFixtures.mysql(tmpFolderPath as String).asString() == MYSQL_EXPECTED_SQL
-    }
-
-    def "mysql fixture to file"() {
+    def "::withConfig(File) instantiates object with config path stored"() {
         when:
-        JFixtures.mysql(tmpFolderPath as String).toFile(outputPath)
+        def file = new File("path/.conf")
 
         then:
-        new File(outputPath).text == MYSQL_EXPECTED_SQL
+        JFixtures.withConfig(file).config == Optional.of(file.getAbsolutePath())
     }
 
-    def "by dialect fixture to a string"() {
-        expect:
-        JFixtures.byDialect(tmpFolderPath as String, SqlType.SQL99).asString() == DEFAULT_EXPECTED_SQL
-    }
-
-    def "by dialect fixture to a file"() {
+    def "::withConfig(Path) instantiates object with config path stored"() {
         when:
-        JFixtures.byDialect(tmpFolderPath as String, SqlType.SQL99).toFile(outputPath)
+        def path = Paths.get("path/.conf")
 
         then:
-        new File(outputPath).text == DEFAULT_EXPECTED_SQL
+        JFixtures.withConfig(path).config == Optional.of(path.toString())
     }
 
-    def "Microsoft SQL fixture to a string"() {
+    def "::withConfig(String) instantiates with default profile"() {
         expect:
-        JFixtures.microsoftSql(tmpFolderPath as String).asString() == MICROSOFT_SQL_EXPECTED_SQL
+        JFixtures.withConfig("path/.conf").profile == "default"
     }
 
-    def "Microsoft SQL fixture to a file"() {
+    def "::noConfig instantiates object with empty config"() {
+        expect:
+        JFixtures.noConfig().config == Optional.empty()
+    }
+
+    def "::noConfig instantiates with default profile"() {
+        expect:
+        JFixtures.noConfig().profile == "default"
+    }
+
+    def "::withProfile replaced the profile and returns another instance"() {
+        given:
+        def fixtures = JFixtures.noConfig()
+
         when:
-        JFixtures.microsoftSql(tmpFolderPath as String).toFile(outputPath)
+        def fixturesWithProfile = fixtures.withProfile("unit")
 
         then:
-        new File(outputPath).text == MICROSOFT_SQL_EXPECTED_SQL
+        fixturesWithProfile.profile == "unit"
+
+        and:
+        !fixturesWithProfile.is(fixtures)
     }
 
-    def "SQL99 fixture to a string"() {
-        expect:
-        JFixtures.sql99(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_SQL
-    }
+    def "instantiated object has read only tables collection"() {
+        given:
+        def tables = JFixtures.noConfig().tables
 
-    def "SQL99 fixture to a file"() {
         when:
-        JFixtures.sql99(tmpFolderPath as String).toFile(outputPath)
+        tables.add(Table.ofName("users"))
 
         then:
-        new File(outputPath).text == DEFAULT_EXPECTED_SQL
+        thrown(UnsupportedOperationException)
     }
 
-    def "Fixture to an XML string"() {
-        expect:
-        JFixtures.xml(tmpFolderPath as String).asString() == DEFAULT_EXPECTED_XML
-    }
+    def "::addTables(Collection<Table>) adds new tables and returns another instance"() {
+        given:
+        def tablesToAdd = [
+                Table.ofName("users"),
+                Table.ofName("comments")
+        ]
+        def fixtures = JFixtures.noConfig()
 
-    def "Fixture to an XML file"() {
         when:
-        JFixtures.xml(tmpFolderPath as String).toFile(outputXmlPath)
+        def withTables = fixtures.addTables(tablesToAdd)
 
         then:
-        new File(outputXmlPath).text == DEFAULT_EXPECTED_XML
+        withTables.tables.toListString() == tablesToAdd.toListString()
+
+        and:
+        !withTables.is(fixtures)
+    }
+
+    def "::addTables(Collection<Table>) could be called in chain accumulating tables"() {
+        given:
+        def tablesToAdd = [
+                Table.ofName("users"),
+                Table.ofName("comments")
+        ]
+        def fixtures = JFixtures.noConfig()
+
+        when:
+        fixtures = fixtures.addTables(tablesToAdd).addTables(tablesToAdd)
+
+        then:
+        fixtures.tables.toListString() == (tablesToAdd + tablesToAdd).toListString()
+    }
+
+    def "::addTables(Collection<Table>) allows empty list"() {
+        expect:
+        JFixtures.noConfig().addTables(Collections.emptyList()).tables.size() == 0
+    }
+
+    def "::addTables(Table...) adds new tables and returns another instance"() {
+        given:
+        def tablesToAdd = [
+                Table.ofName("users"),
+                Table.ofName("comments")
+        ] as Table[]
+        def fixtures = JFixtures.noConfig()
+
+        when:
+        def withTables = fixtures.addTables(tablesToAdd)
+
+        then:
+        withTables.tables.toListString() == tablesToAdd.toList().toListString()
+
+        and:
+        !withTables.is(fixtures)
+    }
+
+    def "::addTables(Table...) could be called in chain accumulating tables"() {
+        given:
+        def tablesToAdd = [
+                Table.ofName("users"),
+                Table.ofName("comments")
+        ] as Table[]
+        def fixtures = JFixtures.noConfig()
+
+        when:
+        fixtures = fixtures.addTables(tablesToAdd).addTables(tablesToAdd)
+
+        then:
+        fixtures.tables.toListString() == (tablesToAdd.toList() + tablesToAdd.toList()).toListString()
+    }
+
+    def "::addTables(Table...) allows empty list"() {
+        expect:
+        JFixtures.noConfig().addTables([] as Table[]).tables.size() == 0
+    }
+
+    def "::load(String) adds fixtures stored in the directory"() {
+        setup:
+        def path = unpackYamlToTempDirectory("default.yml")
+
+        when:
+        def tables = JFixtures.noConfig().load(path.toString()).tables
+
+        then:
+        assertLoadedTables(tables)
+
+        cleanup:
+        path.toFile().deleteDir()
+    }
+
+    def "::load(Path) adds fixtures stored in the directory"() {
+        setup:
+        def path = unpackYamlToTempDirectory("default.yml")
+
+        when:
+        def tables = JFixtures.noConfig().load(path).tables
+
+        then:
+        assertLoadedTables(tables)
+
+        cleanup:
+        path.toFile().deleteDir()
+    }
+
+    def "::load(File) adds fixtures stored in the directory"() {
+        setup:
+        def path = unpackYamlToTempDirectory("default.yml")
+
+        when:
+        def tables = JFixtures.noConfig().load(path.toFile()).tables
+
+        then:
+        assertLoadedTables(tables)
+
+        cleanup:
+        path.toFile().deleteDir()
+    }
+
+    def "::load(String) adds fixtures stored in a single yaml file"() {
+        when:
+        def tables = JFixtures.noConfig().load("src/test/resources/j_fixtures_test/mono.yml").tables
+
+        then:
+        tables.size() == 2
+
+        def users = tables[0]
+        users.name == "users"
+        users.rows.toList() == [
+                Row.of("vlad", [id: 1, name: "Vlad", age: 30]),
+                Row.of("homer", [id: 2, name: "Homer", age: 40])
+        ]
+
+        def roles = tables[1]
+        roles.name == "admin.roles"
+        roles.rows.toList() == [
+                Row.of("admin", [reads: true, writes: true]),
+                Row.of("user", [reads: true, writes: false])
+        ]
+    }
+
+    def "::compile returns instructions without specified config"() {
+        given:
+        def rows = [
+            Row.of("vlad", [name: "Vlad", age: 30, lang: "java"]),
+            Row.of("homer", [name: "Homer S.", age: 40, lang: "beer"]),
+        ]
+        def table = Table.of("users", rows)
+
+        when:
+        def result = JFixtures.noConfig().addTables(table).compile()
+
+        then:
+        assertCollectionsEqual(result.instructions, [
+            cleanTable("users"),
+            insertRow("users", "vlad", [
+                id: IntId.one("vlad"),
+                name: "Vlad",
+                age: 30,
+                lang: "java"
+            ]),
+            insertRow("users", "homer", [
+                id: IntId.one("homer"),
+                name: "Homer S.",
+                age: 40,
+                lang: "beer"
+            ])
+        ])
+    }
+
+    def "::compile merges tables"() {
+        given:
+        def tables = [
+            Table.of("users", [Row.of("vlad", [name: "Vlad", age: 30, lang: "java"])]),
+            Table.of("users", [Row.of("homer", [name: "Homer S.", age: 40, lang: "beer"])])
+        ]
+
+        when:
+        def result = JFixtures.noConfig().addTables(tables).compile()
+
+        then:
+        assertCollectionsEqual(result.instructions, [
+            cleanTable("users"),
+            insertRow("users", "vlad", [
+                id: IntId.one("vlad"),
+                name: "Vlad",
+                age: 30,
+                lang: "java"
+            ]),
+            insertRow("users", "homer", [
+                id: IntId.one("homer"),
+                name: "Homer S.",
+                age: 40,
+                lang: "beer"
+            ])
+        ])
+    }
+
+    def "::compile returns instructions with specified config file"() {
+        setup:
+        def path = unpackYamlToTempDirectory("default.yml")
+
+        def rows = [
+            Row.of("vlad", [name: "Vlad", age: 30, lang: "java"]),
+            Row.of("homer", [name: "Homer S.", age: 40, lang: "beer"]),
+        ]
+        def table = Table.of("users", rows)
+
+        when:
+        def result = JFixtures.withConfig(path.resolve(".conf").toString()).addTables(table).compile()
+
+        then:
+        assertCollectionsEqual(result.instructions, [
+            cleanTable("users", CleanMethod.NONE),
+            insertRow("users", "vlad", [
+                id: IntId.one("vlad"),
+                name: "Vlad",
+                age: 30,
+                lang: "java"
+            ]),
+            insertRow("users", "homer", [
+                id: IntId.one("homer"),
+                name: "Homer S.",
+                age: 40,
+                lang: "beer"
+            ])
+        ])
+
+        cleanup:
+        path.toFile().deleteDir()
+    }
+
+    def "::addTables(Map<String, Map<String, Object>>) adds new tables"() {
+        given:
+        def tablesWithRows = [
+                users   : [
+                        vlad : [id: 5, age: 30],
+                        homer: [id: 6, age: 39]
+                ],
+                comments: [:]
+        ]
+        def fixtures = JFixtures.noConfig()
+
+        when:
+        def withTables = fixtures.addTables(tablesWithRows).tables
+
+        then:
+        withTables.size() == 2
+
+        and:
+        def users = withTables[0]
+        users.name == 'users'
+        users.rows.size() == 2
+
+        and:
+        def vlad = users.rows[0]
+        vlad.name == 'vlad'
+        vlad.columns.id == Value.of(5)
+        vlad.columns.age == Value.of(30)
+
+        and:
+        def homer = users.rows[1]
+        homer.name == 'homer'
+        homer.columns.id == Value.of(6)
+        homer.columns.age == Value.of(39)
+
+        and:
+        def comments = withTables[1]
+        comments.name == 'comments'
+        comments.rows.size() == 0
+    }
+
+    private static assertLoadedTables(tables) {
+        assert tables.size() == 1
+
+        def table = tables.first()
+        assert table.name == "users"
+        assert table.rows.toList() == [
+                Row.of("vlad", [id: 1, name: "Vlad", age: 30]),
+                Row.of("homer", [id: 2, name: "Homer", age: 40])
+        ]
+        true
     }
 }

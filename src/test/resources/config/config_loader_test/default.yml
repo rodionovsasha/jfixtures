@@ -5,3 +5,12 @@
         avatar_id: images
       "content.comment":
         ticket_id: tickets
+
+    profiles:
+      unit: &unit
+        refs:
+          users:
+            avatar_id: unit_images
+
+      integration:
+        <<: *unit

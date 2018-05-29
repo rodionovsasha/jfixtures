@@ -2,17 +2,18 @@ package com.github.vkorobkov.jfixtures.processor
 
 import com.github.vkorobkov.jfixtures.IntId
 import com.github.vkorobkov.jfixtures.config.ConfigLoader
+import com.github.vkorobkov.jfixtures.config.structure.Root
 import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
+import com.github.vkorobkov.jfixtures.domain.Value
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
 import com.github.vkorobkov.jfixtures.instructions.CustomSql
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
 import com.github.vkorobkov.jfixtures.instructions.Instruction
-import com.github.vkorobkov.jfixtures.loader.FixtureValue
-import com.github.vkorobkov.jfixtures.loader.FixturesLoader
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.loader.DirectoryLoader
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
-class ProcessorTest extends Specification implements YamlVirtualFolder {
+class ProcessorTest extends Specification implements YamlVirtualDirectory {
 
     def "basic row creation instructions test"() {
         when:
@@ -86,7 +87,7 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         and:
         def vlad = instructions[1] as InsertRow
-        vlad.values.id == new FixtureValue(100500)
+        vlad.values.id == Value.of(100500)
     }
 
     def "resolves basic dependencies"() {
@@ -116,17 +117,17 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         and:
         users_to_roles[0].values == [
-            id: new FixtureValue(IntId.one("kirill_is_guest")),
+            id: Value.of(IntId.one("kirill_is_guest")),
             user_id: users.find { it.rowName == "kirill" }.values.id,
             role_id: roles.find { it.rowName == "guest" }.values.id,
         ]
         users_to_roles[1].values == [
-            id: new FixtureValue(IntId.one("vlad_is_owner")),
+            id: Value.of(IntId.one("vlad_is_owner")),
             user_id: users.find { it.rowName == "vlad" }.values.id,
             role_id: roles.find { it.rowName == "owner" }.values.id,
         ]
         users_to_roles[2].values == [
-            id: new FixtureValue(IntId.one("diman_is_commitee")),
+            id: Value.of(IntId.one("diman_is_commitee")),
             user_id: users.find { it.rowName == "diman" }.values.id,
             role_id: roles.find { it.rowName == "commitee" }.values.id,
         ]
@@ -242,15 +243,15 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
 
         and:
         def vlad = insertions.find { it.rowName == "vlad" }
-        vlad.values.id == new FixtureValue(IntId.one("vlad"))
-        vlad.values.login == new FixtureValue("vlad")
-        vlad.values.profile_id == new FixtureValue(IntId.one("public"))
+        vlad.values.id == Value.of(IntId.one("vlad"))
+        vlad.values.login == Value.of("vlad")
+        vlad.values.profile_id == Value.of(IntId.one("public"))
 
         and:
         def profile = insertions.find { it.rowName == "public" }
-        profile.values.custom_id == new FixtureValue(IntId.one("public"))
-        profile.values.name == new FixtureValue("Vladimir")
-        profile.values.age == new FixtureValue(29)
+        profile.values.custom_id == Value.of(IntId.one("public"))
+        profile.values.name == Value.of("Vladimir")
+        profile.values.age == Value.of(29)
 
         and:
         vlad.values.profile_id == profile.values.custom_id
@@ -347,15 +348,47 @@ class ProcessorTest extends Specification implements YamlVirtualFolder {
         customSql.get(1).instruction == "BEGIN TRANSACTION;"
     }
 
+    def "applies base columns to rows which do not have them"() {
+        when:
+        def instructions = load("with_base_cols.yml")
+
+        then:
+        instructions.size() == 4
+
+        and:
+        instructions[0] instanceof CleanTable
+
+        and:
+        assertRow(instructions[1], "vlad", [name: "Vladimir", age: 30, sex: "man", version: 1])
+        assertRow(instructions[2], "homer", [name: "Homer", age: 36, sex: "man", version: 1])
+        assertRow(instructions[3], "alien", [name: "undefined", age: 100, sex: "none", version: 1])
+    }
+
+    private assertRow(row, String name, Map values) {
+        row = row as InsertRow
+        assert row.rowName == name
+        assertInsertInstructions(row.values, values + [id: IntId.one(row.rowName)])
+    }
+
     boolean assertInsertInstructions(Map instructions, Map expected) {
-        expected = expected.collectEntries { [it.key, new FixtureValue(it.value)] }
-        new LinkedHashMap(instructions) == expected
+        expected = expected.collectEntries { [it.key, Value.of(it.value)] }
+        assert new LinkedHashMap(instructions) == expected
+        true
     }
 
     List<Instruction> load(String ymlFile) {
-        def path = unpackYamlToTempFolder(ymlFile) as String
-        def config = ConfigLoader.load(path)
-        def fixtures = new FixturesLoader(path, config).load()
+        def path = unpackYamlToTempDirectory(ymlFile) as String
+        def config = loadConfig(path)
+        def fixtures = new DirectoryLoader(path).load()
         new Processor(fixtures, config).process()
+    }
+
+    private Root loadConfig(path) {
+        def loader = new ConfigLoader()
+        path = "${path}/.conf.yml"
+        if (new File(path).exists()) {
+            return loader.load(path, "default")
+        }
+        Root.empty()
     }
 }

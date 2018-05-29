@@ -1,49 +1,45 @@
 package com.github.vkorobkov.jfixtures.config
 
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
-class ConfigLoaderTest extends Specification implements YamlVirtualFolder {
-    def "dummy constructor test"() {
-        expect:
-        new ConfigLoader()
+import java.nio.file.Path
+
+class ConfigLoaderTest extends Specification implements YamlVirtualDirectory {
+    Path tmlDirectoryPath
+    String path
+
+    void setup() {
+        tmlDirectoryPath = unpackYamlToTempDirectory("default.yml")
+        path = "$tmlDirectoryPath/default/.conf.yml"
     }
 
-    def "loads config normally"() {
-        setup:
-        def tmlFolderPath = unpackYamlToTempFolder("default.yml")
-        def path = "$tmlFolderPath/default"
-        def config =  ConfigLoader.load(path)
-
-        expect:
-        config.referredTable("users", "avatar_id") == Optional.of("images")
-        config.referredTable("content.comment", "ticket_id") == Optional.of("tickets")
-
-        cleanup:
-        tmlFolderPath.toFile().deleteDir()
+    void cleanup() {
+        tmlDirectoryPath.toFile().deleteDir()
     }
 
-    def "loads empty config if file not found"() {
-        setup:
-        def config = ConfigLoader.load(notExistingPath() as String)
-
-        expect:
-        config.referredTable("users", "avatar_id") == Optional.empty()
-    }
-
-    def "#load throws when found twins"() {
-        setup:
-        def tmlFolderPath = unpackYamlToTempFolder("twins.yml")
-        def path = "$tmlFolderPath/default"
-
+    def "::load loads config from file without profile"() {
         when:
-        ConfigLoader.load(path)
+        def config = new ConfigLoader().load(path, "default")
 
         then:
-        def e = thrown(ConfigLoaderException)
-        e.message.contains("Fixture's config exists with both extensions(yaml/yml)")
+        config.referredTable("users", "avatar_id") == Optional.of("images")
+        config.referredTable("content.comment", "ticket_id") == Optional.of("tickets")
+    }
 
-        cleanup:
-        tmlFolderPath.toFile().deleteDir()
+    def "::load loads config from file with profile"() {
+        when:
+        def config = new ConfigLoader().load(path, "unit")
+
+        then:
+        config.referredTable("users", "avatar_id") == Optional.of("unit_images")
+    }
+
+    def "::load loads config from file with profile which inherits another profile"() {
+        when:
+        def config = new ConfigLoader().load(path, "integration")
+
+        then:
+        config.referredTable("users", "avatar_id") == Optional.of("unit_images")
     }
 }

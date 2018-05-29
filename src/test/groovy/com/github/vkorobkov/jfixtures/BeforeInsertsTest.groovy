@@ -1,9 +1,9 @@
 package com.github.vkorobkov.jfixtures
 
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualFolder
+import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
-class BeforeInsertsTest extends Specification implements YamlVirtualFolder {
+class BeforeInsertsTest extends Specification implements YamlVirtualDirectory {
     def DEFAULT_EXPECTED_SQL = """DELETE FROM "users";
             |INSERT INTO "users" ("id", "name", "age") VALUES (${IntId.one('vlad')}, 'Vladimir', 29);
             |""".stripMargin()
@@ -15,23 +15,30 @@ class BeforeInsertsTest extends Specification implements YamlVirtualFolder {
 
     def "should not insert any custom SQL by default"() {
         setup:
-        def folder = unpackYamlToTempFolder("default.yml")
+        def directory = unpackYamlToTempDirectory("default.yml")
 
-        expect:
-        JFixtures.sql99(folder as String).asString() == DEFAULT_EXPECTED_SQL
+        when:
+        def sql = JFixtures.noConfig().load(directory).compile().toSql99().toString()
+
+        then:
+        sql == DEFAULT_EXPECTED_SQL
 
         cleanup:
-        folder.toFile().deleteDir()
+        directory.toFile().deleteDir()
     }
 
     def "should insert custom SQL if present"() {
         setup:
-        def folder = unpackYamlToTempFolder("custom.yml")
+        def directory = unpackYamlToTempDirectory("custom.yml")
+        def conf = "${directory}/.conf.yml"
 
-        expect:
-        JFixtures.sql99(folder as String).asString() == CUSTOM_EXPECTED_SQL
+        when:
+        def sql = JFixtures.withConfig(conf).load(directory).compile().toSql99().toString()
+
+        then:
+        sql == CUSTOM_EXPECTED_SQL
 
         cleanup:
-        folder.toFile().deleteDir()
+        directory.toFile().deleteDir()
     }
 }

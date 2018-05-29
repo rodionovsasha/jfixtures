@@ -1,5 +1,15 @@
+".conf":
+  tables:
+    no_users_cleanup:
+      applies_to: "users"
+      clean_method: none
+
 "users.yml":
   vlad:
     id: 1
     name: Vlad
-    age: 29
+    age: 30
+  homer:
+    id: 2
+    name: Homer
+    age: 40

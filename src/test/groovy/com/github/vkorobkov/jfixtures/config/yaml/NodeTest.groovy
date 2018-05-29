@@ -1,10 +1,11 @@
 package com.github.vkorobkov.jfixtures.config.yaml
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import java.util.stream.Collectors
 
-
+@Unroll
 class NodeTest extends Specification {
     def "child() returns a node child if exist"() {
         when:
@@ -182,6 +183,21 @@ class NodeTest extends Specification {
 
         and:
         node.dig("copyright", "author").toString() == "copyright:author"
+    }
+
+    def "::exists returns true if requested node exists"() {
+        expect:
+        Node.root(copyright: [author: "vlad"]).dig("copyright", "author").exists()
+    }
+
+    def "::exists returns true if node is empty"() {
+        expect:
+        Node.root(copyright: [:]).dig("copyright").exists()
+    }
+
+    def "::exists returns false if requested node does not exist"() {
+        expect:
+        !Node.root(copyright: [author: "vlad"]).dig("copyright", "year").exists()
     }
 
     def getNodesWithoutChildren() {

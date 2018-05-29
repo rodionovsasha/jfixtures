@@ -1,0 +1,7 @@
+".conf.yml":
+  profiles:
+    no_cleanup:
+      tables:
+        never_clean_up:
+          applies_to: "/.+"
+          clean_method: "none"

@@ -1,9 +1,9 @@
 package com.github.vkorobkov.jfixtures.processor;
 
 import com.github.vkorobkov.jfixtures.config.structure.Root;
+import com.github.vkorobkov.jfixtures.domain.Table;
+import com.github.vkorobkov.jfixtures.domain.Value;
 import com.github.vkorobkov.jfixtures.instructions.InsertRow;
-import com.github.vkorobkov.jfixtures.loader.Fixture;
-import com.github.vkorobkov.jfixtures.loader.FixtureValue;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -12,9 +12,9 @@ import java.util.function.Consumer;
 @AllArgsConstructor
 class ColumnProcessor {
     private final Context context;
-    private final Consumer<Fixture> dependencyResolver;
+    private final Consumer<Table> dependencyResolver;
 
-    FixtureValue column(String table, String rowName, String column, FixtureValue value) {
+    Value column(String table, String rowName, String column, Value value) {
         try {
             return getConfig().referredTable(table, column)
                     .map(referredTable -> referredColumn(table, referredTable, value))
@@ -26,7 +26,7 @@ class ColumnProcessor {
         }
     }
 
-    private FixtureValue referredColumn(String table, String referredTable, FixtureValue value) {
+    private Value referredColumn(String table, String referredTable, Value value) {
         if (!table.equals(referredTable)) {
             processDependentFixture(referredTable);
         }
@@ -43,7 +43,7 @@ class ColumnProcessor {
         return referredRowValues.get(referredPk);
     }
 
-    private InsertRow referredRow(String table, FixtureValue value) {
+    private InsertRow referredRow(String table, Value value) {
         String rowName = String.valueOf(value.getValue());
         return context.getRowsIndex()
                 .read(table, rowName)
@@ -55,7 +55,7 @@ class ColumnProcessor {
     }
 
     private void processDependentFixture(String referredTable) {
-        val referredFixture = context.getFixtures().get(referredTable);
+        val referredFixture = context.getTables().get(referredTable);
         if (referredFixture == null) {
             String message = "Referred table [" + referredTable + "] is not found";
             throw new ProcessorException(message);

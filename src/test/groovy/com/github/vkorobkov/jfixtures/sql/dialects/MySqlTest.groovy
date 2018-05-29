@@ -1,15 +1,16 @@
 package com.github.vkorobkov.jfixtures.sql.dialects
 
 import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
+import com.github.vkorobkov.jfixtures.domain.Value
 import com.github.vkorobkov.jfixtures.instructions.CleanTable
 import com.github.vkorobkov.jfixtures.instructions.InsertRow
-import com.github.vkorobkov.jfixtures.loader.FixtureValue
 import com.github.vkorobkov.jfixtures.sql.Appender
 import com.github.vkorobkov.jfixtures.sql.Sql
 import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
 import spock.lang.Specification
+import spock.lang.Unroll
 
-
+@Unroll
 class MySqlTest extends Specification {
     Sql sql
     Appender appender
@@ -49,9 +50,9 @@ class MySqlTest extends Specification {
     def "insert row test"() {
         given:
         def insertRow = new InsertRow("admin.users", "vlad", [
-                id  : new FixtureValue(1),
-                name: new FixtureValue("Vlad"),
-                age : new FixtureValue(29)
+                id  : Value.of(1),
+                name: Value.of("Vlad"),
+                age : Value.of(29)
         ])
 
         when:
