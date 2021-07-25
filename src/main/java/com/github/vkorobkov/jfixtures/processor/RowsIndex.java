@@ -4,6 +4,7 @@ import com.github.vkorobkov.jfixtures.instructions.InsertRow;
 import com.github.vkorobkov.jfixtures.instructions.InstructionVisitor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.val;
 
 import java.util.HashMap;
@@ -27,8 +28,9 @@ class RowsIndex implements InstructionVisitor {
 
     @AllArgsConstructor
     @EqualsAndHashCode
+    @Getter
     static final class RowKey {
-        public final String table;
-        public final String rowName;
+        private final String table;
+        private final String rowName;
     }
 }

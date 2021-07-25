@@ -3,14 +3,20 @@ package com.github.vkorobkov.jfixtures.domain;
 import lombok.Getter;
 import lombok.val;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.unmodifiableCollection;
 import static java.util.stream.Collectors.toMap;
 
 public final class Table {
-    public final String name;
+    @Getter
+    private final String name;
 
     @Getter
     private final Collection<Row> rows;

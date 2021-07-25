@@ -11,13 +11,13 @@ public final class IntId {
     private IntId() {
     }
 
-    public static List<Integer> many(String ... aliases) {
+    public static List<Integer> many(String... aliases) {
         return Arrays.stream(aliases).map(IntId::one).collect(Collectors.toList());
     }
 
     /**
      * Calculates and returns a new Integer hash for provided String alias.
-     *
+     * <p>
      * Very similar to plain @java.lang.String#hashCode() but the range is decreased:
      * - the lower bound is LOWER_BOUND, inclusively
      * - the higher bound is Integer.MAX_VALUE, inclusively
