@@ -4,7 +4,7 @@ import java.io.IOException;
 
 @FunctionalInterface
 public interface Appender {
-    default void append(CharSequence ... sequences) throws IOException {
+    default void append(CharSequence... sequences) throws IOException {
         for (CharSequence sequence : sequences) {
             append(sequence);
         }

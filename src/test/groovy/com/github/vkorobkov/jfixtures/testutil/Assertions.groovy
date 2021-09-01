@@ -1,9 +1,6 @@
 package com.github.vkorobkov.jfixtures.testutil
 
-import org.junit.Assert
-
 trait Assertions {
-
     def assertCollectionsEqual(Collection left, Collection right) {
         assert left.size() == right.size()
         def rightIterator = right.iterator()
@@ -18,7 +15,7 @@ trait Assertions {
         try {
             collection.clear()
             Assert.fail("Collection is modifiable when expected that it is not")
-        } catch(UnsupportedOperationException _){
+        } catch(UnsupportedOperationException ignored){
             true
         }
     }

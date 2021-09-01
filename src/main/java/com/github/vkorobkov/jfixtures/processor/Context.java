@@ -1,3 +1,4 @@
+
 package com.github.vkorobkov.jfixtures.processor;
 
 import com.github.vkorobkov.jfixtures.config.structure.Root;
@@ -18,7 +19,7 @@ class Context {
     private final Root config;
 
     Context(Collection<Table> tables, Root config) {
-        this.tables = tables.stream().collect(Collectors.toMap(fixture -> fixture.name, fixture -> fixture));
+        this.tables = tables.stream().collect(Collectors.toMap(Table::getName, fixture -> fixture));
         this.config = config;
     }
 }
