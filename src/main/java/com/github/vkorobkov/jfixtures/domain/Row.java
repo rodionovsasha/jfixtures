@@ -9,7 +9,9 @@ import java.util.Map;
 
 import static com.github.vkorobkov.jfixtures.util.CollectionUtil.mapValues;
 import static com.github.vkorobkov.jfixtures.util.CollectionUtil.merge;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonMap;
+import static java.util.Collections.unmodifiableMap;
 
 @EqualsAndHashCode
 @Getter
