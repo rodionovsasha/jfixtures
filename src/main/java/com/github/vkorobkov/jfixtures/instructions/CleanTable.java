@@ -1,7 +1,11 @@
 package com.github.vkorobkov.jfixtures.instructions;
 
 import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlAttribute;
 

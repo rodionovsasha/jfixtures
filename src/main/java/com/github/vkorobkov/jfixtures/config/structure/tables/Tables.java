@@ -6,7 +6,11 @@ import com.github.vkorobkov.jfixtures.config.yaml.Node;
 import com.github.vkorobkov.jfixtures.util.CollectionUtil;
 import com.github.vkorobkov.jfixtures.util.MapMerger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.stream.Stream;
 
@@ -64,7 +68,7 @@ public class Tables extends Section {
     }
 
     private <T> Stream<T> readSections(String... sections) {
-        return this.<T>getMatchingTables()
+        return this.getMatchingTables()
             .map(node -> node.dig(sections).<T>optional())
             .filter(Optional::isPresent)
             .map(Optional::get);
