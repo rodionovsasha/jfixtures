@@ -1,6 +1,6 @@
-package com.github.vkorobkov.jfixtures.instructions
+package com.github.rodionovsasha.jfixtures.instructions
 
-import com.github.vkorobkov.jfixtures.domain.Value
+import com.github.rodionovsasha.jfixtures.domain.Value
 import nl.jqno.equalsverifier.EqualsVerifier
 import nl.jqno.equalsverifier.Warning
 import spock.lang.Specification

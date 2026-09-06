@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.util;
+package com.github.rodionovsasha.jfixtures.util;
 
 import lombok.SneakyThrows;
 

@@ -1,6 +1,6 @@
-package com.github.vkorobkov.jfixtures.integration
+package com.github.rodionovsasha.jfixtures.integration
 
-import com.github.vkorobkov.jfixtures.testutil.H2Test
+import com.github.rodionovsasha.jfixtures.testutil.H2Test
 import spock.lang.Specification
 
 import java.nio.file.Path

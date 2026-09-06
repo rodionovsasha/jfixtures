@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.config.structure.util
+package com.github.rodionovsasha.jfixtures.config.structure.util
 
 import spock.lang.Specification
 

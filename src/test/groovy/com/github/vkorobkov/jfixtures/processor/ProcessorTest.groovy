@@ -1,16 +1,16 @@
-package com.github.vkorobkov.jfixtures.processor
+package com.github.rodionovsasha.jfixtures.processor
 
-import com.github.vkorobkov.jfixtures.IntId
-import com.github.vkorobkov.jfixtures.config.ConfigLoader
-import com.github.vkorobkov.jfixtures.config.structure.Root
-import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
-import com.github.vkorobkov.jfixtures.domain.Value
-import com.github.vkorobkov.jfixtures.instructions.CleanTable
-import com.github.vkorobkov.jfixtures.instructions.CustomSql
-import com.github.vkorobkov.jfixtures.instructions.InsertRow
-import com.github.vkorobkov.jfixtures.instructions.Instruction
-import com.github.vkorobkov.jfixtures.loader.DirectoryLoader
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
+import com.github.rodionovsasha.jfixtures.IntId
+import com.github.rodionovsasha.jfixtures.config.ConfigLoader
+import com.github.rodionovsasha.jfixtures.config.structure.Root
+import com.github.rodionovsasha.jfixtures.config.structure.tables.CleanMethod
+import com.github.rodionovsasha.jfixtures.domain.Value
+import com.github.rodionovsasha.jfixtures.instructions.CleanTable
+import com.github.rodionovsasha.jfixtures.instructions.CustomSql
+import com.github.rodionovsasha.jfixtures.instructions.InsertRow
+import com.github.rodionovsasha.jfixtures.instructions.Instruction
+import com.github.rodionovsasha.jfixtures.loader.DirectoryLoader
+import com.github.rodionovsasha.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 class ProcessorTest extends Specification implements YamlVirtualDirectory {

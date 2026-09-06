@@ -1,8 +1,8 @@
-package com.github.vkorobkov.jfixtures.loader
+package com.github.rodionovsasha.jfixtures.loader
 
-import com.github.vkorobkov.jfixtures.domain.Table
-import com.github.vkorobkov.jfixtures.domain.Value
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
+import com.github.rodionovsasha.jfixtures.domain.Table
+import com.github.rodionovsasha.jfixtures.domain.Value
+import com.github.rodionovsasha.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 import java.nio.file.NoSuchFileException

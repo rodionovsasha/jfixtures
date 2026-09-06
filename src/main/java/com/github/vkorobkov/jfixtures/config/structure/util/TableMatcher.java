@@ -1,7 +1,7 @@
-package com.github.vkorobkov.jfixtures.config.structure.util;
+package com.github.rodionovsasha.jfixtures.config.structure.util;
 
 
-import com.github.vkorobkov.jfixtures.util.CollectionUtil;
+import com.github.rodionovsasha.jfixtures.util.CollectionUtil;
 
 import java.util.HashSet;
 import java.util.Set;

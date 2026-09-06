@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.instructions
+package com.github.rodionovsasha.jfixtures.instructions
 
 import nl.jqno.equalsverifier.EqualsVerifier
 import nl.jqno.equalsverifier.Warning

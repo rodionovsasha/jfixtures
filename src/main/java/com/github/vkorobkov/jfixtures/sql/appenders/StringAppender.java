@@ -1,6 +1,6 @@
-package com.github.vkorobkov.jfixtures.sql.appenders;
+package com.github.rodionovsasha.jfixtures.sql.appenders;
 
-import com.github.vkorobkov.jfixtures.sql.Appender;
+import com.github.rodionovsasha.jfixtures.sql.Appender;
 
 public class StringAppender implements Appender {
     private final StringBuilder sb = new StringBuilder();

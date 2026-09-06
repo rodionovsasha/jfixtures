@@ -1,10 +1,10 @@
-package com.github.vkorobkov.jfixtures.sql;
+package com.github.rodionovsasha.jfixtures.sql;
 
-import com.github.vkorobkov.jfixtures.instructions.CleanTable;
-import com.github.vkorobkov.jfixtures.instructions.CustomSql;
-import com.github.vkorobkov.jfixtures.instructions.InsertRow;
-import com.github.vkorobkov.jfixtures.instructions.Instruction;
-import com.github.vkorobkov.jfixtures.instructions.InstructionVisitor;
+import com.github.rodionovsasha.jfixtures.instructions.CleanTable;
+import com.github.rodionovsasha.jfixtures.instructions.CustomSql;
+import com.github.rodionovsasha.jfixtures.instructions.InsertRow;
+import com.github.rodionovsasha.jfixtures.instructions.Instruction;
+import com.github.rodionovsasha.jfixtures.instructions.InstructionVisitor;
 import lombok.AllArgsConstructor;
 
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.processor;
+package com.github.rodionovsasha.jfixtures.processor;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

@@ -1,10 +1,10 @@
-package com.github.vkorobkov.jfixtures.config.structure.tables;
+package com.github.rodionovsasha.jfixtures.config.structure.tables;
 
-import com.github.vkorobkov.jfixtures.config.structure.Section;
-import com.github.vkorobkov.jfixtures.config.structure.util.TableMatcher;
-import com.github.vkorobkov.jfixtures.config.yaml.Node;
-import com.github.vkorobkov.jfixtures.util.CollectionUtil;
-import com.github.vkorobkov.jfixtures.util.MapMerger;
+import com.github.rodionovsasha.jfixtures.config.structure.Section;
+import com.github.rodionovsasha.jfixtures.config.structure.util.TableMatcher;
+import com.github.rodionovsasha.jfixtures.config.yaml.Node;
+import com.github.rodionovsasha.jfixtures.util.CollectionUtil;
+import com.github.rodionovsasha.jfixtures.util.MapMerger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,12 +50,14 @@ public class Tables extends Section {
     }
 
     public Map<String, Object> getDefaultColumns() {
-        return readProperty(MapMerger::merge, "default_columns").orElse(Collections.emptyMap());
+        return this.<Map<String, Object>>readProperty(MapMerger::merge, "default_columns")
+                .orElse(Collections.emptyMap());
     }
 
-    private List readArray(String... sections) {
-        List result = new ArrayList();
-        readSections(sections).forEach(elem -> CollectionUtil.flattenRecursively(elem, result::add));
+    private List<String> readArray(String... sections) {
+        List<String> result = new ArrayList<>();
+        readSections(sections).forEach(elem ->
+                CollectionUtil.flattenRecursively(elem, value -> result.add(String.class.cast(value))));
         return result;
     }
 

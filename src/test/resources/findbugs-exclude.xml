@@ -9,4 +9,21 @@
     <Match>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
+    <!-- Sql is an injected strategy; retaining the supplied instance is intentional. -->
+    <Match>
+        <Class name="com.github.rodionovsasha.jfixtures.result.SqlResult"/>
+        <Method name="&lt;init&gt;"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <!-- Opening a file can fail; keep the existing public, extensible appender API. -->
+    <Match>
+        <Class name="com.github.rodionovsasha.jfixtures.sql.appenders.FileAppender"/>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+    </Match>
+    <!-- This generic supplier accepts resources with arbitrary checked exceptions. -->
+    <Match>
+        <Class name="com.github.rodionovsasha.jfixtures.util.WithResource$ThrowingSupplier"/>
+        <Method name="get"/>
+        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION"/>
+    </Match>
 </FindBugsFilter>

@@ -1,9 +1,10 @@
-package com.github.vkorobkov.jfixtures.util;
+package com.github.rodionovsasha.jfixtures.util;
 
 import lombok.SneakyThrows;
 import lombok.val;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,7 +12,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.github.vkorobkov.jfixtures.util.StringUtil.cutOffExtension;
+import static com.github.rodionovsasha.jfixtures.util.StringUtil.cutOffExtension;
 
 public final class YmlUtil {
     public static final String YML_EXT = ".yml";
@@ -23,8 +24,10 @@ public final class YmlUtil {
     @SuppressWarnings("unchecked")
     @SneakyThrows
     public static Map<String, Object> load(Path file) {
-        Object loaded = new Yaml().load(Files.newInputStream(file));
-        return loaded == null ? Collections.emptyMap() : (Map<String, Object>)loaded;
+        try (InputStream input = Files.newInputStream(file)) {
+            Object loaded = new Yaml().load(input);
+            return loaded == null ? Collections.emptyMap() : (Map<String, Object>)loaded;
+        }
     }
 
     public static boolean hasTwin(Path filePath) {

@@ -1,8 +1,8 @@
-package com.github.vkorobkov.jfixtures.sql;
+package com.github.rodionovsasha.jfixtures.sql;
 
-import com.github.vkorobkov.jfixtures.instructions.CleanTable;
-import com.github.vkorobkov.jfixtures.instructions.CustomSql;
-import com.github.vkorobkov.jfixtures.instructions.InsertRow;
+import com.github.rodionovsasha.jfixtures.instructions.CleanTable;
+import com.github.rodionovsasha.jfixtures.instructions.CustomSql;
+import com.github.rodionovsasha.jfixtures.instructions.InsertRow;
 
 public interface Sql {
     void cleanTable(Appender appendable, CleanTable cleanTable);

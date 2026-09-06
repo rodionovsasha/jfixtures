@@ -1,12 +1,12 @@
-package com.github.vkorobkov.jfixtures.sql.dialects
+package com.github.rodionovsasha.jfixtures.sql.dialects
 
-import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
-import com.github.vkorobkov.jfixtures.domain.Value
-import com.github.vkorobkov.jfixtures.instructions.CleanTable
-import com.github.vkorobkov.jfixtures.instructions.InsertRow
-import com.github.vkorobkov.jfixtures.sql.Appender
-import com.github.vkorobkov.jfixtures.sql.Sql
-import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
+import com.github.rodionovsasha.jfixtures.config.structure.tables.CleanMethod
+import com.github.rodionovsasha.jfixtures.domain.Value
+import com.github.rodionovsasha.jfixtures.instructions.CleanTable
+import com.github.rodionovsasha.jfixtures.instructions.InsertRow
+import com.github.rodionovsasha.jfixtures.sql.Appender
+import com.github.rodionovsasha.jfixtures.sql.Sql
+import com.github.rodionovsasha.jfixtures.sql.appenders.StringAppender
 import spock.lang.Specification
 import spock.lang.Unroll
 

@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.domain;
+package com.github.rodionovsasha.jfixtures.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -7,8 +7,8 @@ import lombok.val;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.github.vkorobkov.jfixtures.util.CollectionUtil.mapValues;
-import static com.github.vkorobkov.jfixtures.util.CollectionUtil.merge;
+import static com.github.rodionovsasha.jfixtures.util.CollectionUtil.mapValues;
+import static com.github.rodionovsasha.jfixtures.util.CollectionUtil.merge;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableMap;

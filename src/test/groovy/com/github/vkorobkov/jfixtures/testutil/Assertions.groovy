@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.testutil
+package com.github.rodionovsasha.jfixtures.testutil
 
 trait Assertions {
     def assertCollectionsEqual(Collection left, Collection right) {

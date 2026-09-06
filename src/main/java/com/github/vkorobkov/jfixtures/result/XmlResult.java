@@ -1,24 +1,24 @@
-package com.github.vkorobkov.jfixtures.result;
+package com.github.rodionovsasha.jfixtures.result;
 
-import com.github.vkorobkov.jfixtures.instructions.CleanTable;
-import com.github.vkorobkov.jfixtures.instructions.CustomSql;
-import com.github.vkorobkov.jfixtures.instructions.InsertRow;
-import com.github.vkorobkov.jfixtures.instructions.Instruction;
+import com.github.rodionovsasha.jfixtures.instructions.CleanTable;
+import com.github.rodionovsasha.jfixtures.instructions.CustomSql;
+import com.github.rodionovsasha.jfixtures.instructions.InsertRow;
+import com.github.rodionovsasha.jfixtures.instructions.Instruction;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElements;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.Collection;
 
 import static java.util.Collections.unmodifiableCollection;
-import static javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT;
+import static jakarta.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT;
 
 @NoArgsConstructor
 @XmlRootElement(name = "instructions")

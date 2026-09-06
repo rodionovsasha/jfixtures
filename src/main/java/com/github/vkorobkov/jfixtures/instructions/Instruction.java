@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.instructions;
+package com.github.rodionovsasha.jfixtures.instructions;
 
 @FunctionalInterface
 public interface Instruction {

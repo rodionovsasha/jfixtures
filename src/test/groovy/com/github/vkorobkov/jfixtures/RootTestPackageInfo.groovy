@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures
+package com.github.rodionovsasha.jfixtures
 
 class RootTestPackageInfo {
 }

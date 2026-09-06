@@ -20,7 +20,7 @@ env:
 
 
 jdk:
-  - oraclejdk8
+  - openjdk17
 
 
 before_install:

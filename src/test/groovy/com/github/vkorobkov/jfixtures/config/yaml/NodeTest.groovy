@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.config.yaml
+package com.github.rodionovsasha.jfixtures.config.yaml
 
 import spock.lang.Specification
 import spock.lang.Unroll

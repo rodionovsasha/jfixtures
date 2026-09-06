@@ -1,12 +1,12 @@
-package com.github.vkorobkov.jfixtures
+package com.github.rodionovsasha.jfixtures
 
-import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
-import com.github.vkorobkov.jfixtures.domain.Row
-import com.github.vkorobkov.jfixtures.domain.Table
-import com.github.vkorobkov.jfixtures.domain.Value
-import com.github.vkorobkov.jfixtures.testutil.Assertions
-import com.github.vkorobkov.jfixtures.testutil.InstructionsHelper
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
+import com.github.rodionovsasha.jfixtures.config.structure.tables.CleanMethod
+import com.github.rodionovsasha.jfixtures.domain.Row
+import com.github.rodionovsasha.jfixtures.domain.Table
+import com.github.rodionovsasha.jfixtures.domain.Value
+import com.github.rodionovsasha.jfixtures.testutil.Assertions
+import com.github.rodionovsasha.jfixtures.testutil.InstructionsHelper
+import com.github.rodionovsasha.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 import java.nio.file.Paths

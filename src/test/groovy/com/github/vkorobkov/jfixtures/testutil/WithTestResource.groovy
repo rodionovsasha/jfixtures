@@ -1,6 +1,6 @@
-package com.github.vkorobkov.jfixtures.testutil
+package com.github.rodionovsasha.jfixtures.testutil
 
-import com.github.vkorobkov.jfixtures.RootTestPackageInfo
+import com.github.rodionovsasha.jfixtures.RootTestPackageInfo
 
 import java.nio.file.Path
 import java.nio.file.Paths

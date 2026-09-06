@@ -1,6 +1,6 @@
-package com.github.vkorobkov.jfixtures.config.structure
+package com.github.rodionovsasha.jfixtures.config.structure
 
-import com.github.vkorobkov.jfixtures.config.yaml.Node
+import com.github.rodionovsasha.jfixtures.config.yaml.Node
 import spock.lang.Specification
 import spock.lang.Unroll
 

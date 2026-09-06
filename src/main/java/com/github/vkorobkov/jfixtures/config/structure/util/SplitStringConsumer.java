@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.config.structure.util;
+package com.github.rodionovsasha.jfixtures.config.structure.util;
 
 import lombok.AllArgsConstructor;
 
@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 
 @AllArgsConstructor
-public class SplitStringConsumer implements Consumer {
+public class SplitStringConsumer implements Consumer<Object> {
 
     private final Consumer<String> delegate;
 

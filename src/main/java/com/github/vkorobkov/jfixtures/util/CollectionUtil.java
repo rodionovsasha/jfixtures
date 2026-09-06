@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.util;
+package com.github.rodionovsasha.jfixtures.util;
 
 
 import java.util.ArrayList;
@@ -15,9 +15,9 @@ public final class CollectionUtil {
     private CollectionUtil() {
     }
 
-    public static void flattenRecursively(Object toFlat, Consumer consumer) {
+    public static void flattenRecursively(Object toFlat, Consumer<Object> consumer) {
         if (isIterable(toFlat)) {
-            ((Iterable<Object>)toFlat).forEach(item -> flattenRecursively(item, consumer));
+            ((Iterable<?>)toFlat).forEach(item -> flattenRecursively(item, consumer));
         } else {
             consumer.accept(toFlat);
         }

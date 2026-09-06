@@ -1,7 +1,7 @@
-package com.github.vkorobkov.jfixtures.loader;
+package com.github.rodionovsasha.jfixtures.loader;
 
-import com.github.vkorobkov.jfixtures.domain.Table;
-import com.github.vkorobkov.jfixtures.util.YmlUtil;
+import com.github.rodionovsasha.jfixtures.domain.Table;
+import com.github.rodionovsasha.jfixtures.util.YmlUtil;
 import lombok.AllArgsConstructor;
 
 import java.io.IOException;
@@ -10,22 +10,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.github.vkorobkov.jfixtures.util.StringUtil.cutOffExtension;
-import static com.github.vkorobkov.jfixtures.util.YmlUtil.YAML_EXT;
-import static com.github.vkorobkov.jfixtures.util.YmlUtil.YML_EXT;
+import static com.github.rodionovsasha.jfixtures.util.StringUtil.cutOffExtension;
+import static com.github.rodionovsasha.jfixtures.util.YmlUtil.YAML_EXT;
+import static com.github.rodionovsasha.jfixtures.util.YmlUtil.YML_EXT;
 
 @AllArgsConstructor
 public class DirectoryLoader {
     private final String path;
 
     public Collection<Table> load() {
-        try {
-            return Files
-                    .walk(Paths.get(path))
+        try (Stream<Path> files = Files.walk(Paths.get(path))) {
+            return files
                     .filter(this::isFile)
                     .filter(this::isYml)
                     .filter(this::isNotConfig)
@@ -43,9 +41,8 @@ public class DirectoryLoader {
     }
 
     private boolean isYml(Path path) {
-        return Stream
-                .of(YAML_EXT, YML_EXT)
-                .anyMatch(ext -> getFileName(path).endsWith(ext));
+        String fileName = getFileName(path);
+        return fileName.endsWith(YAML_EXT) || fileName.endsWith(YML_EXT);
     }
 
     private boolean isNotConfig(Path path) {
@@ -61,7 +58,7 @@ public class DirectoryLoader {
     private String getTableName(Path file) {
         String separator = file.getFileSystem().getSeparator();
         Path relativePath = Paths.get(path).relativize(file);
-        checkDotsInDirectory(Optional.ofNullable(relativePath.getParent()));
+        checkDotsInDirectory(relativePath.getParent());
         String justFile = cutOffExtension(relativePath).toString();
         checkDotsInFile(file, justFile);
 
@@ -85,9 +82,9 @@ public class DirectoryLoader {
         }
     }
 
-    private void checkDotsInDirectory(Optional<Path> directory) {
-        if (directory.isPresent() && directory.toString().contains(".")) {
-            String message = "Do not use dots in directory names. Wrong fixture directory: " + directory.get();
+    private void checkDotsInDirectory(Path directory) {
+        if (directory != null && directory.toString().contains(".")) {
+            String message = "Do not use dots in directory names. Wrong fixture directory: " + directory;
             throw new LoaderException(message);
         }
     }

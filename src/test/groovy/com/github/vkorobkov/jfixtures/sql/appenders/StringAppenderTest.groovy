@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.sql.appenders
+package com.github.rodionovsasha.jfixtures.sql.appenders
 
 import spock.lang.Specification
 

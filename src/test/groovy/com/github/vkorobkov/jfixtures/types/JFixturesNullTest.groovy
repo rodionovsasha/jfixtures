@@ -1,7 +1,7 @@
-package com.github.vkorobkov.jfixtures.types
+package com.github.rodionovsasha.jfixtures.types
 
-import com.github.vkorobkov.jfixtures.JFixtures
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
+import com.github.rodionovsasha.jfixtures.JFixtures
+import com.github.rodionovsasha.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 import java.nio.file.Path

@@ -1,12 +1,12 @@
-package com.github.vkorobkov.jfixtures.sql
+package com.github.rodionovsasha.jfixtures.sql
 
-import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
-import com.github.vkorobkov.jfixtures.domain.Value
-import com.github.vkorobkov.jfixtures.instructions.CleanTable
-import com.github.vkorobkov.jfixtures.instructions.CustomSql
-import com.github.vkorobkov.jfixtures.instructions.InsertRow
-import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
-import com.github.vkorobkov.jfixtures.testutil.SqBaseTestImpl
+import com.github.rodionovsasha.jfixtures.config.structure.tables.CleanMethod
+import com.github.rodionovsasha.jfixtures.domain.Value
+import com.github.rodionovsasha.jfixtures.instructions.CleanTable
+import com.github.rodionovsasha.jfixtures.instructions.CustomSql
+import com.github.rodionovsasha.jfixtures.instructions.InsertRow
+import com.github.rodionovsasha.jfixtures.sql.appenders.StringAppender
+import com.github.rodionovsasha.jfixtures.testutil.SqBaseTestImpl
 import spock.lang.Specification
 import spock.lang.Unroll
 

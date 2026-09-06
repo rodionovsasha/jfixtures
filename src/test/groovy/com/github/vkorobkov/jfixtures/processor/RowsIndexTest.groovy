@@ -1,6 +1,6 @@
-package com.github.vkorobkov.jfixtures.processor
+package com.github.rodionovsasha.jfixtures.processor
 
-import com.github.vkorobkov.jfixtures.instructions.InsertRow
+import com.github.rodionovsasha.jfixtures.instructions.InsertRow
 import nl.jqno.equalsverifier.EqualsVerifier
 import spock.lang.Specification
 

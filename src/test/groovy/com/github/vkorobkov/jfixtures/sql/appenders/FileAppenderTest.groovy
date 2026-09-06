@@ -1,6 +1,6 @@
-package com.github.vkorobkov.jfixtures.sql.appenders
+package com.github.rodionovsasha.jfixtures.sql.appenders
 
-import com.github.vkorobkov.jfixtures.testutil.WithTempFile
+import com.github.rodionovsasha.jfixtures.testutil.WithTempFile
 import spock.lang.Specification
 
 class FileAppenderTest extends Specification implements WithTempFile {

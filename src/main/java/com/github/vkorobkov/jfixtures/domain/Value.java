@@ -1,13 +1,13 @@
-package com.github.vkorobkov.jfixtures.domain;
+package com.github.rodionovsasha.jfixtures.domain;
 
-import com.github.vkorobkov.jfixtures.Constants;
-import com.github.vkorobkov.jfixtures.util.StringUtil;
+import com.github.rodionovsasha.jfixtures.Constants;
+import com.github.rodionovsasha.jfixtures.util.StringUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlValue;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlValue;
 
 @EqualsAndHashCode
 @ToString

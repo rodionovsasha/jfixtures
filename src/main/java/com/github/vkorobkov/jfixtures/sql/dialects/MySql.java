@@ -1,7 +1,7 @@
-package com.github.vkorobkov.jfixtures.sql.dialects;
+package com.github.rodionovsasha.jfixtures.sql.dialects;
 
-import com.github.vkorobkov.jfixtures.sql.SqlBase;
-import com.github.vkorobkov.jfixtures.util.SqlUtil;
+import com.github.rodionovsasha.jfixtures.sql.SqlBase;
+import com.github.rodionovsasha.jfixtures.util.SqlUtil;
 
 
 public class MySql implements SqlBase {
