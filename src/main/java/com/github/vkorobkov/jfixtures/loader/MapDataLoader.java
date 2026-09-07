@@ -1,10 +1,11 @@
-package com.github.vkorobkov.jfixtures.loader;
+package com.github.rodionovsasha.jfixtures.loader;
 
-import com.github.vkorobkov.jfixtures.domain.Row;
-import com.github.vkorobkov.jfixtures.domain.Table;
+import com.github.rodionovsasha.jfixtures.domain.Row;
+import com.github.rodionovsasha.jfixtures.domain.Table;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,11 +39,18 @@ public final class MapDataLoader {
     }
 
     private static Table fixtureTable(Map.Entry<String, ?> sourceTable) {
-        return Table.of(sourceTable.getKey(), loadRows((Map<String, Object>) sourceTable.getValue()));
+        return Table.of(sourceTable.getKey(), loadRows(asStringKeyedMap(sourceTable.getValue())));
+    }
+
+    private static Map<String, Object> asStringKeyedMap(Object value) {
+        Map<?, ?> source = Optional.ofNullable((Map<?, ?>) value).orElse(Collections.emptyMap());
+        Map<String, Object> result = new LinkedHashMap<>();
+        source.forEach((key, entry) -> result.put(String.class.cast(key), entry));
+        return result;
     }
 
     private static Row fixtureRow(Map.Entry<String, ?> sourceRow) {
-        Map row = Optional.ofNullable((Map) sourceRow.getValue()).orElse(Collections.emptyMap());
+        Map<String, Object> row = asStringKeyedMap(sourceRow.getValue());
         return Row.of(sourceRow.getKey(), row);
     }
 }

@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.config.yaml;
+package com.github.rodionovsasha.jfixtures.config.yaml;
 
 import java.util.ArrayList;
 import java.util.Arrays;

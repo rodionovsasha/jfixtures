@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.config.structure.tables
+package com.github.rodionovsasha.jfixtures.config.structure.tables
 
 import spock.lang.Specification
 import spock.lang.Unroll

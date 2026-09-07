@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.testutil
+package com.github.rodionovsasha.jfixtures.testutil
 
 import org.yaml.snakeyaml.Yaml
 
@@ -29,7 +29,7 @@ trait YamlVirtualDirectory implements WithTempFile, WithTestResource {
             def path = rootPath.resolve(name)
             if (isDirectory) {
                 Files.createDirectory(path)
-                if (content instanceof Map<String, ?>) {
+                if (content instanceof Map) {
                     content.each { String subName, subContent ->
                         nodeHandler(subName, subContent, path)
                     }

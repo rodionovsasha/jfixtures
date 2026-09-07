@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.loader;
+package com.github.rodionovsasha.jfixtures.loader;
 
 public class LoaderException extends RuntimeException {
     LoaderException(String message) {

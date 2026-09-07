@@ -1,7 +1,7 @@
-package com.github.vkorobkov.jfixtures.processor;
+package com.github.rodionovsasha.jfixtures.processor;
 
-import com.github.vkorobkov.jfixtures.instructions.InsertRow;
-import com.github.vkorobkov.jfixtures.instructions.InstructionVisitor;
+import com.github.rodionovsasha.jfixtures.instructions.InsertRow;
+import com.github.rodionovsasha.jfixtures.instructions.InstructionVisitor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

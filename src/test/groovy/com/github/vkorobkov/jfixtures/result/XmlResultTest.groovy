@@ -1,15 +1,16 @@
-package com.github.vkorobkov.jfixtures.result
+package com.github.rodionovsasha.jfixtures.result
 
-import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod
-import com.github.vkorobkov.jfixtures.domain.Value
-import com.github.vkorobkov.jfixtures.instructions.CleanTable
-import com.github.vkorobkov.jfixtures.instructions.InsertRow
-import com.github.vkorobkov.jfixtures.testutil.Assertions
+import com.github.rodionovsasha.jfixtures.config.structure.tables.CleanMethod
+import com.github.rodionovsasha.jfixtures.domain.Value
+import com.github.rodionovsasha.jfixtures.instructions.CleanTable
+import com.github.rodionovsasha.jfixtures.instructions.InsertRow
+import com.github.rodionovsasha.jfixtures.testutil.Assertions
 import spock.lang.FailsWith
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.xml.bind.JAXBException
+import jakarta.xml.bind.JAXBException
+import jakarta.xml.bind.annotation.XmlElement
 import java.nio.file.Files
 
 class XmlResultTest extends Specification implements Assertions {
@@ -102,6 +103,37 @@ class XmlResultTest extends Specification implements Assertions {
     def "::toFile does not shallow underlying exceptions"() {
         expect:
         subject.toFile("")
+    }
+
+    def "::toString propagates JAXB context creation errors"() {
+        when:
+        new InvalidXmlResult().toString()
+
+        then:
+        thrown(JAXBException)
+    }
+
+    def "::toFile propagates JAXB context creation errors without creating a file"() {
+        given:
+        def directory = Files.createTempDirectory("jfixtures-invalid-xml")
+        def output = directory.resolve("output.xml")
+
+        when:
+        new InvalidXmlResult().toFile(output.toString())
+
+        then:
+        thrown(JAXBException)
+        !Files.exists(output)
+
+        cleanup:
+        Files.deleteIfExists(output)
+        Files.deleteIfExists(directory)
+    }
+
+    // JAXB cannot bind an interface; subclasses with invalid mappings must fail visibly.
+    static class InvalidXmlResult extends XmlResult {
+        @XmlElement
+        public Runnable unsupported
     }
 
     private static createTempOutputFile() {

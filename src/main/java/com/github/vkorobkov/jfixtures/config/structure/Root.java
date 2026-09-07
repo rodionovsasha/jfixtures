@@ -1,7 +1,7 @@
-package com.github.vkorobkov.jfixtures.config.structure;
+package com.github.rodionovsasha.jfixtures.config.structure;
 
-import com.github.vkorobkov.jfixtures.config.structure.tables.Tables;
-import com.github.vkorobkov.jfixtures.config.yaml.Node;
+import com.github.rodionovsasha.jfixtures.config.structure.tables.Tables;
+import com.github.rodionovsasha.jfixtures.config.yaml.Node;
 
 import java.util.Optional;
 

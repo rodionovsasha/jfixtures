@@ -1,12 +1,12 @@
-package com.github.vkorobkov.jfixtures.result;
+package com.github.rodionovsasha.jfixtures.result;
 
-import com.github.vkorobkov.jfixtures.instructions.Instruction;
-import com.github.vkorobkov.jfixtures.sql.Appender;
-import com.github.vkorobkov.jfixtures.sql.Sql;
-import com.github.vkorobkov.jfixtures.sql.SqlBridge;
-import com.github.vkorobkov.jfixtures.sql.appenders.FileAppender;
-import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender;
-import com.github.vkorobkov.jfixtures.util.WithResource;
+import com.github.rodionovsasha.jfixtures.instructions.Instruction;
+import com.github.rodionovsasha.jfixtures.sql.Appender;
+import com.github.rodionovsasha.jfixtures.sql.Sql;
+import com.github.rodionovsasha.jfixtures.sql.SqlBridge;
+import com.github.rodionovsasha.jfixtures.sql.appenders.FileAppender;
+import com.github.rodionovsasha.jfixtures.sql.appenders.StringAppender;
+import com.github.rodionovsasha.jfixtures.util.WithResource;
 import lombok.Getter;
 
 import java.util.Collection;

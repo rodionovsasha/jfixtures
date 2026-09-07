@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.testutil
+package com.github.rodionovsasha.jfixtures.testutil
 
 import java.nio.file.Files
 import java.nio.file.Path

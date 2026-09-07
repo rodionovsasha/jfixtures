@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.domain
+package com.github.rodionovsasha.jfixtures.domain
 
 import nl.jqno.equalsverifier.EqualsVerifier
 import spock.lang.Specification
@@ -111,7 +111,7 @@ class ValueTest extends Specification {
         then:
         def exception = thrown(IllegalArgumentException)
         exception.message == "Type [class java.util.ArrayList] is not supported by JFixtures at the moment\n" +
-            "Read more on https://github.com/vkorobkov/jfixtures/wiki/Type-conversions"
+            "Read more on https://github.com/rodionovsasha/jfixtures/wiki/Type-conversions"
     }
 
     def "#of instantiates a Value.of object"() {

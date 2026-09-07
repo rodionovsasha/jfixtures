@@ -1,6 +1,6 @@
-package com.github.vkorobkov.jfixtures
+package com.github.rodionovsasha.jfixtures
 
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
+import com.github.rodionovsasha.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 class BeforeInsertsTest extends Specification implements YamlVirtualDirectory {

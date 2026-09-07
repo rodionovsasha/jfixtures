@@ -1,7 +1,7 @@
-package com.github.vkorobkov.jfixtures.config.structure.tables
+package com.github.rodionovsasha.jfixtures.config.structure.tables
 
-import com.github.vkorobkov.jfixtures.config.yaml.Node
-import com.github.vkorobkov.jfixtures.domain.Value
+import com.github.rodionovsasha.jfixtures.config.yaml.Node
+import com.github.rodionovsasha.jfixtures.domain.Value
 import spock.lang.Specification
 
 class TablesTest extends Specification {

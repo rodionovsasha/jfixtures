@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.result;
+package com.github.rodionovsasha.jfixtures.result;
 
 public interface StringResult {
     String toString();

@@ -1,6 +1,6 @@
-package com.github.vkorobkov.jfixtures.testutil
+package com.github.rodionovsasha.jfixtures.testutil
 
-import com.github.vkorobkov.jfixtures.sql.SqlBase
+import com.github.rodionovsasha.jfixtures.sql.SqlBase
 
 class SqBaseTestImpl implements SqlBase {
     @Override

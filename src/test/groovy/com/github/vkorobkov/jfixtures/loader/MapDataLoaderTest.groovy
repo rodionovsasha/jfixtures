@@ -1,6 +1,6 @@
-package com.github.vkorobkov.jfixtures.loader
+package com.github.rodionovsasha.jfixtures.loader
 
-import com.github.vkorobkov.jfixtures.domain.Value
+import com.github.rodionovsasha.jfixtures.domain.Value
 import spock.lang.Specification
 
 import java.lang.reflect.Modifier

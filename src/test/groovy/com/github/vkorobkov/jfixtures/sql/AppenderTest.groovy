@@ -1,6 +1,6 @@
-package com.github.vkorobkov.jfixtures.sql
+package com.github.rodionovsasha.jfixtures.sql
 
-import com.github.vkorobkov.jfixtures.sql.appenders.StringAppender
+import com.github.rodionovsasha.jfixtures.sql.appenders.StringAppender
 import spock.lang.Specification
 
 class AppenderTest extends Specification {

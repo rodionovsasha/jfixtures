@@ -1,9 +1,9 @@
-package com.github.vkorobkov.jfixtures.result;
+package com.github.rodionovsasha.jfixtures.result;
 
-import com.github.vkorobkov.jfixtures.instructions.Instruction;
-import com.github.vkorobkov.jfixtures.instructions.InstructionVisitor;
-import com.github.vkorobkov.jfixtures.sql.Sql;
-import com.github.vkorobkov.jfixtures.sql.SqlType;
+import com.github.rodionovsasha.jfixtures.instructions.Instruction;
+import com.github.rodionovsasha.jfixtures.instructions.InstructionVisitor;
+import com.github.rodionovsasha.jfixtures.sql.Sql;
+import com.github.rodionovsasha.jfixtures.sql.SqlType;
 import lombok.Getter;
 
 import java.util.Collection;

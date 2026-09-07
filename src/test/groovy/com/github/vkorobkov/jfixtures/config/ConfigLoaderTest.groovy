@@ -1,6 +1,6 @@
-package com.github.vkorobkov.jfixtures.config
+package com.github.rodionovsasha.jfixtures.config
 
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
+import com.github.rodionovsasha.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
 import java.nio.file.Path

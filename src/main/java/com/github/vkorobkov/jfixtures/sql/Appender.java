@@ -1,4 +1,4 @@
-package com.github.vkorobkov.jfixtures.sql;
+package com.github.rodionovsasha.jfixtures.sql;
 
 import java.io.IOException;
 

@@ -1,8 +1,8 @@
-package com.github.vkorobkov.jfixtures.integration
+package com.github.rodionovsasha.jfixtures.integration
 
-import com.github.vkorobkov.jfixtures.JFixtures
-import com.github.vkorobkov.jfixtures.sql.SqlType
-import com.github.vkorobkov.jfixtures.testutil.YamlVirtualDirectory
+import com.github.rodionovsasha.jfixtures.JFixtures
+import com.github.rodionovsasha.jfixtures.sql.SqlType
+import com.github.rodionovsasha.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 import spock.lang.Unroll
 

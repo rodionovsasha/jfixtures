@@ -1,8 +1,8 @@
-package com.github.vkorobkov.jfixtures.config;
+package com.github.rodionovsasha.jfixtures.config;
 
-import com.github.vkorobkov.jfixtures.config.structure.Root;
-import com.github.vkorobkov.jfixtures.config.yaml.Node;
-import com.github.vkorobkov.jfixtures.util.YmlUtil;
+import com.github.rodionovsasha.jfixtures.config.structure.Root;
+import com.github.rodionovsasha.jfixtures.config.yaml.Node;
+import com.github.rodionovsasha.jfixtures.util.YmlUtil;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

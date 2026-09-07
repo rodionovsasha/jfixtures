@@ -1,8 +1,8 @@
-package com.github.vkorobkov.jfixtures.sql;
+package com.github.rodionovsasha.jfixtures.sql;
 
-import com.github.vkorobkov.jfixtures.sql.dialects.MicrosoftSql;
-import com.github.vkorobkov.jfixtures.sql.dialects.MySql;
-import com.github.vkorobkov.jfixtures.sql.dialects.Sql99;
+import com.github.rodionovsasha.jfixtures.sql.dialects.MicrosoftSql;
+import com.github.rodionovsasha.jfixtures.sql.dialects.MySql;
+import com.github.rodionovsasha.jfixtures.sql.dialects.Sql99;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

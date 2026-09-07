@@ -1,7 +1,7 @@
-package com.github.vkorobkov.jfixtures.testutil
+package com.github.rodionovsasha.jfixtures.testutil
 
-import com.github.vkorobkov.jfixtures.JFixtures
-import com.github.vkorobkov.jfixtures.sql.DataSourceUtil
+import com.github.rodionovsasha.jfixtures.JFixtures
+import com.github.rodionovsasha.jfixtures.sql.DataSourceUtil
 import groovy.sql.Sql
 
 trait H2Test extends YamlVirtualDirectory {

@@ -1,13 +1,13 @@
-package com.github.vkorobkov.jfixtures.instructions;
+package com.github.rodionovsasha.jfixtures.instructions;
 
-import com.github.vkorobkov.jfixtures.config.structure.tables.CleanMethod;
+import com.github.rodionovsasha.jfixtures.config.structure.tables.CleanMethod;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlAttribute;
 
 @ToString
 @EqualsAndHashCode
