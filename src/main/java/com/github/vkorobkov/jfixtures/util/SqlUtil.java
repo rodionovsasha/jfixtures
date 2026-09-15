@@ -1,13 +1,14 @@
 package com.github.rodionovsasha.jfixtures.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.Objects;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SqlUtil {
     private static final String SINGLE_QUOTE = "'";
     private static final String SINGLE_QUOTE_ESCAPED = "''";
-
-    private SqlUtil() {
-    }
 
     public static String escapeString(String string) {
         string = string.replace(SINGLE_QUOTE, SINGLE_QUOTE_ESCAPED);

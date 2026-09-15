@@ -1,15 +1,16 @@
 package com.github.rodionovsasha.jfixtures;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class IntId {
     public static final int LOWER_BOUND = 100_000;
     public static final int RANGE = Integer.MAX_VALUE - LOWER_BOUND;
-
-    private IntId() {
-    }
 
     public static List<Integer> many(String... aliases) {
         return Arrays.stream(aliases).map(IntId::one).collect(Collectors.toList());

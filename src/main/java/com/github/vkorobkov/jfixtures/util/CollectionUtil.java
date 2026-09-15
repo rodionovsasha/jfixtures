@@ -1,6 +1,7 @@
 package com.github.rodionovsasha.jfixtures.util;
 
-
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,10 +11,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CollectionUtil {
-
-    private CollectionUtil() {
-    }
 
     public static void flattenRecursively(Object toFlat, Consumer<Object> consumer) {
         if (isIterable(toFlat)) {

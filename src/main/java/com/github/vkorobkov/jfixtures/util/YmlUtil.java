@@ -1,5 +1,7 @@
 package com.github.rodionovsasha.jfixtures.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.yaml.snakeyaml.Yaml;
@@ -14,12 +16,10 @@ import java.util.stream.Stream;
 
 import static com.github.rodionovsasha.jfixtures.util.StringUtil.cutOffExtension;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class YmlUtil {
     public static final String YML_EXT = ".yml";
     public static final String YAML_EXT = ".yaml";
-
-    private YmlUtil() {
-    }
 
     @SuppressWarnings("unchecked")
     @SneakyThrows

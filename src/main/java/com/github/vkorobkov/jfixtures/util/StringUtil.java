@@ -1,13 +1,14 @@
 package com.github.rodionovsasha.jfixtures.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.val;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StringUtil {
-    private StringUtil() {
-    }
 
     public static String removePrefixes(String s, String... prefixes) {
         for (String prefix : prefixes) {

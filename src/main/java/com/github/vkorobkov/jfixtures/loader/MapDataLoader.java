@@ -2,6 +2,8 @@ package com.github.rodionovsasha.jfixtures.loader;
 
 import com.github.rodionovsasha.jfixtures.domain.Row;
 import com.github.rodionovsasha.jfixtures.domain.Table;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -10,9 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MapDataLoader {
-    private MapDataLoader() {
-    }
 
     public static Collection<Table> loadTables(Map<String, ?> tables) {
         if (tables == null) {
