@@ -1,0 +1,11 @@
+".conf.yml":
+  tables:
+    clean_up_with_truncate_cascade:
+      applies_to: "friends"
+      clean_method: "truncate_cascade"
+
+"friends.yml":
+  semen:
+    first_name: Semen
+    age: 30
+    sex: man
