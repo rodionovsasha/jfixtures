@@ -1,12 +1,13 @@
 package com.github.rodionovsasha.jfixtures.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MapMerger {
-    private MapMerger() {
-    }
 
     public static <K> Map<K, Object> merge(Map<? extends K, ?> from, Map<? extends K, ?> with) {
         Map<K, Object> into = new LinkedHashMap<>(from);

@@ -88,6 +88,11 @@
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
+        <!-- Lombok generates the private constructor after Checkstyle parses the source. -->
+        <module name="SuppressionXpathSingleFilter">
+            <property name="checks" value="HideUtilityClassConstructor"/>
+            <property name="query" value="//*[MODIFIERS//*[@text = 'NoArgsConstructor']]/descendant-or-self::node()"/>
+        </module>
         <module name="InterfaceIsType"/>
         <module name="VisibilityModifier"/>
         <!-- Miscellaneous other checks.                   -->

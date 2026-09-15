@@ -1,10 +1,12 @@
 package com.github.rodionovsasha.jfixtures.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.function.BinaryOperator;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StreamUtil {
-    private StreamUtil() {
-    }
 
     public static <T> BinaryOperator<T> throwingMerger() {
         return (u, v) -> {

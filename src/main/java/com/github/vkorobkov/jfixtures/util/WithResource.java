@@ -1,12 +1,13 @@
 package com.github.rodionovsasha.jfixtures.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.util.function.Function;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WithResource {
-    private WithResource() {
-    }
 
     @SneakyThrows
     public static <TResource extends AutoCloseable, TResult> TResult touch(
