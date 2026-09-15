@@ -1,0 +1,7 @@
+"users.yml":
+  vlad:
+    id: 100500
+    first_name: Vladimir
+  semen:
+    id: 100500
+    first_name: Semen

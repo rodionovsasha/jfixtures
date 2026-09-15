@@ -90,6 +90,15 @@ class ProcessorTest extends Specification implements YamlVirtualDirectory {
         vlad.values.id == Value.of(100500)
     }
 
+    def "throws a helpful exception when a user-defined primary key is duplicated"() {
+        when:
+        load("duplicate_user_defined_primary_key.yml")
+
+        then:
+        def exception = thrown(ProcessorException)
+        exception.message == "Duplicate primary key [id=100500] in table [users]: rows [vlad] and [semen] define the same value"
+    }
+
     def "resolves basic dependencies"() {
         when:
         def instructions = load("basic_dependencies.yml")

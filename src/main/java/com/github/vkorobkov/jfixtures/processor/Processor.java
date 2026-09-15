@@ -67,17 +67,48 @@ public class Processor {
 
     private List<Instruction> processRows(Table table) {
         val baseColumns = context.getConfig().table(table.getName()).getDefaultColumns();
+        val pkColumnName = context.getConfig().table(table.getName()).getPkColumnName();
+        Map<Value, String> rowsByPrimaryKey = new LinkedHashMap<>();
 
         return table.getRows().stream()
                 .map(row -> Row.of(row.getName(), baseColumns).columns(row.getColumns()))
-                .map(row -> processRow(table.getName(), row))
+                .map(row -> processRow(table.getName(), row, pkColumnName, rowsByPrimaryKey))
                 .collect(Collectors.toList());
     }
 
-    private Instruction processRow(String tableName, Row row) {
-        Instruction result = new InsertRow(tableName, row.getName(), extractRowValues(tableName, row));
+    private Instruction processRow(
+            String tableName,
+            Row row,
+            String pkColumnName,
+            Map<Value, String> rowsByPrimaryKey
+    ) {
+        Map<String, Value> rowValues = extractRowValues(tableName, row);
+        validatePrimaryKey(tableName, row, pkColumnName, rowValues, rowsByPrimaryKey);
+        Instruction result = new InsertRow(tableName, row.getName(), rowValues);
         result.accept(context.getRowsIndex());
         return result;
+    }
+
+    private void validatePrimaryKey(
+            String tableName,
+            Row row,
+            String pkColumnName,
+            Map<String, Value> rowValues,
+            Map<Value, String> rowsByPrimaryKey
+    ) {
+        Value primaryKey = rowValues.get(pkColumnName);
+        if (primaryKey == null) {
+            return;
+        }
+
+        String previousRow = rowsByPrimaryKey.putIfAbsent(primaryKey, row.getName());
+        if (row.getColumns().containsKey(pkColumnName) && previousRow != null) {
+            String message = String.format(
+                    "Duplicate primary key [%s=%s] in table [%s]: rows [%s] and [%s] define the same value",
+                    pkColumnName, primaryKey.getValue(), tableName, previousRow, row.getName()
+            );
+            throw new ProcessorException(message);
+        }
     }
 
     private Map<String, Value> extractRowValues(String tableName, Row row) {
