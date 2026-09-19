@@ -5,7 +5,7 @@
 
     <groupId>io.github.rodionovsasha</groupId>
     <artifactId>jfixtures</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
 
     <name>JFixtures</name>
@@ -33,8 +33,8 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/rodionovsasha/jfixtures.git</connection>
-        <developerConnection>scm:git:ssh://github.com:rodionovsasha/jfixtures.git</developerConnection>
+        <connection>scm:git:https://github.com/rodionovsasha/jfixtures.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/rodionovsasha/jfixtures.git</developerConnection>
         <url>https://github.com/rodionovsasha/jfixtures</url>
     </scm>
 
@@ -61,7 +61,7 @@
         <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
         <gmavenplus-plugin.version>5.1.0</gmavenplus-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
-        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
         <spotbugs-maven-plugin.version>4.10.4.1</spotbugs-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
         <!-- Checkstyle 13+ requires Java 21; keep the Java 17 compatible release. -->
@@ -162,14 +162,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>Jfixtures</name>
-            <url>https://maven.pkg.github.com/rodionovsasha/jfixtures</url>
-        </repository>
-    </distributionManagement>
 
     <build>
         <testResources>
@@ -337,7 +329,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>central</id>
             <build>
                 <plugins>
                     <plugin>
@@ -347,21 +339,25 @@
                             <execution>
                                 <id>package-sources</id>
                                 <goals>
-                                    <goal>jar</goal>
+                                    <goal>jar-no-fork</goal>
                                 </goals>
                             </execution>
                         </executions>
                     </plugin>
                     <plugin>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>${maven-javadoc-plugin.version}</version>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>${maven-jar-plugin.version}</version>
                         <executions>
                             <execution>
-                                <id>package-javadoc</id>
+                                <id>package-javadoc-placeholder</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
+                                <configuration>
+                                    <classifier>javadoc</classifier>
+                                    <classesDirectory>${project.basedir}/src/main/javadoc</classesDirectory>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -378,16 +374,19 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                          <keyname>39843E8F5C8FBD8B3DAC09F087DB8DBAFC7E23A0</keyname>
+                        </configuration>
                     </plugin>
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>${nexus-staging-maven-plugin.version}</version>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>false</autoPublish>
+                            <waitUntil>validated</waitUntil>
                         </configuration>
                     </plugin>
                 </plugins>
