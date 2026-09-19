@@ -1,0 +1,91 @@
+package io.github.rodionovsasha.jfixtures.loader;
+
+import io.github.rodionovsasha.jfixtures.domain.Table;
+import io.github.rodionovsasha.jfixtures.util.YmlUtil;
+import lombok.AllArgsConstructor;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static io.github.rodionovsasha.jfixtures.util.StringUtil.cutOffExtension;
+import static io.github.rodionovsasha.jfixtures.util.YmlUtil.YAML_EXT;
+import static io.github.rodionovsasha.jfixtures.util.YmlUtil.YML_EXT;
+
+@AllArgsConstructor
+public class DirectoryLoader {
+    private final String path;
+
+    public Collection<Table> load() {
+        try (Stream<Path> files = Files.walk(Paths.get(path))) {
+            return files
+                    .filter(this::isFile)
+                    .filter(this::isYml)
+                    .filter(this::isNotConfig)
+                    .peek(this::checkTwin)
+                    .map(this::loadTable)
+                    .collect(Collectors.toList());
+        } catch (IOException cause) {
+            String message = "Can not load fixtures from directory: " + path;
+            throw new LoaderException(message, cause);
+        }
+    }
+
+    private boolean isFile(Path file) {
+        return !Files.isDirectory(file);
+    }
+
+    private boolean isYml(Path path) {
+        String fileName = getFileName(path);
+        return fileName.endsWith(YAML_EXT) || fileName.endsWith(YML_EXT);
+    }
+
+    private boolean isNotConfig(Path path) {
+        return !getFileName(path).startsWith(".");
+    }
+
+    private Table loadTable(Path file) {
+        String name = getTableName(file);
+        Map<String, Object> yamlContent = YmlUtil.load(file);
+        return Table.of(name, MapDataLoader.loadRows(yamlContent));
+    }
+
+    private String getTableName(Path file) {
+        String separator = file.getFileSystem().getSeparator();
+        Path relativePath = Paths.get(path).relativize(file);
+        checkDotsInDirectory(relativePath.getParent());
+        String justFile = cutOffExtension(relativePath).toString();
+        checkDotsInFile(file, justFile);
+
+        return justFile.replace(separator, ".");
+    }
+
+    private String getFileName(Path path) {
+        return path.getFileName().toString();
+    }
+
+    private void checkTwin(Path path) {
+        if (YmlUtil.hasTwin(path)) {
+            throw new LoaderException("File " + path + " exists with both extensions(yaml/yml).");
+        }
+    }
+
+    private void checkDotsInFile(Path file, String relativePath) {
+        if (relativePath.contains(".")) {
+            String message = "Do not use dots in file names. Use nested directorys instead. Wrong fixture: " + file;
+            throw new LoaderException(message);
+        }
+    }
+
+    private void checkDotsInDirectory(Path directory) {
+        if (directory != null && directory.toString().contains(".")) {
+            String message = "Do not use dots in directory names. Wrong fixture directory: " + directory;
+            throw new LoaderException(message);
+        }
+    }
+}

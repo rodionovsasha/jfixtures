@@ -1,0 +1,29 @@
+package io.github.rodionovsasha.jfixtures.instructions
+
+import io.github.rodionovsasha.jfixtures.config.structure.tables.CleanMethod
+import spock.lang.Specification
+
+class InstructionVisitorTest extends Specification {
+    TestVisitor visitor
+
+    void setup() {
+        visitor = new TestVisitor()
+    }
+
+    def "visiting CleanTable is doing nothing"() {
+        expect:
+        visitor.visit(new CleanTable("users", CleanMethod.DELETE))
+    }
+
+    def "visiting CustomSql is doing nothing"() {
+        expect:
+        visitor.visit(new CustomSql("users", "BEGIN TRANSACTION;"))
+    }
+
+
+    static class TestVisitor implements InstructionVisitor {
+        @Override
+        void visit(InsertRow insertRow) {
+        }
+    }
+}

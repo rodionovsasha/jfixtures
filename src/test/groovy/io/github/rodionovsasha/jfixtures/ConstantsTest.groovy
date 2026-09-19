@@ -1,0 +1,10 @@
+package io.github.rodionovsasha.jfixtures
+
+import spock.lang.Specification
+
+class ConstantsTest extends Specification {
+    def "dummy constructor test"() {
+        expect:
+        new Constants()
+    }
+}

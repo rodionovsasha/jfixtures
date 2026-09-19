@@ -1,0 +1,46 @@
+package io.github.rodionovsasha.jfixtures.util;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static io.github.rodionovsasha.jfixtures.util.StringUtil.cutOffExtension;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class YmlUtil {
+    public static final String YML_EXT = ".yml";
+    public static final String YAML_EXT = ".yaml";
+
+    @SuppressWarnings("unchecked")
+    @SneakyThrows
+    public static Map<String, Object> load(Path file) {
+        try (InputStream input = Files.newInputStream(file)) {
+            Object loaded = new Yaml().load(input);
+            return loaded == null ? Collections.emptyMap() : (Map<String, Object>)loaded;
+        }
+    }
+
+    public static boolean hasTwin(Path filePath) {
+        var count = Stream.of(YML_EXT, YAML_EXT)
+                .map(ext -> cutOffExtension(filePath) + ext)
+                .map(Paths::get)
+                .filter(Files::exists)
+                .filter(path -> !Files.isDirectory(path))
+                .count();
+
+        if (count == 0) {
+            throw new IllegalArgumentException("Neither " + filePath + " nor it's yaml/yml twin does exist");
+        }
+
+        return count == 2;
+    }
+}
