@@ -62,6 +62,8 @@ public class Processor {
 
         log.info("Processing table '{}'", tableName);
 
+        processRequiredTables(tableName, config.getRequires());
+
         List<Instruction> instructions = new ArrayList<>();
         if (context.getCleanedTables().add(tableName)) {
             addCustomSql(instructions, tableName, config.getBeforeCleanup());
@@ -89,11 +91,36 @@ public class Processor {
 
         for (Row source : table.getRows()) {
             Row row = Row.of(source.getName(), baseColumns).columns(source.getColumns());
+            row = addTimestamps(row, config.table(table.getName()));
             Instruction insert = processRow(table.getName(), row, pkColumnNames, rowsByPrimaryKey);
             instructions.add(insert);
             instructions.addAll(processManyToMany(table.getName(), row, (InsertRow)insert));
         }
         return instructions;
+    }
+
+    private void processRequiredTables(String tableName, List<String> requirements) {
+        for (String requiredTable : requirements) {
+            String resolved = context.resolveTableName(tableName, requiredTable);
+            Table fixture = context.getTables().get(resolved);
+            if (fixture == null) {
+                throw new ProcessorException("Required table [" + resolved + "] is not found");
+            }
+            processTable(fixture);
+        }
+    }
+
+    private Row addTimestamps(Row row, io.github.rodionovsasha.jfixtures.config.structure.tables.Tables table) {
+        if (!table.shouldAddTimestamps()) {
+            return row;
+        }
+        Object timestamp = table.getTimestampValue().orElse(Value.ofSql("CURRENT_TIMESTAMP"));
+        for (String column : List.of("created_at", "created_on", "updated_at", "updated_on")) {
+            if (!row.getColumns().containsKey(column)) {
+                row = row.column(column, timestamp);
+            }
+        }
+        return row;
     }
 
     private Instruction processRow(
@@ -154,9 +181,7 @@ public class Processor {
         if (table.shouldAutoGeneratePk()) {
             for (String column : table.getPkColumnNames()) {
                 String label = table.getPkColumnNames().size() == 1 ? row.getName() : row.getName() + "." + column;
-                Object identifier = table.shouldGenerateUuidPk()
-                        ? UuidId.one(label).toString()
-                        : IntId.one(label);
+                Object identifier = identifier(table, label);
                 result.put(column, Value.of(identifier));
             }
         }
@@ -177,6 +202,14 @@ public class Processor {
             }
         });
         return result;
+    }
+
+    private Object identifier(io.github.rodionovsasha.jfixtures.config.structure.tables.Tables table, String label) {
+        var generator = table.getIdGenerator().or(context.getConfig()::getIdGenerator);
+        if (generator.isPresent()) {
+            return IdentifierGenerator.generate(generator.get(), label);
+        }
+        return table.shouldGenerateUuidPk() ? UuidId.one(label).toString() : IntId.one(label);
     }
 
     private void addCompositeReferenceValues(

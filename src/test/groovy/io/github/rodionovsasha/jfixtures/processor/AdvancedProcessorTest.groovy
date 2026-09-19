@@ -68,6 +68,65 @@ class AdvancedProcessorTest extends Specification {
         rows.find { it.table == "comments" }.values.author_id == uuid
     }
 
+    def "uses configured generators, computed PK names, timestamps, and explicit table requirements"() {
+        given:
+        def config = root(
+                id_generator: "io.github.rodionovsasha.jfixtures.StringId.one",
+                tables: [
+                        users: [
+                                applies_to: "users", pk: [column: '${TABLE}_ID'],
+                                timestamps: [enabled: true, value: "sql:TIMESTAMP '2020-01-01 00:00:00'"],
+                                requires: ["roles"]
+                        ],
+                        roles: [applies_to: "roles", pk: [id_generator: "io.github.rodionovsasha.jfixtures.LongId.one"]]
+                ]
+        )
+
+        when:
+        def rows = rows(new Processor([Table.ofRow("users", "vlad", [created_at: "explicit"]),
+                Table.ofRow("roles", "admin", [:])], config).process())
+
+        then:
+        rows*.table == ["roles", "users"]
+        def user = rows.find { it.table == "users" }
+        user.values.USERS_ID == Value.of("vlad")
+        user.values.created_at == Value.of("explicit")
+        user.values.created_on == Value.ofSql("TIMESTAMP '2020-01-01 00:00:00'")
+        user.values.updated_at == Value.ofSql("TIMESTAMP '2020-01-01 00:00:00'")
+        user.values.updated_on == Value.ofSql("TIMESTAMP '2020-01-01 00:00:00'")
+        rows.find { it.table == "roles" }.values.id == Value.of(Integer.toUnsignedLong("admin".hashCode()))
+    }
+
+    def "rejects an invalid configured ID generator"() {
+        when:
+        new Processor([Table.ofRow("users", "vlad", [:])], root(
+                id_generator: "java.lang.String.trim"
+        )).process()
+
+        then:
+        def exception = thrown(ProcessorException)
+        exception.message == "ID generator [java.lang.String.trim] must be a public static method accepting String and returning a value"
+    }
+
+    def "supports scalar timestamp configuration and reports missing required tables"() {
+        when:
+        def rows = rows(new Processor([Table.ofRow("users", "vlad", [:])], root(
+                tables: [users: [applies_to: "users", timestamps: true]]
+        )).process())
+
+        then:
+        rows.first().values.created_at == Value.ofSql("CURRENT_TIMESTAMP")
+
+        when:
+        new Processor([Table.ofRow("users", "vlad", [:])], root(
+                tables: [users: [applies_to: "users", requires: ["roles"]]]
+        )).process()
+
+        then:
+        def exception = thrown(ProcessorException)
+        exception.message == "Required table [roles] is not found"
+    }
+
     def "generates every composite primary-key component and expands configured references"() {
         given:
         def config = root(

@@ -40,6 +40,10 @@ public final class Root extends Section {
         return getNode().dig("templates", "enabled").<Boolean>optional().orElse(false);
     }
 
+    public Optional<String> getIdGenerator() {
+        return getNode().child("id_generator").optional().map(String.class::cast);
+    }
+
     /** Kept for source compatibility with the original string-only reference configuration. */
     public Optional<String> referredTable(String table, String column) {
         return foreignKey(table, column).map(ForeignKey::table);

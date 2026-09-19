@@ -114,6 +114,61 @@ user_{{ number }}:
 
 This creates `user_1` through `user_3`, with numeric `position` values 10, 20, and 30. Ranges may descend and multiple comma-separated variables produce their Cartesian product. A row may expand to at most 10,000 rows. Templates do not load classes, call methods, access files, execute SQL, or run arbitrary code. With templates disabled, their markers are treated as ordinary fixture text and are never evaluated.
 
+### Output and fixture options
+
+SQL rendering can use a chosen line separator and number of blank lines between statements. The same formatting is used for `toString()`, `toFile()`, and custom appenders.
+
+```java
+String sql = JFixtures.noConfig().load("fixtures").compile().toSql99()
+    .withFormatting(new SqlFormatting("\\r\\n", 1))
+    .toString();
+```
+
+Set `id_generator` to the fully qualified name of a public static method that accepts a row label (`String`) and returns the primary-key value. A table-level generator overrides the root setting. `StringId.one` and `LongId.one` are supplied deterministic generators. Primary-key column names may include `${TABLE}` (upper case) or `${table}` (lower case).
+
+```yml
+id_generator: io.github.rodionovsasha.jfixtures.StringId.one
+tables:
+  users:
+    applies_to: users
+    pk:
+      column: ${TABLE}_ID
+  audit_log:
+    applies_to: audit_log
+    pk:
+      id_generator: com.example.Ids.auditId
+```
+
+Set `timestamps: true` or provide `timestamps.enabled: true` for a table to add missing `created_at`, `created_on`, `updated_at`, and `updated_on` values as `CURRENT_TIMESTAMP`. A fixture value is retained. `timestamps.value` may provide a different literal, including `sql:` SQL.
+
+`requires` inserts named prerequisite tables before a table even if no foreign key declares the relationship. It uses the same relative-table lookup and circular-dependency checks as references.
+
+```yml
+tables:
+  users:
+    applies_to: users
+    requires: [roles]
+    timestamps:
+      enabled: true
+      value: "sql:CURRENT_TIMESTAMP"
+```
+
+The map API accepts a map for a fixture table and accepts an empty list as an empty table. A scalar value or a non-empty list is rejected because neither identifies named rows. YAML anchors are available through SnakeYAML; name reusable helper rows with a leading `.` so they are not inserted. Root-level YAML `!omap` preserves the declared row order, which lets a self-referential tree place each parent before its children.
+
+```yml
+.base: &base
+  active: true
+vlad:
+  <<: *base
+  name: Vlad
+```
+
+```yml
+!omap
+- grandparent: { age: 100 }
+- parent: { parent_id: grandparent }
+```
+
 Compiled results can be applied directly:
 
 ```java

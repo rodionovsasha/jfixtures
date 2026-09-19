@@ -4,6 +4,7 @@ import io.github.rodionovsasha.jfixtures.instructions.Instruction;
 import io.github.rodionovsasha.jfixtures.sql.Appender;
 import io.github.rodionovsasha.jfixtures.sql.Sql;
 import io.github.rodionovsasha.jfixtures.sql.SqlBridge;
+import io.github.rodionovsasha.jfixtures.sql.SqlFormatting;
 import io.github.rodionovsasha.jfixtures.sql.appenders.FileAppender;
 import io.github.rodionovsasha.jfixtures.sql.appenders.StringAppender;
 import io.github.rodionovsasha.jfixtures.processor.JdbcBridge;
@@ -23,10 +24,20 @@ import static java.util.Collections.unmodifiableCollection;
 public class SqlResult implements StringResult {
     private final Collection<Instruction> instructions;
     private final Sql sql;
+    private final SqlFormatting formatting;
 
     public SqlResult(Collection<Instruction> instructions, Sql sql) {
+        this(instructions, sql, SqlFormatting.compact());
+    }
+
+    private SqlResult(Collection<Instruction> instructions, Sql sql, SqlFormatting formatting) {
         this.instructions = unmodifiableCollection(instructions);
         this.sql = sql;
+        this.formatting = formatting;
+    }
+
+    public SqlResult withFormatting(SqlFormatting formatting) {
+        return new SqlResult(instructions, sql, formatting);
     }
 
     @Override
@@ -40,7 +51,8 @@ public class SqlResult implements StringResult {
     }
 
     public <T extends Appender> T applyAppender(T appender) {
-        createSqlBridge(appender).apply(instructions);
+        Appender formatted = sequence -> appender.append(formatting.apply(sequence.toString()));
+        createSqlBridge(formatted).apply(instructions);
         return appender;
     }
 

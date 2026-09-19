@@ -1,0 +1,10 @@
+"family.yml": |
+  !omap
+  - grandparent:
+      age: 100
+  - parent:
+      age: 70
+      parent_id: grandparent
+  - child:
+      age: 40
+      parent_id: parent

@@ -1,0 +1,7 @@
+!omap
+  - grandparent:
+      name: Grandparent
+  - parent:
+      name: Parent
+  - child:
+      name: Child

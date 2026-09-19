@@ -1,9 +1,11 @@
 package io.github.rodionovsasha.jfixtures.util
 
 import io.github.rodionovsasha.jfixtures.testutil.YamlVirtualDirectory
+import io.github.rodionovsasha.jfixtures.loader.MapDataLoader
 import spock.lang.Specification
 
 import java.nio.file.NoSuchFileException
+import java.nio.file.Files
 import java.nio.file.Path
 
 class YmlUtilTest extends Specification implements YamlVirtualDirectory {
@@ -49,6 +51,53 @@ class YmlUtilTest extends Specification implements YamlVirtualDirectory {
         yaml.binary == [1, 2] as byte[]
         yaml.date instanceof Date
         yaml.timestamp instanceof Date
+    }
+
+    def "loads !omap documents in their declared order"() {
+        expect:
+        YmlUtil.load(testResourcePath("omap.yml")).keySet().asList() == ["grandparent", "parent", "child"]
+    }
+
+    def "loads anchor fragments while excluding their dot-prefixed rows"() {
+        when:
+        def yaml = YmlUtil.load(testResourcePath("anchors.yml"))
+
+        then:
+        yaml.vlad == [active: true, name: "Vlad"]
+        MapDataLoader.loadRows(yaml)*.name == ["vlad"]
+    }
+
+    def "rejects invalid root !omap entries and scalar YAML documents"() {
+        given:
+        def invalidOmap = File.createTempFile("jfixtures", ".yml").toPath()
+        def invalidEntry = File.createTempFile("jfixtures", ".yml").toPath()
+        def scalar = File.createTempFile("jfixtures", ".yml").toPath()
+        invalidOmap.text = "!omap\n- first: {}\n- second: {}\n  third: {}\n"
+        invalidEntry.text = "!omap\n- first: {}\n- invalid\n"
+        scalar.text = "fixture"
+
+        when:
+        YmlUtil.load(invalidOmap)
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        YmlUtil.load(invalidEntry)
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        YmlUtil.load(scalar)
+
+        then:
+        thrown(IllegalArgumentException)
+
+        cleanup:
+        Files.deleteIfExists(invalidOmap)
+        Files.deleteIfExists(invalidEntry)
+        Files.deleteIfExists(scalar)
     }
 
     def "#hasYamlTwin does not have twin for .yml file"() {

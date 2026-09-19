@@ -18,14 +18,14 @@ Open feature backlog, ordered from the least to the greatest estimated implement
 
 ## Medium
 
-- [ ] Make generated SQL formatting configurable. [#78](https://github.com/rodionovsasha/jfixtures/issues/78)
-- [ ] Allow a custom primary-key generator globally and per table. [#68](https://github.com/rodionovsasha/jfixtures/issues/68)
-- [ ] Add opt-in automatic values for conventional timestamp columns (`created_at`, `created_on`, `updated_at`, and `updated_on`) when a fixture omits them. [#214](https://github.com/rodionovsasha/jfixtures/issues/214)
-- [ ] Support computed primary-key column names. [#35](https://github.com/rodionovsasha/jfixtures/issues/35)
-- [ ] Define and implement handling for list or scalar values passed to the map-based fixture API. [#198](https://github.com/rodionovsasha/jfixtures/issues/198)
-- [ ] Allow explicit table ordering in addition to order inferred from foreign-key relationships. [#112](https://github.com/rodionovsasha/jfixtures/issues/112)
-- [ ] Support YAML anchors for reusable fixture fragments without inserting the anchor rows. [#123](https://github.com/rodionovsasha/jfixtures/issues/123)
-- [ ] Support YAML `!omap` so rows in one fixture file can be inserted in an explicit order, including self-referential foreign-key trees. [#210](https://github.com/rodionovsasha/jfixtures/issues/210)
+- [x] Make generated SQL formatting configurable. [#78](https://github.com/rodionovsasha/jfixtures/issues/78)
+- [x] Allow a custom primary-key generator globally and per table. [#68](https://github.com/rodionovsasha/jfixtures/issues/68)
+- [x] Add opt-in automatic values for conventional timestamp columns (`created_at`, `created_on`, `updated_at`, and `updated_on`) when a fixture omits them. [#214](https://github.com/rodionovsasha/jfixtures/issues/214)
+- [x] Support computed primary-key column names. [#35](https://github.com/rodionovsasha/jfixtures/issues/35)
+- [x] Define and implement handling for list or scalar values passed to the map-based fixture API. [#198](https://github.com/rodionovsasha/jfixtures/issues/198)
+- [x] Allow explicit table ordering in addition to order inferred from foreign-key relationships. [#112](https://github.com/rodionovsasha/jfixtures/issues/112)
+- [x] Support YAML anchors for reusable fixture fragments without inserting the anchor rows. [#123](https://github.com/rodionovsasha/jfixtures/issues/123)
+- [x] Support YAML `!omap` so rows in one fixture file can be inserted in an explicit order, including self-referential foreign-key trees. [#210](https://github.com/rodionovsasha/jfixtures/issues/210)
 
 ## Large
 

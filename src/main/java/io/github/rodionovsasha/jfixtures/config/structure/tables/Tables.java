@@ -36,6 +36,25 @@ public class Tables extends Section {
         return getPkColumnNames().get(0);
     }
 
+    public Optional<String> getIdGenerator() {
+        return readProperty(SECTION_PRIMARY_KEY, "id_generator")
+                .map(String.class::cast)
+                .or(() -> readProperty("id_generator").map(String.class::cast));
+    }
+
+    public List<String> getRequires() {
+        return readArray("requires");
+    }
+
+    public Optional<Object> getTimestampValue() {
+        return readProperty("timestamps", "value");
+    }
+
+    public boolean shouldAddTimestamps() {
+        return readProperty("timestamps", "enabled").map(Boolean.class::cast).orElse(false)
+                || readProperty("timestamps").filter(Boolean.class::isInstance).map(Boolean.class::cast).orElse(false);
+    }
+
     /**
      * Returns the primary-key columns in declaration order.  {@code pk.column}
      * remains supported for existing configurations; new composite keys use
@@ -45,7 +64,8 @@ public class Tables extends Section {
         Object columns = readProperty(SECTION_PRIMARY_KEY, "columns").orElse(null);
         if (columns == null) {
             return Collections.singletonList(
-                    (String)readProperty(SECTION_PRIMARY_KEY, "column").orElse(PK_DEFAULT_COLUMN_NAME)
+                    computedColumnName((String)readProperty(SECTION_PRIMARY_KEY, "column")
+                            .orElse(PK_DEFAULT_COLUMN_NAME))
             );
         }
         if (!(columns instanceof Collection<?> values) || values.isEmpty()) {
@@ -56,12 +76,19 @@ public class Tables extends Section {
             if (!(value instanceof String name) || name.isBlank()) {
                 throw new IllegalArgumentException("Primary-key columns must contain non-blank strings");
             }
-            result.add(name);
+            result.add(computedColumnName(name));
         }
         if (new LinkedHashSet<>(result).size() != result.size()) {
             throw new IllegalArgumentException("Primary-key columns must not contain duplicates");
         }
         return Collections.unmodifiableList(result);
+    }
+
+    private String computedColumnName(String configuredName) {
+        String tableName = name.replace('.', '_');
+        return configuredName
+                .replace("${TABLE}", tableName.toUpperCase(java.util.Locale.ROOT))
+                .replace("${table}", tableName.toLowerCase(java.util.Locale.ROOT));
     }
 
     public boolean shouldGenerateUuidPk() {
