@@ -8,4 +8,9 @@ public class MicrosoftSql implements SqlBase {
     public String escapeTableOrColumnPart(String part) {
         return SqlUtil.surround(part, "[", "]");
     }
+
+    @Override
+    public String escapeBinary(byte[] value) {
+        return "0x" + java.util.HexFormat.of().formatHex(value);
+    }
 }

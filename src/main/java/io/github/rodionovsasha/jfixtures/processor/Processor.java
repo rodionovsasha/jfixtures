@@ -29,8 +29,21 @@ public class Processor {
     }
 
     public List<Instruction> process() {
+        processConfiguredCleanTables();
         context.getTables().values().forEach(this::processTable);
         return context.getInstructions();
+    }
+
+    private void processConfiguredCleanTables() {
+        context.getConfig().getCleanTables().stream()
+                .filter(context.getCleanedTables()::add)
+                .forEach(this::cleanConfiguredTable);
+    }
+
+    private void cleanConfiguredTable(String tableName) {
+        var config = context.getConfig().table(tableName);
+        addCustomSql(context.getInstructions(), tableName, config.getBeforeCleanup());
+        context.getInstructions().add(new CleanTable(tableName, config.getCleanMethod()));
     }
 
     private void processTable(Table table) {
@@ -48,9 +61,10 @@ public class Processor {
         log.info("Processing table '{}'", tableName);
 
         List<Instruction> instructions = new ArrayList<>();
-        addCustomSql(instructions, tableName, config.getBeforeCleanup());
-
-        instructions.add(new CleanTable(tableName, config.getCleanMethod()));
+        if (context.getCleanedTables().add(tableName)) {
+            addCustomSql(instructions, tableName, config.getBeforeCleanup());
+            instructions.add(new CleanTable(tableName, config.getCleanMethod()));
+        }
 
         addCustomSql(instructions, tableName, config.getBeforeInserts());
 

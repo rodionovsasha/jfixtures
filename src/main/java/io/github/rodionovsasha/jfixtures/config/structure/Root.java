@@ -3,7 +3,12 @@ package io.github.rodionovsasha.jfixtures.config.structure;
 import io.github.rodionovsasha.jfixtures.config.structure.tables.Tables;
 import io.github.rodionovsasha.jfixtures.config.yaml.Node;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 public final class Root extends Section {
     public static Root ofProfile(Node root, String profile) {
@@ -26,5 +31,13 @@ public final class Root extends Section {
 
     public Tables table(String name) {
         return new Tables(getNode().child("tables"), name);
+    }
+
+    public List<String> getCleanTables() {
+        return getNode().child("clean_tables").<Collection<?>>optional()
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(String.class::cast)
+                .collect(toList());
     }
 }

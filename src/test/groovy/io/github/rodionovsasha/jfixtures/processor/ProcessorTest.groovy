@@ -4,6 +4,8 @@ import io.github.rodionovsasha.jfixtures.IntId
 import io.github.rodionovsasha.jfixtures.config.ConfigLoader
 import io.github.rodionovsasha.jfixtures.config.structure.Root
 import io.github.rodionovsasha.jfixtures.config.structure.tables.CleanMethod
+import io.github.rodionovsasha.jfixtures.config.yaml.Node
+import io.github.rodionovsasha.jfixtures.domain.Table
 import io.github.rodionovsasha.jfixtures.domain.Value
 import io.github.rodionovsasha.jfixtures.instructions.CleanTable
 import io.github.rodionovsasha.jfixtures.instructions.CustomSql
@@ -57,6 +59,25 @@ class ProcessorTest extends Specification implements YamlVirtualDirectory {
 
         and:
         (instructions.first() as CleanTable).table == "users"
+    }
+
+    def "cleans configured tables before fixture tables, preserving order and skipping duplicates"() {
+        given:
+        def config = Root.ofProfile(Node.root([
+                clean_tables: ["logs", "users", "logs", "statistics"],
+                tables: [
+                        default_cleanup: [applies_to: "/.*", clean_method: "none"],
+                        users          : [applies_to: "users", clean_method: "delete"]
+                ]
+        ]), "default")
+        def fixtures = [Table.ofRow("users", "vlad", [name: "Vlad"])]
+
+        when:
+        def instructions = new Processor(fixtures, config).process()
+
+        then:
+        instructions.findAll { it instanceof CleanTable }*.table == ["logs", "users", "statistics"]
+        instructions.findAll { it instanceof InsertRow }*.table == ["users"]
     }
 
     def "duplicate rows getting overridden by the latest one"() {

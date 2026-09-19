@@ -70,6 +70,16 @@ class RootTest extends Specification {
         !root([:]).referredTable("users", "role_id").present
     }
 
+    def "::getCleanTables preserves configured order and duplicates"() {
+        expect:
+        root([clean_tables: ["logs", "users", "logs"]]).cleanTables == ["logs", "users", "logs"]
+    }
+
+    def "::getCleanTables returns an empty list when not configured"() {
+        expect:
+        root([:]).cleanTables.empty
+    }
+
     def root(content, profile = "default") {
         Root.ofProfile(Node.root(content), profile)
     }

@@ -19,6 +19,7 @@ class Context {
     private final List<Instruction> instructions = new ArrayList<>();
     private final RowsIndex rowsIndex = new RowsIndex();
     private final Set<String> completedTables = new HashSet<>();
+    private final Set<String> cleanedTables = new HashSet<>();
     private final CircularPreventer circularPreventer = new CircularPreventer();
     private final Map<String, Table> tables;
     private final Root config;

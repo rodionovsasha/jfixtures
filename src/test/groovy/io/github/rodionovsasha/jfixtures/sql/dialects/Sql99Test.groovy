@@ -10,6 +10,8 @@ import io.github.rodionovsasha.jfixtures.sql.appenders.StringAppender
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.time.Instant
+
 @Unroll
 class Sql99Test extends Specification {
     Sql sql
@@ -78,5 +80,20 @@ class Sql99Test extends Specification {
 
         then:
         appender as String == 'INSERT INTO "admin"."users" ("id", "name", "age", "hobby", "active") VALUES (1, \'Vlad\', 29, NULL, TRUE);\n'
+    }
+
+    def "renders binary values and dates as valid SQL literals"() {
+        given:
+        def insertRow = new InsertRow("files", "logo", [
+                binary    : Value.of([0x0a, 0xff] as byte[]),
+                date      : Value.of(Date.from(Instant.parse("2001-11-23T00:00:00Z"))),
+                timestamp : Value.of(Date.from(Instant.parse("2001-11-23T15:02:31Z")))
+        ])
+
+        when:
+        sql.insertRow(appender, insertRow)
+
+        then:
+        appender as String == 'INSERT INTO "files" ("binary", "date", "timestamp") VALUES (X\'0aff\', \'2001-11-23\', \'2001-11-23 15:02:31\');\n'
     }
 }

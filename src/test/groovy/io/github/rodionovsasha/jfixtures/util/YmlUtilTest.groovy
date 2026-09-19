@@ -40,6 +40,17 @@ class YmlUtilTest extends Specification implements YamlVirtualDirectory {
         yaml.isEmpty()
     }
 
+    def "loads YAML binary, date, and timestamp scalar types"() {
+        when:
+        def yaml = load("types.yml")
+
+        then:
+        yaml.binary instanceof byte[]
+        yaml.binary == [1, 2] as byte[]
+        yaml.date instanceof Date
+        yaml.timestamp instanceof Date
+    }
+
     def "#hasYamlTwin does not have twin for .yml file"() {
         expect:
         !YmlUtil.hasTwin(testDirectoryPath.resolve("simple.yml"))
