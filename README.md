@@ -1,7 +1,13 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/cz.jirutka.rsql/rsql-parser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.rodionovsasha/jfixtures)
+[![Build](https://github.com/rodionovsasha/jfixtures/actions/workflows/maven-verify.yml/badge.svg)](https://github.com/rodionovsasha/jfixtures/actions/workflows/maven-verify.yml)
+
+[![Coverage Status](https://coveralls.io/repos/github/rodionovsasha/jfixtures/badge.svg?branch=master)](https://coveralls.io/github/rodionovsasha/jfixtures?branch=master)
+
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.rodionovsasha/jfixtures?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.rodionovsasha/jfixtures)
+
+[![License](https://img.shields.io/github/license/rodionovsasha/jfixtures)](https://github.com/rodionovsasha/jfixtures/blob/master/LICENSE)
 
 ## Preface 
-JFixtures creation is inspired by [Ruby On Rails fixtures](http://api.rubyonrails.org/v3.2/classes/ActiveRecord/Fixtures.html) - it helps to define test data in a human readable YML format and then to transform the data to the SQL language which your database understands. So it is a sort of YML to SQL converter.
+JFixtures creation is inspired by [Ruby On Rails fixtures](http://api.rubyonrails.org/v3.2/classes/ActiveRecord/Fixtures.html) - it helps to define test data in a human-readable YML format and then to transform the data to the SQL language which your database understands. So it is a sort of YML to SQL converter.
 As for java world, JFixtures could be compared with [DBUnit](http://dbunit.sourceforge.net/) library.
 
 [Please read our WIKI for more info](https://github.com/rodionovsasha/jfixtures/wiki)
@@ -69,12 +75,12 @@ good_comment: # This is the alias for the row below
 * JFixtures has circular dependencies detection between tables
 
 ## Tech details
-The project is written in pure Java and needs Java Runtime 17+. It is available on maven central [![Maven Central](https://maven-badges.herokuapp.com/maven-central/cz.jirutka.rsql/rsql-parser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.rodionovsasha/jfixtures) as a library or there is [a command line interface for it](https://github.com/rodionovsasha/jfixtures-cmd)
+The project is written in pure Java and needs Java Runtime 17+. It is available on maven central [![Maven Central](https://img.shields.io/maven-central/v/io.github.rodionovsasha/jfixtures?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.rodionovsasha/jfixtures) as a library or there is [a command line interface for it](https://github.com/rodionovsasha/jfixtures-cmd)
 
 JFixtures support a few database dialects:
-* `SQL 99` which covers many databases(Postgres, Oracle, H2, SqlLite, Yandex ClickHouse, Sybase and many others)
+* `SQL 99` format, which covers many databases(Postgres, Oracle, H2, SqlLite, Yandex ClickHouse, Sybase and many others)
 * MySql
-* Miscrosoft Sql 
+* Microsoft SQL 
 * [Adding a custom database support is easy](https://github.com/rodionovsasha/jfixtures/wiki/How-to-add-a-new-SQL-dialect) or [submit us an issue](https://github.com/rodionovsasha/jfixtures/issues)
 
 JFixtures can export the result into XML, so it is possible then to transform the XML into any other custom format, either SQL or not
@@ -86,7 +92,5 @@ JFixtures uses SnakeYAML to parse YML files and Jakarta XML Binding (JAXB) for X
 We are happy if [you contribute](https://github.com/rodionovsasha/jfixtures/wiki/Contribution) or [submit an issue](https://github.com/rodionovsasha/jfixtures/issues)
 
 Also, feel free to email us, the emails are in [pom.xml](https://github.com/rodionovsasha/jfixtures/blob/master/pom.xml)
-
-And [join us on slack](https://jfixtures.slack.com)
 
 [Please read our WIKI for more info](https://github.com/rodionovsasha/jfixtures/wiki)
