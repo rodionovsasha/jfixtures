@@ -38,5 +38,5 @@ Open feature backlog, ordered from the least to the greatest estimated implement
 
 ## Extra large
 
-- [ ] Support composite primary keys and deterministic identifiers for their individual components when resolving relationships. [#216](https://github.com/rodionovsasha/jfixtures/issues/216)
-- [ ] Evaluate a safe, opt-in fixture template mechanism for generating repeated rows and computed values without executing arbitrary code. [#217](https://github.com/rodionovsasha/jfixtures/issues/217)
+- [x] Support composite primary keys and deterministic identifiers for their individual components when resolving relationships. [#216](https://github.com/rodionovsasha/jfixtures/issues/216)
+- [x] Provide a safe, opt-in fixture template mechanism for generating repeated rows and computed values without executing arbitrary code. [#217](https://github.com/rodionovsasha/jfixtures/issues/217)

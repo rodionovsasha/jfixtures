@@ -68,6 +68,144 @@ class AdvancedProcessorTest extends Specification {
         rows.find { it.table == "comments" }.values.author_id == uuid
     }
 
+    def "generates every composite primary-key component and expands configured references"() {
+        given:
+        def config = root(
+                tables: [orders: [applies_to: "orders", pk: [columns: ["tenant_id", "order_id"]]]],
+                refs: [line_items: [order: [
+                        table: "orders", columns: [tenant_id: "order_tenant_id", order_id: "order_number"]
+                ]]]
+        )
+        def orders = Table.ofRow("orders", "spring_sale", [description: "Spring sale"])
+        def lineItems = Table.ofRow("line_items", "first", [order: "spring_sale", sku: "A-1"])
+
+        when:
+        def rows = rows(new Processor([lineItems, orders], config).process())
+
+        then:
+        def order = rows.find { it.table == "orders" }
+        order.values.tenant_id == Value.of(IntId.one("spring_sale.tenant_id"))
+        order.values.order_id == Value.of(IntId.one("spring_sale.order_id"))
+
+        and:
+        def lineItem = rows.find { it.table == "line_items" }
+        lineItem.values.order_tenant_id == order.values.tenant_id
+        lineItem.values.order_number == order.values.order_id
+        !lineItem.values.containsKey("order")
+    }
+
+    def "validates complete explicit composite keys and rejects ambiguous scalar references"() {
+        given:
+        def keyConfig = root(tables: [orders: [applies_to: "orders", pk: [
+                generate: false, columns: ["tenant_id", "order_id"]
+        ]]])
+
+        when:
+        new Processor([Table.ofRow("orders", "incomplete", [tenant_id: 1])], keyConfig).process()
+
+        then:
+        def incomplete = thrown(ProcessorException)
+        incomplete.message.contains("missing column [order_id]")
+
+        when:
+        new Processor([Table.of("orders",
+                io.github.rodionovsasha.jfixtures.domain.Row.of("one", [tenant_id: 1, order_id: 2]),
+                io.github.rodionovsasha.jfixtures.domain.Row.of("two", [tenant_id: 1, order_id: 2]))], keyConfig).process()
+
+        then:
+        def duplicate = thrown(ProcessorException)
+        duplicate.message.contains("tenant_id=1, order_id=2")
+
+        when:
+        def config = root(tables: [orders: [applies_to: "orders", pk: [columns: ["tenant_id", "order_id"]]]],
+                refs: [line_items: [order_id: "orders"]])
+        new Processor([Table.ofRow("orders", "one", [:]), Table.ofRow("line_items", "first", [order_id: "one"])], config).process()
+
+        then:
+        thrown(ProcessorException)
+    }
+
+    def "rejects incomplete composite-reference mappings, blank labels, and composite many-to-many sources"() {
+        given:
+        def orders = Table.ofRow("orders", "one", [:])
+
+        when:
+        new Processor([Table.ofRow("line_items", "line", [order: "one"]), orders], root(
+                tables: [orders: [applies_to: "orders", pk: [columns: ["tenant_id", "order_id"]]]],
+                refs: [line_items: [order: [table: "orders", columns: [tenant_id: "order_tenant_id"]]]]
+        )).process()
+
+        then:
+        thrown(ProcessorException)
+
+        when:
+        new Processor([Table.ofRow("line_items", "line", [order: ""]), orders], root(
+                tables: [orders: [applies_to: "orders", pk: [columns: ["tenant_id", "order_id"]]]],
+                refs: [line_items: [order: [
+                        table: "orders", columns: [tenant_id: "order_tenant_id", order_id: "order_number"]
+                ]]]
+        )).process()
+
+        then:
+        thrown(ProcessorException)
+
+        when:
+        new Processor([Table.ofRow("line_items", "line", [order: 1]), orders], root(
+                tables: [orders: [applies_to: "orders", pk: [columns: ["tenant_id", "order_id"]]]],
+                refs: [line_items: [order: [
+                        table: "orders", columns: [tenant_id: "order_tenant_id", order_id: "order_number"]
+                ]]]
+        )).process()
+
+        then:
+        thrown(ProcessorException)
+
+        when:
+        new Processor([Table.ofRow("posts", "post", [tags: ["blue"]]), Table.ofRow("tags", "blue", [:])], root(
+                tables: [posts: [applies_to: "posts", pk: [columns: ["tenant_id", "post_id"]]]],
+                many_to_many: [posts: [tags: [
+                        join_table: "posts_tags", source_column: "post_id", target_table: "tags", target_column: "tag_id"
+                ]]]
+        )).process()
+
+        then:
+        thrown(ProcessorException)
+    }
+
+    def "expands opt-in template rows with integer arithmetic and keeps templates disabled by default"() {
+        given:
+        def template = io.github.rodionovsasha.jfixtures.domain.Row.of("user_{{ number }}", [
+                "\$template": "number=1..3", name: "User {{ number }}", position: "{{ number * 10 }}"
+        ])
+
+        when:
+        def templateRows = rows(new Processor([Table.of("users", template)], root(templates: [enabled: true])).process())
+
+        then:
+        templateRows*.rowName == ["user_1", "user_2", "user_3"]
+        templateRows*.values.position == [Value.of(10L), Value.of(20L), Value.of(30L)]
+        templateRows*.values.name == [Value.of("User 1"), Value.of("User 2"), Value.of("User 3")]
+
+        when:
+        def disabled = rows(new Processor([Table.ofRow("users", "user", [position: "{{ 1 + 2 }}"])], Root.empty()).process())
+
+        then:
+        disabled.first().values.position == Value.of("{{ 1 + 2 }}")
+    }
+
+    def "rejects template expressions outside the safe arithmetic grammar"() {
+        given:
+        def row = io.github.rodionovsasha.jfixtures.domain.Row.of("user", [
+                "\$template": "number=1..1", value: "{{ number.toString() }}"
+        ])
+
+        when:
+        new Processor([Table.of("users", row)], root(templates: [enabled: true])).process()
+
+        then:
+        thrown(ProcessorException)
+    }
+
     def "expands configured polymorphic references"() {
         given:
         def config = root(polymorphic_refs: [fruits: [eater: [

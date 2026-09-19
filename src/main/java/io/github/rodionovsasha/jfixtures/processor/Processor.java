@@ -26,7 +26,7 @@ public class Processor {
     private final Context context;
 
     public Processor(Collection<Table> tables, Root config) {
-        this.context = new Context(tables, config);
+        this.context = new Context(FixtureTemplates.expand(tables, config), config);
         this.columnProcessor = new ColumnProcessor(context, this::processTable);
     }
 
@@ -83,13 +83,13 @@ public class Processor {
     private List<Instruction> processRows(Table table) {
         var config = context.getConfig();
         var baseColumns = config.table(table.getName()).getDefaultColumns();
-        var pkColumnName = config.table(table.getName()).getPkColumnName();
-        Map<Value, String> rowsByPrimaryKey = new LinkedHashMap<>();
+        var pkColumnNames = config.table(table.getName()).getPkColumnNames();
+        Map<List<Value>, String> rowsByPrimaryKey = new LinkedHashMap<>();
         List<Instruction> instructions = new ArrayList<>();
 
         for (Row source : table.getRows()) {
             Row row = Row.of(source.getName(), baseColumns).columns(source.getColumns());
-            Instruction insert = processRow(table.getName(), row, pkColumnName, rowsByPrimaryKey);
+            Instruction insert = processRow(table.getName(), row, pkColumnNames, rowsByPrimaryKey);
             instructions.add(insert);
             instructions.addAll(processManyToMany(table.getName(), row, (InsertRow)insert));
         }
@@ -99,11 +99,11 @@ public class Processor {
     private Instruction processRow(
             String tableName,
             Row row,
-            String pkColumnName,
-            Map<Value, String> rowsByPrimaryKey
+            List<String> pkColumnNames,
+            Map<List<Value>, String> rowsByPrimaryKey
     ) {
         Map<String, Value> rowValues = extractRowValues(tableName, row);
-        validatePrimaryKey(tableName, row, pkColumnName, rowValues, rowsByPrimaryKey);
+        validatePrimaryKey(tableName, row, pkColumnNames, rowValues, rowsByPrimaryKey);
         Instruction result = new InsertRow(tableName, row.getName(), rowValues);
         result.accept(context.getRowsIndex());
         return result;
@@ -112,39 +112,61 @@ public class Processor {
     private void validatePrimaryKey(
             String tableName,
             Row row,
-            String pkColumnName,
+            List<String> pkColumnNames,
             Map<String, Value> rowValues,
-            Map<Value, String> rowsByPrimaryKey
+            Map<List<Value>, String> rowsByPrimaryKey
     ) {
-        Value primaryKey = rowValues.get(pkColumnName);
-        if (primaryKey == null) {
-            return;
+        List<Value> primaryKey = new ArrayList<>(pkColumnNames.size());
+        for (String column : pkColumnNames) {
+            Value value = rowValues.get(column);
+            if (value == null) {
+                if (pkColumnNames.size() == 1) {
+                    return;
+                }
+                throw new ProcessorException("Primary key [" + tableName + "] is incomplete; missing column ["
+                        + column + "]");
+            }
+            primaryKey.add(value);
         }
 
         String previousRow = rowsByPrimaryKey.putIfAbsent(primaryKey, row.getName());
-        if (row.getColumns().containsKey(pkColumnName) && previousRow != null) {
+        if (previousRow != null) {
+            String key = formatPrimaryKey(pkColumnNames, primaryKey);
             String message = String.format(
-                    "Duplicate primary key [%s=%s] in table [%s]: rows [%s] and [%s] define the same value",
-                    pkColumnName, primaryKey.getValue(), tableName, previousRow, row.getName()
+                    "Duplicate primary key [%s] in table [%s]: rows [%s] and [%s] define the same value",
+                    key, tableName, previousRow, row.getName()
             );
             throw new ProcessorException(message);
         }
+    }
+
+    private String formatPrimaryKey(List<String> columns, List<Value> values) {
+        List<String> entries = new ArrayList<>(columns.size());
+        for (int index = 0; index < columns.size(); index++) {
+            entries.add(columns.get(index) + "=" + values.get(index).getValue());
+        }
+        return String.join(", ", entries);
     }
 
     private Map<String, Value> extractRowValues(String tableName, Row row) {
         Map<String, Value> result = new LinkedHashMap<>(row.getColumns().size() + 1);
         var table = context.getConfig().table(tableName);
         if (table.shouldAutoGeneratePk()) {
-            Object identifier = table.shouldGenerateUuidPk()
-                    ? UuidId.one(row.getName()).toString()
-                    : IntId.one(row.getName());
-            var id = Value.of(identifier);
-            result.put(table.getPkColumnName(), id);
+            for (String column : table.getPkColumnNames()) {
+                String label = table.getPkColumnNames().size() == 1 ? row.getName() : row.getName() + "." + column;
+                Object identifier = table.shouldGenerateUuidPk()
+                        ? UuidId.one(label).toString()
+                        : IntId.one(label);
+                result.put(column, Value.of(identifier));
+            }
         }
         row.getColumns().forEach((name, value) -> {
             var polymorphic = context.getConfig().polymorphicReference(tableName, name);
             if (polymorphic.isPresent()) {
                 addPolymorphicValues(result, tableName, row.getName(), name, value, polymorphic.get());
+            } else if (context.getConfig().compositeForeignKey(tableName, name).isPresent()) {
+                addCompositeReferenceValues(result, tableName, row.getName(), name, value,
+                        context.getConfig().compositeForeignKey(tableName, name).get());
             } else if (context.getConfig().manyToMany(tableName, name).isEmpty()) {
                 if (value.getValue() instanceof Collection<?>) {
                     String message = "List value is only supported for a configured many-to-many association ["
@@ -155,6 +177,29 @@ public class Processor {
             }
         });
         return result;
+    }
+
+    private void addCompositeReferenceValues(
+            Map<String, Value> result,
+            String table,
+            String row,
+            String column,
+            Value value,
+            Root.CompositeForeignKey reference
+    ) {
+        if (!(value.getValue() instanceof String label) || label.isBlank()) {
+            throw new ProcessorException("Composite reference [" + table + "." + row + "." + column
+                    + "] must be a row label");
+        }
+        String targetTable = context.resolveTableName(table, reference.table());
+        Set<String> targetColumns = new HashSet<>(context.getConfig().table(targetTable).getPkColumnNames());
+        if (!targetColumns.equals(reference.columns().keySet())) {
+            throw new ProcessorException("Composite reference [" + table + "." + column
+                    + "] must map every primary-key column of table [" + targetTable + "]");
+        }
+        for (Map.Entry<String, String> entry : reference.columns().entrySet()) {
+            result.put(entry.getValue(), columnProcessor.reference(table, targetTable, label, entry.getKey()));
+        }
     }
 
     private void addPolymorphicValues(
@@ -203,7 +248,12 @@ public class Processor {
                     "Many-to-many association [" + table + "." + column + "] must be a list of row labels"
             );
         }
-        String sourcePk = context.getConfig().table(table).getPkColumnName();
+        List<String> sourcePks = context.getConfig().table(table).getPkColumnNames();
+        if (sourcePks.size() != 1) {
+            throw new ProcessorException("Many-to-many association [" + table + "." + column
+                    + "] requires a single-column source primary key");
+        }
+        String sourcePk = sourcePks.get(0);
         Value sourceId = source.getValues().get(sourcePk);
         if (sourceId == null) {
             throw new ProcessorException(

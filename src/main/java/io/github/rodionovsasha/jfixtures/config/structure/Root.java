@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 
@@ -28,6 +30,14 @@ public final class Root extends Section {
 
     public Optional<ForeignKey> foreignKey(String table, String column) {
         return getNode().dig("refs", table, column).optional().map(this::foreignKey);
+    }
+
+    public Optional<CompositeForeignKey> compositeForeignKey(String table, String column) {
+        return getNode().dig("refs", table, column).optional().flatMap(this::compositeForeignKey);
+    }
+
+    public boolean templatesEnabled() {
+        return getNode().dig("templates", "enabled").<Boolean>optional().orElse(false);
     }
 
     /** Kept for source compatibility with the original string-only reference configuration. */
@@ -68,6 +78,31 @@ public final class Root extends Section {
         return new ForeignKey(required(values, "table"), optional(values, "column"));
     }
 
+    @SuppressWarnings("unchecked")
+    private Optional<CompositeForeignKey> compositeForeignKey(Object value) {
+        if (!(value instanceof Map<?, ?> raw) || !raw.containsKey("columns")) {
+            return Optional.empty();
+        }
+        Map<String, Object> values = (Map<String, Object>)raw;
+        Object rawColumns = values.get("columns");
+        if (!(rawColumns instanceof Map<?, ?> columns) || columns.isEmpty()) {
+            throw new IllegalArgumentException("Composite reference columns must be a non-empty map");
+        }
+        java.util.LinkedHashMap<String, String> mapping = new java.util.LinkedHashMap<>();
+        columns.forEach((target, source) -> {
+            if (!(target instanceof String targetName) || !(source instanceof String sourceName)
+                    || targetName.isBlank() || sourceName.isBlank()) {
+                throw new IllegalArgumentException("Composite reference columns must map non-blank strings");
+            }
+            mapping.put(targetName, sourceName);
+        });
+        Set<String> sourceColumns = new HashSet<>(mapping.values());
+        if (sourceColumns.size() != mapping.size()) {
+            throw new IllegalArgumentException("Composite reference columns must write distinct source columns");
+        }
+        return Optional.of(new CompositeForeignKey(required(values, "table"), mapping));
+    }
+
     private PolymorphicReference polymorphicReference(Map<String, Object> values) {
         Map<String, String> types = values.containsKey("types")
                 ? ((Map<String, Object>)values.get("types")).entrySet().stream()
@@ -106,6 +141,12 @@ public final class Root extends Section {
     }
 
     public record ForeignKey(String table, String column) { }
+
+    public record CompositeForeignKey(String table, Map<String, String> columns) {
+        public CompositeForeignKey {
+            columns = Collections.unmodifiableMap(new java.util.LinkedHashMap<>(columns));
+        }
+    }
 
     public record PolymorphicReference(String idColumn, String typeColumn, Map<String, String> types) {
         public PolymorphicReference {

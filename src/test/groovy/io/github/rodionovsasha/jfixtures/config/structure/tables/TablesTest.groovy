@@ -125,6 +125,44 @@ class TablesTest extends Specification {
         getCustomColumnForPk(SAMPLE_CONFIG_WITH_CUSTOM_PK, "users") == "custom_id"
     }
 
+    def "gets ordered composite primary-key columns"() {
+        expect:
+        getTablesConfig([composite: [applies_to: "users", pk: [columns: ["tenant_id", "order_id"]]]], "users")
+                .pkColumnNames == ["tenant_id", "order_id"]
+    }
+
+    def "rejects malformed composite primary-key columns"() {
+        when:
+        getTablesConfig([composite: [applies_to: "users", pk: [columns: []]]], "users").pkColumnNames
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        getTablesConfig([composite: [applies_to: "users", pk: [columns: "id"]]], "users").pkColumnNames
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        getTablesConfig([composite: [applies_to: "users", pk: [columns: ["id", ""]]]], "users").pkColumnNames
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        getTablesConfig([composite: [applies_to: "users", pk: [columns: [1]]]], "users").pkColumnNames
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        getTablesConfig([composite: [applies_to: "users", pk: [columns: ["id", "id"]]]], "users").pkColumnNames
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
     def "getCleanMethod returns 'delete' by default"() {
         expect:
         getCleanMethod(SAMPLE_CONFIG, "friends") == CleanMethod.DELETE

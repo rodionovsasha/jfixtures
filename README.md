@@ -23,8 +23,9 @@ The following capabilities are implemented in the current codebase. The links po
 * Resolve table dependencies from configured references, order the generated statements accordingly, and report circular dependencies and invalid references.
 * Clean tables with `DELETE`, `TRUNCATE`, `TRUNCATE CASCADE`, or no cleanup; list tables in `clean_tables` to clean them first even without fixture files; run table-specific custom SQL before cleanup, before inserts, or after inserts. [#21](https://github.com/rodionovsasha/jfixtures/issues/21), [#22](https://github.com/rodionovsasha/jfixtures/issues/22), [#27](https://github.com/rodionovsasha/jfixtures/issues/27), [#28](https://github.com/rodionovsasha/jfixtures/issues/28), [#29](https://github.com/rodionovsasha/jfixtures/issues/29), [#74](https://github.com/rodionovsasha/jfixtures/issues/74), [#75](https://github.com/rodionovsasha/jfixtures/issues/75)
 * Preserve SQL-safe scalar output: strings are escaped; `NULL`, boolean, YAML binary, and date/timestamp literals render correctly. [#1](https://github.com/rodionovsasha/jfixtures/issues/1), [#89](https://github.com/rodionovsasha/jfixtures/issues/89), [#91](https://github.com/rodionovsasha/jfixtures/issues/91), [#98](https://github.com/rodionovsasha/jfixtures/issues/98), [#103](https://github.com/rodionovsasha/jfixtures/issues/103), [#90](https://github.com/rodionovsasha/jfixtures/issues/90), [#92](https://github.com/rodionovsasha/jfixtures/issues/92)
-* Use inline and configured foreign keys, including relative table names, non-primary-key target columns, UUID primary keys, and label interpolation. [#32](https://github.com/rodionovsasha/jfixtures/issues/32), [#111](https://github.com/rodionovsasha/jfixtures/issues/111), [#211](https://github.com/rodionovsasha/jfixtures/issues/211), [#215](https://github.com/rodionovsasha/jfixtures/issues/215)
+* Use inline and configured foreign keys, including relative table names, non-primary-key target columns, UUID primary keys, label interpolation, and composite primary keys. [#32](https://github.com/rodionovsasha/jfixtures/issues/32), [#111](https://github.com/rodionovsasha/jfixtures/issues/111), [#211](https://github.com/rodionovsasha/jfixtures/issues/211), [#215](https://github.com/rodionovsasha/jfixtures/issues/215), [#216](https://github.com/rodionovsasha/jfixtures/issues/216)
 * Expand configured polymorphic and many-to-many associations from readable fixture values. [#212](https://github.com/rodionovsasha/jfixtures/issues/212), [#213](https://github.com/rodionovsasha/jfixtures/issues/213)
+* Expand opt-in fixture templates with bounded integer ranges and arithmetic expressions. [#217](https://github.com/rodionovsasha/jfixtures/issues/217)
 * Apply compiled SQL directly with a caller-provided JDBC `Connection` or `DataSource`. [#34](https://github.com/rodionovsasha/jfixtures/issues/34)
 
 ## Advanced references
@@ -73,6 +74,45 @@ many_to_many:
 ```
 
 With that configuration, `eater: george (Monkey)` inserts `eater_id` and `eater_type`, while `tags: [blue, green]` produces `posts_tags` rows.
+
+### Composite primary keys
+
+Use `pk.columns` to declare a composite key. Each generated component is stable for the row label and column name; for example, the `tenant_id` below is `IntId.one("spring_sale.tenant_id")`. Set `generate: false` when the fixture provides the values itself; then every component is required.
+
+```yml
+tables:
+  orders:
+    applies_to: orders
+    pk:
+      columns: [tenant_id, order_id]
+refs:
+  line_items:
+    order:
+      table: orders
+      columns:
+        tenant_id: order_tenant_id
+        order_id: order_number
+```
+
+The `order: spring_sale` value in a `line_items` row is removed and expanded into `order_tenant_id` and `order_number`. The mapping keys name target-key columns and the values name columns to write in the referring row. A scalar reference to a composite-key table is rejected because it cannot represent all key components.
+
+### Fixture templates
+
+Templates are disabled unless the configuration contains `templates.enabled: true`. A template row has a `$template` directive containing one or more inclusive integer ranges. Use `{{ expression }}` in a row label or string column; expressions contain only declared integer variables, integer literals, parentheses, and `+`, `-`, `*`, `/`, or `%`.
+
+```yml
+# .conf.yml
+templates:
+  enabled: true
+
+# users.yml
+user_{{ number }}:
+  $template: number=1..3
+  name: User {{ number }}
+  position: "{{ number * 10 }}"
+```
+
+This creates `user_1` through `user_3`, with numeric `position` values 10, 20, and 30. Ranges may descend and multiple comma-separated variables produce their Cartesian product. A row may expand to at most 10,000 rows. Templates do not load classes, call methods, access files, execute SQL, or run arbitrary code. With templates disabled, their markers are treated as ordinary fixture text and are never evaluated.
 
 Compiled results can be applied directly:
 

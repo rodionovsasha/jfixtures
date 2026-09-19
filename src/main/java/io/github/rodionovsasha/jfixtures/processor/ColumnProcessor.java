@@ -49,7 +49,12 @@ class ColumnProcessor {
         }
 
         var referredRowValues = referredRow(referredTable, rowName).getValues();
-        var referredPk = referredColumn == null ? getConfig().table(referredTable).getPkColumnName() : referredColumn;
+        var primaryKeyColumns = getConfig().table(referredTable).getPkColumnNames();
+        if (referredColumn == null && primaryKeyColumns.size() > 1) {
+            throw new ProcessorException("Referred row [" + referredTable + "." + rowName
+                    + "] has a composite primary key; configure a composite reference or name a column");
+        }
+        var referredPk = referredColumn == null ? primaryKeyColumns.get(0) : referredColumn;
 
         if (!referredRowValues.containsKey(referredPk)) {
             String columnPath = String.join(".", referredTable, rowName, referredPk);

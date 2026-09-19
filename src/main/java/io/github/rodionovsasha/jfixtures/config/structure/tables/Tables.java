@@ -7,7 +7,9 @@ import io.github.rodionovsasha.jfixtures.util.CollectionUtil;
 import io.github.rodionovsasha.jfixtures.util.MapMerger;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,7 +33,35 @@ public class Tables extends Section {
     }
 
     public String getPkColumnName() {
-        return (String)readProperty(SECTION_PRIMARY_KEY, "column").orElse(PK_DEFAULT_COLUMN_NAME);
+        return getPkColumnNames().get(0);
+    }
+
+    /**
+     * Returns the primary-key columns in declaration order.  {@code pk.column}
+     * remains supported for existing configurations; new composite keys use
+     * {@code pk.columns}.
+     */
+    public List<String> getPkColumnNames() {
+        Object columns = readProperty(SECTION_PRIMARY_KEY, "columns").orElse(null);
+        if (columns == null) {
+            return Collections.singletonList(
+                    (String)readProperty(SECTION_PRIMARY_KEY, "column").orElse(PK_DEFAULT_COLUMN_NAME)
+            );
+        }
+        if (!(columns instanceof Collection<?> values) || values.isEmpty()) {
+            throw new IllegalArgumentException("Primary-key columns must be a non-empty list");
+        }
+        List<String> result = new ArrayList<>();
+        for (Object value : values) {
+            if (!(value instanceof String name) || name.isBlank()) {
+                throw new IllegalArgumentException("Primary-key columns must contain non-blank strings");
+            }
+            result.add(name);
+        }
+        if (new LinkedHashSet<>(result).size() != result.size()) {
+            throw new IllegalArgumentException("Primary-key columns must not contain duplicates");
+        }
+        return Collections.unmodifiableList(result);
     }
 
     public boolean shouldGenerateUuidPk() {

@@ -80,6 +80,83 @@ class RootTest extends Specification {
         root([:]).cleanTables.empty
     }
 
+    def "reads opt-in templates and configured composite references"() {
+        given:
+        def configuration = root([
+                templates: [enabled: true],
+                refs: [line_items: [order: [
+                        table: "orders", columns: [tenant_id: "order_tenant_id", order_id: "order_number"]
+                ]]]
+        ])
+
+        expect:
+        configuration.templatesEnabled()
+        !root([:]).templatesEnabled()
+        configuration.compositeForeignKey("line_items", "order").get().columns() == [
+                tenant_id: "order_tenant_id", order_id: "order_number"
+        ]
+        !configuration.compositeForeignKey("line_items", "missing").present
+        !root([refs: [line_items: [order: "orders"]]]).compositeForeignKey("line_items", "order").present
+    }
+
+    def "rejects invalid composite-reference column mappings"() {
+        when:
+        root([refs: [line_items: [order: [table: "orders", columns: [:]]]]])
+                .compositeForeignKey("line_items", "order")
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        root([refs: [line_items: [order: [table: "orders"]]]]).compositeForeignKey("line_items", "order")
+
+        then:
+        !root([refs: [line_items: [order: [table: "orders"]]]]).compositeForeignKey("line_items", "order").present
+
+        when:
+        root([refs: [line_items: [order: [table: "orders", columns: "order_id"]]]])
+                .compositeForeignKey("line_items", "order")
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        root([refs: [line_items: [order: [table: "orders", columns: [(1): "order_id"]]]]])
+                .compositeForeignKey("line_items", "order")
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        root([refs: [line_items: [order: [table: "orders", columns: [tenant_id: "", order_id: ""]]]]])
+                .compositeForeignKey("line_items", "order")
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        root([refs: [line_items: [order: [table: "orders", columns: [tenant_id: 1]]]]])
+                .compositeForeignKey("line_items", "order")
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        root([refs: [line_items: [order: [table: "orders", columns: ["": "order_id"]]]]])
+                .compositeForeignKey("line_items", "order")
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        root([refs: [line_items: [order: [
+                table: "orders", columns: [tenant_id: "order_id", order_id: "order_id"]
+        ]]]]).compositeForeignKey("line_items", "order")
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
     def root(content, profile = "default") {
         Root.ofProfile(Node.root(content), profile)
     }
