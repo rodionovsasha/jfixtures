@@ -1,9 +1,6 @@
 [![Build](https://github.com/rodionovsasha/jfixtures/actions/workflows/maven-verify.yml/badge.svg)](https://github.com/rodionovsasha/jfixtures/actions/workflows/maven-verify.yml)
-
 [![Coverage Status](https://coveralls.io/repos/github/rodionovsasha/jfixtures/badge.svg?branch=master)](https://coveralls.io/github/rodionovsasha/jfixtures?branch=master)
-
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.rodionovsasha/jfixtures?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.rodionovsasha/jfixtures)
-
 [![License](https://img.shields.io/github/license/rodionovsasha/jfixtures)](https://github.com/rodionovsasha/jfixtures/blob/master/LICENSE)
 
 ## Preface 
