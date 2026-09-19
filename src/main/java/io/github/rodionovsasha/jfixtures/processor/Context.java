@@ -19,6 +19,7 @@ class Context {
     private final List<Instruction> instructions = new ArrayList<>();
     private final RowsIndex rowsIndex = new RowsIndex();
     private final Set<String> completedTables = new HashSet<>();
+    private final Set<String> cleanedTables = new HashSet<>();
     private final CircularPreventer circularPreventer = new CircularPreventer();
     private final Map<String, Table> tables;
     private final Root config;
@@ -26,5 +27,19 @@ class Context {
     Context(Collection<Table> tables, Root config) {
         this.tables = tables.stream().collect(Collectors.toMap(Table::getName, fixture -> fixture));
         this.config = config;
+    }
+
+    String resolveTableName(String currentTable, String requestedTable) {
+        if (tables.containsKey(requestedTable)) {
+            return requestedTable;
+        }
+        int separator = currentTable.lastIndexOf('.');
+        if (separator > 0) {
+            String relative = currentTable.substring(0, separator + 1) + requestedTable;
+            if (tables.containsKey(relative)) {
+                return relative;
+            }
+        }
+        return requestedTable;
     }
 }

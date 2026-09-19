@@ -9,10 +9,16 @@ import io.github.rodionovsasha.jfixtures.instructions.InsertRow;
 import io.github.rodionovsasha.jfixtures.util.SqlUtil;
 import lombok.SneakyThrows;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HexFormat;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 public interface SqlBase extends Sql {
+    int DATE_LENGTH = 10;
+
     @SneakyThrows
     @Override
     default void cleanTable(Appender appender, CleanTable cleanTable) {
@@ -58,8 +64,26 @@ public interface SqlBase extends Sql {
     }
 
     default String escapeValue(Value value) {
+        Object rawValue = value.getValue();
+        if (rawValue instanceof byte[]) {
+            return escapeBinary((byte[])rawValue);
+        }
+        if (rawValue instanceof Date) {
+            return SqlUtil.escapeString(formatDate((Date)rawValue));
+        }
         String str = value.getSqlRepresentation();
         return value.getType() == ValueType.TEXT ? SqlUtil.escapeString(str) : str;
+    }
+
+    default String escapeBinary(byte[] value) {
+        return "X'" + HexFormat.of().formatHex(value) + "'";
+    }
+
+    private static String formatDate(Date value) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String timestamp = format.format(value);
+        return timestamp.endsWith(" 00:00:00") ? timestamp.substring(0, DATE_LENGTH) : timestamp;
     }
 
     String escapeTableOrColumnPart(String part);

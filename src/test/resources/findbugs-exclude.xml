@@ -15,6 +15,18 @@
         <Method name="&lt;init&gt;"/>
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
+    <!-- JDBC connections and SQL dialects are supplied strategies used only for one apply call. -->
+    <Match>
+        <Class name="io.github.rodionovsasha.jfixtures.processor.JdbcBridge"/>
+        <Method name="&lt;init&gt;"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <!-- Fixture custom SQL is explicitly part of the generated instruction stream. -->
+    <Match>
+        <Class name="io.github.rodionovsasha.jfixtures.processor.JdbcBridge"/>
+        <Method name="execute"/>
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
+    </Match>
     <!-- Opening a file can fail; keep the existing public, extensible appender API. -->
     <Match>
         <Class name="io.github.rodionovsasha.jfixtures.sql.appenders.FileAppender"/>
