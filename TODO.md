@@ -29,12 +29,12 @@ Open feature backlog, ordered from the least to the greatest estimated implement
 
 ## Large
 
-- [ ] Support inline, relative foreign-key references and references to non-primary-key columns. [#111](https://github.com/rodionovsasha/jfixtures/issues/111), [#32](https://github.com/rodionovsasha/jfixtures/issues/32)
-- [ ] Support fixture-label interpolation such as `$LABEL`, and expose a way to insert the deterministic identifier for another row label. [#211](https://github.com/rodionovsasha/jfixtures/issues/211)
-- [ ] Support UUID primary-key generation and label references for UUID-backed tables. [#215](https://github.com/rodionovsasha/jfixtures/issues/215)
-- [ ] Support polymorphic foreign-key references, resolving one readable value into both the target identifier and target type columns. [#212](https://github.com/rodionovsasha/jfixtures/issues/212)
-- [ ] Support inline many-to-many associations, expanding a list of row labels into rows for the configured join table. [#213](https://github.com/rodionovsasha/jfixtures/issues/213)
-- [ ] Add an optional fluent API for applying generated SQL directly through JDBC. [#34](https://github.com/rodionovsasha/jfixtures/issues/34)
+- [x] Support inline, relative foreign-key references and references to non-primary-key columns. [#111](https://github.com/rodionovsasha/jfixtures/issues/111), [#32](https://github.com/rodionovsasha/jfixtures/issues/32)
+- [x] Support fixture-label interpolation such as `$LABEL`, and expose a way to insert the deterministic identifier for another row label. [#211](https://github.com/rodionovsasha/jfixtures/issues/211)
+- [x] Support UUID primary-key generation and label references for UUID-backed tables. [#215](https://github.com/rodionovsasha/jfixtures/issues/215)
+- [x] Support polymorphic foreign-key references, resolving one readable value into both the target identifier and target type columns. [#212](https://github.com/rodionovsasha/jfixtures/issues/212)
+- [x] Support inline many-to-many associations, expanding a list of row labels into rows for the configured join table. [#213](https://github.com/rodionovsasha/jfixtures/issues/213)
+- [x] Add an optional fluent API for applying generated SQL directly through JDBC. [#34](https://github.com/rodionovsasha/jfixtures/issues/34)
 
 ## Extra large
 

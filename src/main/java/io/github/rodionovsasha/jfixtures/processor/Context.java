@@ -28,4 +28,18 @@ class Context {
         this.tables = tables.stream().collect(Collectors.toMap(Table::getName, fixture -> fixture));
         this.config = config;
     }
+
+    String resolveTableName(String currentTable, String requestedTable) {
+        if (tables.containsKey(requestedTable)) {
+            return requestedTable;
+        }
+        int separator = currentTable.lastIndexOf('.');
+        if (separator > 0) {
+            String relative = currentTable.substring(0, separator + 1) + requestedTable;
+            if (tables.containsKey(relative)) {
+                return relative;
+            }
+        }
+        return requestedTable;
+    }
 }

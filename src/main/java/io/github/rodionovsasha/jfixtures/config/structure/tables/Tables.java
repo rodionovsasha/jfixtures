@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 public class Tables extends Section {
     private static final String SECTION_PRIMARY_KEY = "pk";
     private static final String PK_DEFAULT_COLUMN_NAME = "id";
+    private static final String PK_DEFAULT_TYPE = "int";
 
     private final String name;
 
@@ -31,6 +32,14 @@ public class Tables extends Section {
 
     public String getPkColumnName() {
         return (String)readProperty(SECTION_PRIMARY_KEY, "column").orElse(PK_DEFAULT_COLUMN_NAME);
+    }
+
+    public boolean shouldGenerateUuidPk() {
+        String type = (String)readProperty(SECTION_PRIMARY_KEY, "type").orElse(PK_DEFAULT_TYPE);
+        if (!"int".equalsIgnoreCase(type) && !"uuid".equalsIgnoreCase(type)) {
+            throw new IllegalArgumentException("Unsupported primary-key type [" + type + "]");
+        }
+        return "uuid".equalsIgnoreCase(type);
     }
 
     public CleanMethod getCleanMethod() {

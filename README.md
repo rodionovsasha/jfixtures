@@ -23,6 +23,63 @@ The following capabilities are implemented in the current codebase. The links po
 * Resolve table dependencies from configured references, order the generated statements accordingly, and report circular dependencies and invalid references.
 * Clean tables with `DELETE`, `TRUNCATE`, `TRUNCATE CASCADE`, or no cleanup; list tables in `clean_tables` to clean them first even without fixture files; run table-specific custom SQL before cleanup, before inserts, or after inserts. [#21](https://github.com/rodionovsasha/jfixtures/issues/21), [#22](https://github.com/rodionovsasha/jfixtures/issues/22), [#27](https://github.com/rodionovsasha/jfixtures/issues/27), [#28](https://github.com/rodionovsasha/jfixtures/issues/28), [#29](https://github.com/rodionovsasha/jfixtures/issues/29), [#74](https://github.com/rodionovsasha/jfixtures/issues/74), [#75](https://github.com/rodionovsasha/jfixtures/issues/75)
 * Preserve SQL-safe scalar output: strings are escaped; `NULL`, boolean, YAML binary, and date/timestamp literals render correctly. [#1](https://github.com/rodionovsasha/jfixtures/issues/1), [#89](https://github.com/rodionovsasha/jfixtures/issues/89), [#91](https://github.com/rodionovsasha/jfixtures/issues/91), [#98](https://github.com/rodionovsasha/jfixtures/issues/98), [#103](https://github.com/rodionovsasha/jfixtures/issues/103), [#90](https://github.com/rodionovsasha/jfixtures/issues/90), [#92](https://github.com/rodionovsasha/jfixtures/issues/92)
+* Use inline and configured foreign keys, including relative table names, non-primary-key target columns, UUID primary keys, and label interpolation. [#32](https://github.com/rodionovsasha/jfixtures/issues/32), [#111](https://github.com/rodionovsasha/jfixtures/issues/111), [#211](https://github.com/rodionovsasha/jfixtures/issues/211), [#215](https://github.com/rodionovsasha/jfixtures/issues/215)
+* Expand configured polymorphic and many-to-many associations from readable fixture values. [#212](https://github.com/rodionovsasha/jfixtures/issues/212), [#213](https://github.com/rodionovsasha/jfixtures/issues/213)
+* Apply compiled SQL directly with a caller-provided JDBC `Connection` or `DataSource`. [#34](https://github.com/rodionovsasha/jfixtures/issues/34)
+
+## Advanced references
+
+An inline reference has the form `table:label` or `table:label:column`. JFixtures first looks for the table beside the referring fixture and then from the fixture root. An inline value overrides a configured `refs` entry.
+
+```yml
+vlad_comment:
+  user_public_id: users:vlad:public_id
+  slug: comment-$LABEL
+  author_id: $ID(vlad)
+```
+
+`$LABEL` is replaced with the current row label. `$ID(label)` is the stable integer identifier returned by `IntId.one(label)`. `UuidId.one(label)` exposes the matching stable UUID API. Configure UUID IDs with `pk.type: uuid`; normal label references then resolve that UUID automatically.
+
+```yml
+tables:
+  uuid_users:
+    applies_to: users
+    pk:
+      type: uuid
+refs:
+  comments:
+    user_public_id:
+      table: users
+      column: public_id
+```
+
+Polymorphic and many-to-many associations are opt-in and remove the association field from the row being inserted.
+
+```yml
+polymorphic_refs:
+  fruits:
+    eater:
+      id_column: eater_id
+      type_column: eater_type
+      types:
+        Monkey: monkeys
+many_to_many:
+  posts:
+    tags:
+      join_table: posts_tags
+      source_column: post_id
+      target_table: tags
+      target_column: tag_id
+```
+
+With that configuration, `eater: george (Monkey)` inserts `eater_id` and `eater_type`, while `tags: [blue, green]` produces `posts_tags` rows.
+
+Compiled results can be applied directly:
+
+```java
+JFixtures.noConfig().load("fixtures").apply(dataSource);
+JFixtures.noConfig().load("fixtures").compile().toMySql().apply(connection);
+```
 
 ## JFixtures VS plain SQL
 * With plain SQL it is hard to match values to column names even when you format SQL well:

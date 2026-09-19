@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.sql.Connection;
+import javax.sql.DataSource;
 
 @Getter
 public final class JFixtures {
@@ -98,6 +100,16 @@ public final class JFixtures {
     public Result compile() {
         List<Instruction> instructions = new Processor(Table.mergeTables(tables), loadConfig()).process();
         return new Result(instructions);
+    }
+
+    /** Compiles and applies SQL-99 fixture statements through an existing JDBC connection. */
+    public Result apply(Connection connection) {
+        return compile().apply(connection);
+    }
+
+    /** Compiles and applies SQL-99 fixture statements using a data-source connection. */
+    public Result apply(DataSource dataSource) {
+        return compile().apply(dataSource);
     }
 
     private Root loadConfig() {

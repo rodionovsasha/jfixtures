@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlValue;
 
 import java.util.Date;
+import java.util.Collection;
 
 @EqualsAndHashCode
 @ToString
@@ -77,5 +78,14 @@ public final class Value {
                 || value instanceof Boolean
                 || value instanceof Date
                 || value instanceof byte[];
+    }
+
+    static Value ofAssociation(Collection<?> labels) {
+        return new Value(labels, ValueType.AUTO);
+    }
+
+    private Value(Collection<?> value, ValueType type) {
+        this.value = value;
+        this.type = type;
     }
 }
