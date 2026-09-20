@@ -30,6 +30,297 @@ The following capabilities are implemented in the current codebase. The links po
 * Expand opt-in fixture templates with bounded integer ranges and arithmetic expressions. [#217](https://github.com/rodionovsasha/jfixtures/issues/217)
 * Apply compiled SQL directly with a caller-provided JDBC `Connection` or `DataSource`. [#34](https://github.com/rodionovsasha/jfixtures/issues/34)
 
+### YAML and generated SQL examples
+
+The examples below follow the feature list in the same order. Each SQL block is the SQL-99 result for the YAML fixture and configuration shown above it.
+
+#### 1. Directory structure and schema-qualified tables
+
+```yml
+# fixtures/admin/users.yml
+alice:
+  name: Alice
+```
+
+```sql
+DELETE FROM "admin"."users";
+INSERT INTO "admin"."users" ("id", "name") VALUES (93003040, 'Alice');
+```
+
+#### 2. Java fixture API
+
+The Java API builds the same table and row model as this equivalent YAML fixture:
+
+```yml
+# users.yml
+vlad:
+  name: Vlad
+```
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name") VALUES (3722233, 'Vlad');
+```
+
+#### 3. Input paths and configuration profiles
+
+```yml
+# .conf.yml
+profiles:
+  unit:
+    tables:
+      users:
+        applies_to: users
+        clean_method: none
+
+# users.yml
+vlad:
+  name: Vlad
+```
+
+Selecting `withProfile("unit")` produces:
+
+```sql
+INSERT INTO "users" ("id", "name") VALUES (3722233, 'Vlad');
+```
+
+#### 4. `Shortcuts.Str.sql99`
+
+```yml
+# fixtures/users.yml
+vlad:
+  name: Vlad
+```
+
+`Shortcuts.Str.sql99("fixtures")` returns:
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name") VALUES (3722233, 'Vlad');
+```
+
+#### 5. Compiled instructions and renderers
+
+```yml
+# notes.yml
+first:
+  text: Remember the milk
+```
+
+The compiled instruction list contains a cleanup and an insert; its SQL renderer writes:
+
+```sql
+DELETE FROM "notes";
+INSERT INTO "notes" ("id", "text") VALUES (97540432, 'Remember the milk');
+```
+
+#### 6. SQL dialects
+
+```yml
+# users.yml
+vlad:
+  name: Vlad
+```
+
+The same fixture renders with dialect-specific identifier quoting:
+
+```sql
+-- SQL-99
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name") VALUES (3722233, 'Vlad');
+
+-- MySQL
+DELETE FROM `users`;
+INSERT INTO `users` (`id`, `name`) VALUES (3722233, 'Vlad');
+
+-- Microsoft SQL Server
+DELETE FROM [users];
+INSERT INTO [users] ([id], [name]) VALUES (3722233, 'Vlad');
+```
+
+#### 7. Primary keys
+
+```yml
+# .conf.yml
+tables:
+  users:
+    applies_to: users
+    pk:
+      generate: false
+
+# users.yml
+vlad:
+  id: 7
+  name: Vlad
+```
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name") VALUES (7, 'Vlad');
+```
+
+#### 8. Dependencies and configured references
+
+```yml
+# .conf.yml
+refs:
+  comments:
+    author_id: users
+
+# users.yml
+vlad:
+  name: Vlad
+
+# comments.yml
+comment:
+  author_id: vlad
+  text: Hello
+```
+
+The user table is emitted before the dependent comments table:
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name") VALUES (3722233, 'Vlad');
+DELETE FROM "comments";
+INSERT INTO "comments" ("id", "author_id", "text") VALUES (950498559, 3722233, 'Hello');
+```
+
+#### 9. Cleanup modes and table hooks
+
+```yml
+# .conf.yml
+tables:
+  users:
+    applies_to: users
+    clean_method: truncate
+    before_cleanup: "DELETE FROM audit_log;"
+    before_inserts: "SET CONSTRAINTS ALL DEFERRED;"
+    after_inserts: "ANALYZE users;"
+
+# users.yml
+vlad:
+  name: Vlad
+```
+
+```sql
+DELETE FROM audit_log;
+TRUNCATE TABLE "users";
+SET CONSTRAINTS ALL DEFERRED;
+INSERT INTO "users" ("id", "name") VALUES (3722233, 'Vlad');
+ANALYZE users;
+```
+
+#### 10. SQL-safe scalar values
+
+```yml
+# files.yml
+example:
+  quoted: "O'Reilly"
+  missing: null
+  enabled: true
+  published_on: 2001-11-23
+  binary: !!binary Cg==
+  created_at: "sql:CURRENT_TIMESTAMP"
+```
+
+```sql
+DELETE FROM "files";
+INSERT INTO "files" ("id", "quoted", "missing", "enabled", "published_on", "binary", "created_at") VALUES (1323070774, 'O''Reilly', NULL, TRUE, '2001-11-23', X'0a', CURRENT_TIMESTAMP);
+```
+
+#### 11. Foreign-key variants
+
+```yml
+# .conf.yml
+tables:
+  users:
+    applies_to: users
+    pk:
+      type: uuid
+refs:
+  comments:
+    author_id: users
+
+# users.yml
+vlad:
+  name: Vlad
+
+# comments.yml
+comment:
+  author_id: vlad
+```
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name") VALUES ('d701fde5-9d74-3768-8308-7b6632186caf', 'Vlad');
+DELETE FROM "comments";
+INSERT INTO "comments" ("id", "author_id") VALUES (950498559, 'd701fde5-9d74-3768-8308-7b6632186caf');
+```
+
+#### 12. Polymorphic and many-to-many associations
+
+```yml
+# .conf.yml
+many_to_many:
+  posts:
+    tags:
+      join_table: posts_tags
+      source_column: post_id
+      target_table: tags
+      target_column: tag_id
+
+# tags.yml
+blue: {}
+
+# posts.yml
+post_one:
+  title: First post
+  tags: [blue]
+```
+
+```sql
+DELETE FROM "tags";
+INSERT INTO "tags" ("id") VALUES (3127034);
+DELETE FROM "posts";
+INSERT INTO "posts" ("id", "title") VALUES (757443815, 'First post');
+INSERT INTO "posts_tags" ("post_id", "tag_id") VALUES (757443815, 3127034);
+```
+
+#### 13. Fixture templates
+
+```yml
+# .conf.yml
+templates:
+  enabled: true
+
+# users.yml
+user_{{ number }}:
+  $template: number=1..2
+  name: User {{ number }}
+```
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name") VALUES (836130275, 'User 1');
+INSERT INTO "users" ("id", "name") VALUES (836130274, 'User 2');
+```
+
+#### 14. Applying SQL through JDBC
+
+```yml
+# users.yml
+vlad:
+  name: Vlad
+```
+
+`JFixtures.noConfig().load("fixtures").apply(dataSource)` applies this generated script to the supplied `DataSource`:
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name") VALUES (3722233, 'Vlad');
+```
+
 ## Advanced references
 
 An inline reference has the form `table:label` or `table:label:column`. JFixtures first looks for the table beside the referring fixture and then from the fixture root. An inline value overrides a configured `refs` entry.
