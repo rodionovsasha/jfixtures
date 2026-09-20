@@ -10,11 +10,11 @@ Open feature backlog, ordered from the least to the greatest estimated implement
 
 ## Small
 
-- [ ] Review and close the stale Java 9 adoption task; the project now requires Java 17. [#63](https://github.com/rodionovsasha/jfixtures/issues/63)
-- [ ] Verify the implemented configuration-profile support against the issue acceptance criteria, document it, and close the still-open task. [#200](https://github.com/rodionovsasha/jfixtures/issues/200)
-- [ ] Publish a getting-started guide for JFixtures with Spring Boot and JUnit. [#71](https://github.com/rodionovsasha/jfixtures/issues/71)
-- [ ] Add custom SQL hooks that run once before or after the whole fixture set. [#77](https://github.com/rodionovsasha/jfixtures/issues/77)
-- [ ] Load `before_cleanup`, `before_inserts`, and `after_inserts` SQL from external files. [#30](https://github.com/rodionovsasha/jfixtures/issues/30)
+- [x] Review and close the stale Java 9 adoption task; the project now requires Java 17. [#63](https://github.com/rodionovsasha/jfixtures/issues/63)
+- [x] Verify the implemented configuration-profile support against the issue acceptance criteria, document it, and close the still-open task. [#200](https://github.com/rodionovsasha/jfixtures/issues/200)
+- [x] Publish a getting-started guide for JFixtures with Spring Boot and JUnit. [#71](https://github.com/rodionovsasha/jfixtures/issues/71)
+- [x] Add custom SQL hooks that run once before or after the whole fixture set. [#77](https://github.com/rodionovsasha/jfixtures/issues/77)
+- [x] Load `before_cleanup`, `before_inserts`, and `after_inserts` SQL from external files. [#30](https://github.com/rodionovsasha/jfixtures/issues/30)
 
 ## Medium
 

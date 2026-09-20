@@ -6,6 +6,7 @@ import io.github.rodionovsasha.jfixtures.domain.Table;
 import io.github.rodionovsasha.jfixtures.instructions.Instruction;
 import io.github.rodionovsasha.jfixtures.loader.DirectoryLoader;
 import io.github.rodionovsasha.jfixtures.loader.MapDataLoader;
+import io.github.rodionovsasha.jfixtures.loader.SqlHookLoader;
 import io.github.rodionovsasha.jfixtures.processor.Processor;
 import io.github.rodionovsasha.jfixtures.result.Result;
 import io.github.rodionovsasha.jfixtures.util.CollectionUtil;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -32,15 +34,17 @@ public final class JFixtures {
     private final Optional<String> config;
     private final Collection<Table> tables;
     private final String profile;
+    private final SqlHookLoader.Hooks hooks;
 
     private JFixtures(Optional<String> config, String profile) {
-        this(config, profile, Collections.emptyList());
+        this(config, profile, Collections.emptyList(), SqlHookLoader.Hooks.empty());
     }
 
-    private JFixtures(Optional<String> config, String profile, Collection<Table> tables) {
+    private JFixtures(Optional<String> config, String profile, Collection<Table> tables, SqlHookLoader.Hooks hooks) {
         this.config = config;
         this.profile = profile;
         this.tables = Collections.unmodifiableCollection(tables);
+        this.hooks = hooks;
     }
 
     public static JFixtures withConfig(Path config) {
@@ -71,7 +75,7 @@ public final class JFixtures {
         Path dataPath = Paths.get(path);
         if (Files.isDirectory(dataPath)) {
             var data = new DirectoryLoader(path).load();
-            return addTables(data);
+            return addTables(data).addHooks(SqlHookLoader.load(dataPath));
         }
         var data = YmlUtil.load(dataPath);
         return addTables(data);
@@ -89,16 +93,28 @@ public final class JFixtures {
         return new JFixtures(
             this.config,
             this.profile,
-            CollectionUtil.concat(this.tables, newTables)
+            CollectionUtil.concat(this.tables, newTables),
+            this.hooks
         );
     }
 
     public JFixtures withProfile(String profile) {
-        return new JFixtures(this.config, profile, this.tables);
+        return new JFixtures(this.config, profile, this.tables, this.hooks);
+    }
+
+    public JFixtures withDefaultProfile() {
+        return withProfile(DEFAULT_PROFILE);
     }
 
     public Result compile() {
-        List<Instruction> instructions = new Processor(Table.mergeTables(tables), loadConfig()).process();
+        List<Instruction> instructions = new ArrayList<>();
+        hooks.before().forEach(statement -> instructions.add(
+                io.github.rodionovsasha.jfixtures.instructions.CustomSql.global(statement)
+        ));
+        instructions.addAll(new Processor(Table.mergeTables(tables), loadConfig()).process());
+        hooks.after().forEach(statement -> instructions.add(
+                io.github.rodionovsasha.jfixtures.instructions.CustomSql.global(statement)
+        ));
         return new Result(instructions);
     }
 
@@ -118,5 +134,9 @@ public final class JFixtures {
 
     private Root loadConfig(String path) {
         return new ConfigLoader().load(path, profile);
+    }
+
+    private JFixtures addHooks(SqlHookLoader.Hooks additional) {
+        return new JFixtures(config, profile, tables, hooks.append(additional));
     }
 }

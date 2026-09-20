@@ -2,7 +2,9 @@ package io.github.rodionovsasha.jfixtures.config.structure;
 
 import io.github.rodionovsasha.jfixtures.config.structure.tables.Tables;
 import io.github.rodionovsasha.jfixtures.config.yaml.Node;
+import io.github.rodionovsasha.jfixtures.util.CollectionUtil;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -16,8 +18,13 @@ import static java.util.stream.Collectors.toList;
 public final class Root extends Section {
     public static Root ofProfile(Node root, String profile) {
         Node profileNode = root.dig("profiles", profile);
-        Node node = profileNode.exists() ? profileNode : root;
-        return new Root(node);
+        if (profileNode.exists()) {
+            return new Root(profileNode);
+        }
+        if ("default".equals(profile)) {
+            return new Root(root);
+        }
+        throw new IllegalArgumentException("Configuration profile [" + profile + "] is not found");
     }
 
     public static Root empty() {
@@ -44,6 +51,14 @@ public final class Root extends Section {
         return getNode().child("id_generator").optional().map(String.class::cast);
     }
 
+    public List<String> getBeforeAll() {
+        return getStringArray("before_all");
+    }
+
+    public List<String> getAfterAll() {
+        return getStringArray("after_all");
+    }
+
     /** Kept for source compatibility with the original string-only reference configuration. */
     public Optional<String> referredTable(String table, String column) {
         return foreignKey(table, column).map(ForeignKey::table);
@@ -67,6 +82,13 @@ public final class Root extends Section {
                 .stream()
                 .map(String.class::cast)
                 .collect(toList());
+    }
+
+    private List<String> getStringArray(String section) {
+        List<String> result = new ArrayList<>();
+        Object value = getNode().child(section).optional().orElse(Collections.emptyList());
+        CollectionUtil.flattenRecursively(value, entry -> result.add(String.class.cast(entry)));
+        return result;
     }
 
     private Optional<Map<String, Object>> section(String section, String table, String column) {

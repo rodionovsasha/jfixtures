@@ -11,7 +11,7 @@ class RootTest extends Specification {
         Root.empty()
     }
 
-    def "::ofProfile creates config on the top of the root node if requested profile does not exist"() {
+    def "::ofProfile rejects an unknown non-default profile"() {
         given:
         def config = [
                 refs: [users: [role_id: "roles"]],
@@ -21,10 +21,16 @@ class RootTest extends Specification {
         ]
 
         when:
-        def root = root(config, "integration")
+        root(config, "integration")
 
         then:
-        root.referredTable("users", "role_id").get() == "roles"
+        def exception = thrown(IllegalArgumentException)
+        exception.message == "Configuration profile [integration] is not found"
+    }
+
+    def "::ofProfile uses the root when the default profile is not declared"() {
+        expect:
+        root([refs: [users: [role_id: "roles"]]]).referredTable("users", "role_id").get() == "roles"
     }
 
     def "::ofProfile creates config with specified profile"() {
@@ -78,6 +84,17 @@ class RootTest extends Specification {
     def "::getCleanTables returns an empty list when not configured"() {
         expect:
         root([:]).cleanTables.empty
+    }
+
+    def "reads global SQL hooks from a scalar or a list"() {
+        given:
+        def configuration = root([before_all: "SET before", after_all: ["SET after", ["VACUUM"]]])
+
+        expect:
+        configuration.beforeAll == ["SET before"]
+        configuration.afterAll == ["SET after", "VACUUM"]
+        root([:]).beforeAll.empty
+        root([:]).afterAll.empty
     }
 
     def "reads opt-in templates and configured composite references"() {

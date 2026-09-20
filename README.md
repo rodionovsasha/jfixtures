@@ -5,6 +5,8 @@
 
 ## Preface 
 JFixtures creation is inspired by [Ruby On Rails fixtures](http://api.rubyonrails.org/v3.2/classes/ActiveRecord/Fixtures.html) - it helps to define test data in a human-readable YML format and then to transform the data to the SQL language which your database understands. So it is a sort of YML to SQL converter.
+
+JFixtures requires Java 17 or newer. For a Spring Boot and JUnit setup, see the [getting-started guide](docs/getting-started-spring-boot-junit.md).
 As for java world, JFixtures could be compared with [DBUnit](http://dbunit.sourceforge.net/) library.
 
 [Please read our WIKI for more info](https://github.com/rodionovsasha/jfixtures/wiki)
@@ -168,6 +170,39 @@ vlad:
 - grandparent: { age: 100 }
 - parent: { parent_id: grandparent }
 ```
+
+### Profiles and fixture-set hooks
+
+Configuration may have a `profiles` section. `default` uses `profiles.default` when it is present and otherwise uses the configuration root for backward compatibility. Named profiles must exist; use `withProfile("unit")` to select one and `withDefaultProfile()` to return to `default`. YAML anchors can share settings between profiles.
+
+```yml
+profiles:
+  default: &base
+    refs:
+      posts:
+        author_id: users
+  unit:
+    <<: *base
+    tables:
+      users:
+        applies_to: users
+        clean_method: none
+```
+
+Use `before_all` and `after_all` for SQL that runs once around the complete fixture set. SQL can be inline or use a `file:` reference relative to the configuration file. The same `file:` form works in a table's `before_cleanup`, `before_inserts`, and `after_inserts`; `$TABLE_NAME` is replaced in loaded SQL just as it is for inline SQL.
+
+```yml
+before_all: "file:sql/start.sql"
+after_all:
+  - "ANALYZE"
+  - "file:sql/finish.sql"
+tables:
+  users:
+    applies_to: users
+    before_cleanup: "file:sql/reset-users.sql"
+```
+
+When loading a fixture directory, SQL files in `.before` run first and files in `.after` run last. Each directory is optional; its `*.sql` files run in ascending filename order. These conventional hooks surround the configured `before_all` and `after_all` hooks.
 
 Compiled results can be applied directly:
 

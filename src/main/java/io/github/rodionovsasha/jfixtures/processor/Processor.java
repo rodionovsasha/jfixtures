@@ -31,9 +31,15 @@ public class Processor {
     }
 
     public List<Instruction> process() {
+        addGlobalSql(context.getConfig().getBeforeAll());
         processConfiguredCleanTables();
         context.getTables().values().forEach(this::processTable);
+        addGlobalSql(context.getConfig().getAfterAll());
         return context.getInstructions();
+    }
+
+    private void addGlobalSql(Collection<String> statements) {
+        statements.forEach(statement -> context.getInstructions().add(CustomSql.global(statement)));
     }
 
     private void processConfiguredCleanTables() {
