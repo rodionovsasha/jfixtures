@@ -41,6 +41,15 @@ vlad_comment:
   author_id: $ID(vlad)
 ```
 
+For `comments.yml` above and `users.yml` containing `vlad: { public_id: vlad-001 }`, the SQL-99 output is:
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "public_id") VALUES (3722233, 'vlad-001');
+DELETE FROM "comments";
+INSERT INTO "comments" ("id", "user_public_id", "slug", "author_id") VALUES (1675564327, 'vlad-001', 'comment-vlad_comment', 3722233);
+```
+
 `$LABEL` is replaced with the current row label. `$ID(label)` is the stable integer identifier returned by `IntId.one(label)`. `UuidId.one(label)` exposes the matching stable UUID API. Configure UUID IDs with `pk.type: uuid`; normal label references then resolve that UUID automatically.
 
 ```yml
@@ -54,6 +63,15 @@ refs:
     user_public_id:
       table: users
       column: public_id
+```
+
+For `users.yml` containing `vlad: { public_id: vlad-001 }` and `comments.yml` containing `comment: { user_public_id: vlad }`, this configuration produces:
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "public_id") VALUES ('d701fde5-9d74-3768-8308-7b6632186caf', 'vlad-001');
+DELETE FROM "comments";
+INSERT INTO "comments" ("id", "user_public_id") VALUES (950498559, 'vlad-001');
 ```
 
 Polymorphic and many-to-many associations are opt-in and remove the association field from the row being inserted.
@@ -73,6 +91,22 @@ many_to_many:
       source_column: post_id
       target_table: tags
       target_column: tag_id
+```
+
+For `fruits.yml` containing `banana: { eater: "george (Monkey)" }`, `monkeys.yml` containing `george: {}`, `posts.yml` containing `post_one: { title: First post, tags: [blue, green] }`, and `tags.yml` containing `blue: {}` and `green: {}`, the SQL-99 script is:
+
+```sql
+DELETE FROM "monkeys";
+INSERT INTO "monkeys" ("id") VALUES (1249569473);
+DELETE FROM "fruits";
+INSERT INTO "fruits" ("id", "eater_id", "eater_type") VALUES (1396455227, 1249569473, 'Monkey');
+DELETE FROM "tags";
+INSERT INTO "tags" ("id") VALUES (3127034);
+INSERT INTO "tags" ("id") VALUES (98719139);
+DELETE FROM "posts";
+INSERT INTO "posts" ("id", "title") VALUES (757443815, 'First post');
+INSERT INTO "posts_tags" ("post_id", "tag_id") VALUES (757443815, 3127034);
+INSERT INTO "posts_tags" ("post_id", "tag_id") VALUES (757443815, 98719139);
 ```
 
 With that configuration, `eater: george (Monkey)` inserts `eater_id` and `eater_type`, while `tags: [blue, green]` produces `posts_tags` rows.
@@ -96,6 +130,15 @@ refs:
         order_id: order_number
 ```
 
+For `orders.yml` containing `spring_sale: { description: Spring sale }` and `line_items.yml` containing `sale_item: { order: spring_sale, sku: mug }`, the SQL-99 output is:
+
+```sql
+DELETE FROM "orders";
+INSERT INTO "orders" ("tenant_id", "order_id", "description") VALUES (1116434171, 1163869151, 'Spring sale');
+DELETE FROM "line_items";
+INSERT INTO "line_items" ("id", "order_tenant_id", "order_number", "sku") VALUES (101383829, 1116434171, 1163869151, 'mug');
+```
+
 The `order: spring_sale` value in a `line_items` row is removed and expanded into `order_tenant_id` and `order_number`. The mapping keys name target-key columns and the values name columns to write in the referring row. A scalar reference to a composite-key table is rejected because it cannot represent all key components.
 
 ### Fixture templates
@@ -114,15 +157,16 @@ user_{{ number }}:
   position: "{{ number * 10 }}"
 ```
 
-This creates `user_1` through `user_3`, with numeric `position` values 10, 20, and 30. Ranges may descend and multiple comma-separated variables produce their Cartesian product. A row may expand to at most 10,000 rows. Templates do not load classes, call methods, access files, execute SQL, or run arbitrary code. With templates disabled, their markers are treated as ordinary fixture text and are never evaluated.
-
 With this configuration and `users.yml`, the generated SQL-99 output is:
+
 ```sql
 DELETE FROM "users";
 INSERT INTO "users" ("id", "name", "position") VALUES (836130275, 'User 1', 10);
 INSERT INTO "users" ("id", "name", "position") VALUES (836130274, 'User 2', 20);
 INSERT INTO "users" ("id", "name", "position") VALUES (836130273, 'User 3', 30);
 ```
+
+This creates `user_1` through `user_3`, with numeric `position` values 10, 20, and 30. Ranges may descend and multiple comma-separated variables produce their Cartesian product. A row may expand to at most 10,000 rows. Templates do not load classes, call methods, access files, execute SQL, or run arbitrary code. With templates disabled, their markers are treated as ordinary fixture text and are never evaluated.
 
 ### Output and fixture options
 
@@ -149,6 +193,15 @@ tables:
       id_generator: com.example.Ids.auditId
 ```
 
+For `users.yml` containing `vlad: { name: Vlad }`, the configured `StringId.one` generator and `${TABLE}` placeholder produce:
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("USERS_ID", "name") VALUES ('vlad', 'Vlad');
+```
+
+For `audit_log.yml`, the statement has the same shape, but its primary-key value is the value returned by the application method `com.example.Ids.auditId` for that row label.
+
 Set `timestamps: true` or provide `timestamps.enabled: true` for a table to add missing `created_at`, `created_on`, `updated_at`, and `updated_on` values as `CURRENT_TIMESTAMP`. A fixture value is retained. `timestamps.value` may provide a different literal, including `sql:` SQL.
 
 `requires` inserts named prerequisite tables before a table even if no foreign key declares the relationship. It uses the same relative-table lookup and circular-dependency checks as references.
@@ -161,6 +214,15 @@ tables:
     timestamps:
       enabled: true
       value: "sql:CURRENT_TIMESTAMP"
+```
+
+For `roles.yml` containing `admin: { name: Admin }` and `users.yml` containing `vlad: { name: Vlad }`, `requires` places the role first and timestamps add the four missing columns:
+
+```sql
+DELETE FROM "roles";
+INSERT INTO "roles" ("id", "name") VALUES (92768751, 'Admin');
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name", "created_at", "created_on", "updated_at", "updated_on") VALUES (3722233, 'Vlad', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 ```
 
 The map API accepts a map for a fixture table and accepts an empty list as an empty table. A scalar value or a non-empty list is rejected because neither identifies named rows. YAML anchors are available through SnakeYAML; name reusable helper rows with a leading `.` so they are not inserted. Root-level YAML `!omap` preserves the declared row order, which lets a self-referential tree place each parent before its children.
@@ -186,6 +248,14 @@ INSERT INTO "users" ("id", "active", "name") VALUES (3722233, TRUE, 'Vlad');
 - parent: { parent_id: grandparent }
 ```
 
+When this is `people.yml` and `refs.people.parent_id: people` is configured, `!omap` preserves the parent-before-child insertion order:
+
+```sql
+DELETE FROM "people";
+INSERT INTO "people" ("id", "age") VALUES (268416490, 100);
+INSERT INTO "people" ("id", "parent_id") VALUES (995524086, 268416490);
+```
+
 ### Profiles and fixture-set hooks
 
 Configuration may have a `profiles` section. `default` uses `profiles.default` when it is present and otherwise uses the configuration root for backward compatibility. Named profiles must exist; use `withProfile("unit")` to select one and `withDefaultProfile()` to return to `default`. YAML anchors can share settings between profiles.
@@ -204,6 +274,14 @@ profiles:
         clean_method: none
 ```
 
+With `withProfile("unit")`, `users.yml` containing `vlad: { name: Vlad }`, and `posts.yml` containing `welcome: { author_id: vlad, title: Welcome }`, the profile inherits the reference and suppresses cleanup for `users`:
+
+```sql
+INSERT INTO "users" ("id", "name") VALUES (3722233, 'Vlad');
+DELETE FROM "posts";
+INSERT INTO "posts" ("id", "author_id", "title") VALUES (1233199618, 3722233, 'Welcome');
+```
+
 Use `before_all` and `after_all` for SQL that runs once around the complete fixture set. SQL can be inline or use a `file:` reference relative to the configuration file. The same `file:` form works in a table's `before_cleanup`, `before_inserts`, and `after_inserts`; `$TABLE_NAME` is replaced in loaded SQL just as it is for inline SQL.
 
 ```yml
@@ -215,6 +293,17 @@ tables:
   users:
     applies_to: users
     before_cleanup: "file:sql/reset-users.sql"
+```
+
+If `start.sql` contains `SET TIME ZONE 'UTC';`, `reset-users.sql` contains `DELETE FROM audit_log;`, `finish.sql` contains `VACUUM;`, and `users.yml` contains `vlad: { name: Vlad }`, the resulting SQL is:
+
+```sql
+SET TIME ZONE 'UTC';
+DELETE FROM audit_log;
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name") VALUES (3722233, 'Vlad');
+ANALYZE
+VACUUM;
 ```
 
 When loading a fixture directory, SQL files in `.before` run first and files in `.after` run last. Each directory is optional; its `*.sql` files run in ascending filename order. These conventional hooks surround the configured `before_all` and `after_all` hooks.
@@ -287,7 +376,7 @@ DELETE FROM "comments";
 INSERT INTO "comments" ("id", "text", "rate", "ticket_id", "user_id") VALUES (1131253629, 'This service is really great', 10, 2084435077, 728039863);
 ```
 
-The SQL examples use the default integer ID generator and SQL-99 dialect. Configuration-only YAML fragments earlier in this document do not produce SQL by themselves; their output depends on the fixture files loaded with that configuration.
+The SQL examples use the SQL-99 dialect. They use the default integer ID generator unless the adjacent YAML example configures a different generator; configuration snippets include the minimal fixture data needed to make the output concrete.
 
 * Since every row of every table has an alias, JFixtures takes care of automatic primary keys generation so no need to deal with these numbers at in 99% of cases. For the remaining 1% there is an ability to define primary keys values manually.
 
