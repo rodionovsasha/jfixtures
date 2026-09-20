@@ -62,6 +62,14 @@ class JFixturesTest extends Specification implements YamlVirtualDirectory, Instr
         !fixturesWithProfile.is(fixtures)
     }
 
+    def "::withDefaultProfile returns a new fixture set using the default profile"() {
+        given:
+        def fixtures = JFixtures.noConfig().withProfile("unit")
+
+        expect:
+        fixtures.withDefaultProfile().profile == JFixtures.DEFAULT_PROFILE
+    }
+
     def "instantiated object has read only tables collection"() {
         given:
         def tables = JFixtures.noConfig().tables

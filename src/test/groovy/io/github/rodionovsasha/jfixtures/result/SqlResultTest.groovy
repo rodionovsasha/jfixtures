@@ -5,6 +5,7 @@ import io.github.rodionovsasha.jfixtures.domain.Value
 import io.github.rodionovsasha.jfixtures.instructions.CleanTable
 import io.github.rodionovsasha.jfixtures.instructions.InsertRow
 import io.github.rodionovsasha.jfixtures.sql.SqlType
+import io.github.rodionovsasha.jfixtures.sql.SqlFormatting
 import io.github.rodionovsasha.jfixtures.sql.appenders.StringAppender
 import io.github.rodionovsasha.jfixtures.testutil.Assertions
 import spock.lang.Shared
@@ -96,6 +97,45 @@ class SqlResultTest extends Specification implements Assertions {
 
         then:
         appender.toString() == EXPECTED_SQL
+    }
+
+    def "renders SQL with configured line and statement separators"() {
+        expect:
+        subject.withFormatting(new SqlFormatting("\r\n", 1)).toString() == EXPECTED_SQL.replace("\n", "\r\n\r\n")
+    }
+
+    def "writes configured formatting to a file"() {
+        given:
+        def file = createTempOutputFile()
+
+        when:
+        subject.withFormatting(new SqlFormatting("\r\n", 1)).toFile(file.toString())
+
+        then:
+        file.text == EXPECTED_SQL.replace("\n", "\r\n\r\n")
+
+        cleanup:
+        file.toFile().delete()
+    }
+
+    def "rejects invalid SQL formatting"() {
+        when:
+        new SqlFormatting("", 0)
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        new SqlFormatting("\n", -1)
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        new SqlFormatting(null, 0)
+
+        then:
+        thrown(IllegalArgumentException)
     }
 
     private static createTempOutputFile() {

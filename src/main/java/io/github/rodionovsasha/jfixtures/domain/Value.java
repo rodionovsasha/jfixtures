@@ -9,6 +9,9 @@ import lombok.ToString;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlValue;
 
+import java.util.Date;
+import java.util.Collection;
+
 @EqualsAndHashCode
 @ToString
 @Getter
@@ -38,8 +41,7 @@ public final class Value {
 
     private Value(Object value) {
         checkSupported(value);
-        if (value instanceof String) {
-            String str = (String) value;
+        if (value instanceof String str) {
             this.type = determineType(str);
             this.value = StringUtil.removePrefixes(str, PREFIX_SQL, PREFIX_TEXT);
         } else {
@@ -70,6 +72,20 @@ public final class Value {
     }
 
     private boolean isSupported(Object value) {
-        return value == null || value instanceof Number || value instanceof String || value instanceof Boolean;
+        return value == null
+                || value instanceof Number
+                || value instanceof String
+                || value instanceof Boolean
+                || value instanceof Date
+                || value instanceof byte[];
+    }
+
+    static Value ofAssociation(Collection<?> labels) {
+        return new Value(labels, ValueType.AUTO);
+    }
+
+    private Value(Collection<?> value, ValueType type) {
+        this.value = value;
+        this.type = type;
     }
 }

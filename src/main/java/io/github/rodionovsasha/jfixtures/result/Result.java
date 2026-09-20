@@ -8,6 +8,8 @@ import lombok.Getter;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.sql.Connection;
+import javax.sql.DataSource;
 
 @Getter
 public class Result {
@@ -44,4 +46,15 @@ public class Result {
     public XmlResult toXml() {
         return new XmlResult(instructions);
     }
+
+    public Result apply(Connection connection) {
+        toSql99().apply(connection);
+        return this;
+    }
+
+    public Result apply(DataSource dataSource) {
+        toSql99().apply(dataSource);
+        return this;
+    }
+
 }

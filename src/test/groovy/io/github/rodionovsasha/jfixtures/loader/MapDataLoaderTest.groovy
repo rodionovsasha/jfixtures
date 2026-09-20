@@ -173,4 +173,45 @@ class MapDataLoaderTest extends Specification {
         then:
         fixtures.empty
     }
+
+    def "accepts empty lists as empty tables and rejects non-map table or row values"() {
+        expect:
+        MapDataLoader.loadTables([comments: []]).first().rows.empty
+        MapDataLoader.loadTables([empty: null]).first().rows.empty
+        MapDataLoader.loadRows([empty: null]).first().columns.isEmpty()
+
+        when:
+        MapDataLoader.loadTables([posts: ["not a row"]])
+
+        then:
+        thrown(LoaderException)
+
+        when:
+        MapDataLoader.loadTables([posts: 1])
+
+        then:
+        thrown(LoaderException)
+
+        when:
+        MapDataLoader.loadRows([vlad: "not a map"])
+
+        then:
+        thrown(LoaderException)
+    }
+
+    def "rejects fixture maps with non-string keys"() {
+        when:
+        MapDataLoader.loadRows([(1): [name: "Vlad"]])
+
+        then:
+        thrown(ClassCastException)
+    }
+
+    def "does not turn dot-prefixed anchor rows into fixtures"() {
+        when:
+        def rows = MapDataLoader.loadRows([".base": [name: "Base"], vlad: [name: "Vlad"]])
+
+        then:
+        rows*.name == ["vlad"]
+    }
 }

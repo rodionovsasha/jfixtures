@@ -69,4 +69,9 @@ class MicrosoftSqlTest extends Specification {
         then:
         appender as String == 'INSERT INTO [admin].[users] ([id], [name], [age]) VALUES (1, \'Vlad\', 29);\n'
     }
+
+    def "renders binary values as SQL Server hexadecimal literals"() {
+        expect:
+        sql.escapeBinary([0x0a, 0xff] as byte[]) == "0x0aff"
+    }
 }

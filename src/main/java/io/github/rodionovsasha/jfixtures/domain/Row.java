@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.LinkedHashMap;
+import java.util.Collection;
 import java.util.Map;
 
 import static io.github.rodionovsasha.jfixtures.util.CollectionUtil.mapValues;
@@ -20,7 +21,7 @@ public final class Row {
 
     private Row(String name, Map<String, ?> columns) {
         this.name = name;
-        this.columns = unmodifiableMap(mapValues(columns, Value::of));
+        this.columns = unmodifiableMap(mapValues(columns, Row::toValue));
     }
 
     public static Row ofName(String name) {
@@ -36,7 +37,7 @@ public final class Row {
     }
 
     public Row columns(Map<String, ?> toMerge) {
-        var merged = merge(columns, mapValues(toMerge, Value::of));
+        var merged = merge(columns, mapValues(toMerge, Row::toValue));
         return new Row(name, merged);
     }
 
@@ -81,5 +82,9 @@ public final class Row {
         String actualValue = name == null ? null : "class = [" + name.getClass() + "], value = [" + name + "]";
         String message = "Column name is expected to be a string, but was passed " + actualValue;
         throw new IllegalArgumentException(message);
+    }
+
+    private static Value toValue(Object value) {
+        return value instanceof Collection<?> labels ? Value.ofAssociation(labels) : Value.of(value);
     }
 }

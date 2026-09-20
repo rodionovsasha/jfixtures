@@ -1,7 +1,11 @@
 package io.github.rodionovsasha.jfixtures.loader
 
+import io.github.rodionovsasha.jfixtures.config.structure.Root
+import io.github.rodionovsasha.jfixtures.config.yaml.Node
 import io.github.rodionovsasha.jfixtures.domain.Table
 import io.github.rodionovsasha.jfixtures.domain.Value
+import io.github.rodionovsasha.jfixtures.instructions.InsertRow
+import io.github.rodionovsasha.jfixtures.processor.Processor
 import io.github.rodionovsasha.jfixtures.testutil.YamlVirtualDirectory
 import spock.lang.Specification
 
@@ -108,6 +112,20 @@ class DirectoryLoaderTest extends Specification implements YamlVirtualDirectory 
                 sex == Value.of("man")
             }
         }
+    }
+
+    def "loads !omap rows in the order needed by self-references"() {
+        given:
+        def fixtures = load("ordered_self_reference.yml")
+        def config = Root.ofProfile(Node.root(refs: [family: [parent_id: "family"]]), "default")
+
+        when:
+        def rows = new Processor(fixtures, config).process().findAll { it instanceof InsertRow }
+
+        then:
+        rows*.rowName == ["grandparent", "parent", "child"]
+        rows[1].values.parent_id == rows[0].values.id
+        rows[2].values.parent_id == rows[1].values.id
     }
 
     def "#load consumes fixture with .yaml extension"() {

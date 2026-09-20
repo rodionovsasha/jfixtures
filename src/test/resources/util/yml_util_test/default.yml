@@ -7,3 +7,8 @@
 "yaml_config.yaml":
   name: Vlad
   age: 29
+
+"types.yml": |
+  binary: !!binary AQI=
+  date: 2001-11-23
+  timestamp: 2001-11-23 15:02:31

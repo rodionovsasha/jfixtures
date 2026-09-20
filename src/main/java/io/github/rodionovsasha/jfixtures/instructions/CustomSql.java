@@ -23,6 +23,14 @@ public class CustomSql implements Instruction {
         this.instruction = instruction.replace(TABLE_NAME_PLACEHOLDER, table);
     }
 
+    public static CustomSql global(String instruction) {
+        return new CustomSql(instruction);
+    }
+
+    private CustomSql(String instruction) {
+        this.instruction = instruction;
+    }
+
     @Override
     public void accept(InstructionVisitor visitor) {
         visitor.visit(this);
