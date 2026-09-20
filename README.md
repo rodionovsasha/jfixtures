@@ -116,6 +116,14 @@ user_{{ number }}:
 
 This creates `user_1` through `user_3`, with numeric `position` values 10, 20, and 30. Ranges may descend and multiple comma-separated variables produce their Cartesian product. A row may expand to at most 10,000 rows. Templates do not load classes, call methods, access files, execute SQL, or run arbitrary code. With templates disabled, their markers are treated as ordinary fixture text and are never evaluated.
 
+With this configuration and `users.yml`, the generated SQL-99 output is:
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "name", "position") VALUES (836130275, 'User 1', 10);
+INSERT INTO "users" ("id", "name", "position") VALUES (836130274, 'User 2', 20);
+INSERT INTO "users" ("id", "name", "position") VALUES (836130273, 'User 3', 30);
+```
+
 ### Output and fixture options
 
 SQL rendering can use a chosen line separator and number of blank lines between statements. The same formatting is used for `toString()`, `toFile()`, and custom appenders.
@@ -163,6 +171,13 @@ The map API accepts a map for a fixture table and accepts an empty list as an em
 vlad:
   <<: *base
   name: Vlad
+```
+
+If this is `users.yml`, the anchor is expanded before SQL is generated:
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "active", "name") VALUES (3722233, TRUE, 'Vlad');
 ```
 
 ```yml
@@ -230,10 +245,25 @@ user_1:
   is_admin: true
   is_guest: false
 ```
+
+For `users.yml`, the default SQL-99 output is:
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "first_name", "last_name", "middle_name", "sex", "age", "is_admin", "is_guest") VALUES (5, 'Vladimir', 'Korobkov', 'Vadimovich', 'm', 29, TRUE, FALSE);
+```
 or the compact form:
 ```yml
 vlad: { first_name: 'Vladimir', last_name: 'Korobkov', sex: 'm', age: 29 }
 homer: { first_name: 'Homer', last_name: 'Griffin', sex: 'm', age: 45 }
+```
+
+For `users.yml`, JFixtures generates stable primary keys from the row aliases:
+
+```sql
+DELETE FROM "users";
+INSERT INTO "users" ("id", "first_name", "last_name", "sex", "age") VALUES (3722233, 'Vladimir', 'Korobkov', 'm', 29);
+INSERT INTO "users" ("id", "first_name", "last_name", "sex", "age") VALUES (99560979, 'Homer', 'Griffin', 'm', 45);
 ```
 * References to other tables _are numbers_ in plain SQL:
 ```sql
@@ -249,6 +279,15 @@ good_comment: # This is the alias for the row below
   ticket_id: write_wiki_ticket # refers to tickets table by write_wiki_ticket alias
   user_id: vlad_admin # refers to users table by vlad_admin alias
 ```
+
+With references for `comments.ticket_id` and `comments.user_id` configured, the generated SQL-99 statement resolves those aliases to the primary keys of their rows:
+
+```sql
+DELETE FROM "comments";
+INSERT INTO "comments" ("id", "text", "rate", "ticket_id", "user_id") VALUES (1131253629, 'This service is really great', 10, 2084435077, 728039863);
+```
+
+The SQL examples use the default integer ID generator and SQL-99 dialect. Configuration-only YAML fragments earlier in this document do not produce SQL by themselves; their output depends on the fixture files loaded with that configuration.
 
 * Since every row of every table has an alias, JFixtures takes care of automatic primary keys generation so no need to deal with these numbers at in 99% of cases. For the remaining 1% there is an ability to define primary keys values manually.
 
