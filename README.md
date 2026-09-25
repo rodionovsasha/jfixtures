@@ -7,6 +7,7 @@
 JFixtures creation is inspired by [Ruby On Rails fixtures](http://api.rubyonrails.org/v3.2/classes/ActiveRecord/Fixtures.html) - it helps to define test data in a human-readable YML format and then to transform the data to the SQL language which your database understands. So it is a sort of YML to SQL converter.
 
 JFixtures requires Java 17 or newer. For a Spring Boot and JUnit setup, see the [getting-started guide](docs/getting-started-spring-boot-junit.md).
+For a catalogue of YAML fixture and configuration recipes, see [YAML recipes](docs/yaml-recipes.md).
 As for java world, JFixtures could be compared with [DBUnit](http://dbunit.sourceforge.net/) library.
 
 [Please read our WIKI for more info](https://github.com/rodionovsasha/jfixtures/wiki)
